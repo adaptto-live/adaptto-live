@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  push:
+    branches-ignore:
+      - experimental/**
+      - master
+  pull_request:
+    branches-ignore:
+      - experimental/**
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+#    env:
+#      SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: npm
+
+    # client
+    - run: npm --no-fund --prefix client install
+    - run: npm --no-fund --prefix client run lint
+    # no unit tests yet
+    #- run: npm --no-fund --prefix client run test:unit
+    - run: npm --no-fund --prefix client run build
+
+    # server
+    - run: npm --no-fund --prefix server install
+    - run: npm --no-fund --prefix server run lint
+    - run: npm --no-fund --prefix server run build
+
+ #   - uses: SonarSource/sonarcloud-github-action@master
+ #     if: env.SONARCLOUD_TOKEN != null
+ #     env:
+ #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ #       SONAR_TOKEN: ${{ env.SONARCLOUD_TOKEN }}
