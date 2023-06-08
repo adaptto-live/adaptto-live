@@ -29,6 +29,11 @@ process.on('uncaughtException', err => {
   log.error(err)
 })
 
+app.get('/', (req, res) => {
+  res.contentType('text/plain')
+  res.send('adaptTo() Live Server');
+});
+
 io.use(middleware)
 io.on('connection', async (socket) => {
   const authenticationInfo = await handleConnection(socket)
