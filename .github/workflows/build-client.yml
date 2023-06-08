@@ -37,6 +37,8 @@ jobs:
     - run: npm run build
 
     - uses: SonarSource/sonarcloud-github-action@master
+      with:
+        projectBaseDir: ./client
       if: env.SONARCLOUD_TOKEN != null
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
