@@ -14,8 +14,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-#    env:
-#      SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+    env:
+      SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
 
     defaults:
       run:
@@ -36,8 +36,8 @@ jobs:
     - run: npm run lint
     - run: npm run build
 
- #   - uses: SonarSource/sonarcloud-github-action@master
- #     if: env.SONARCLOUD_TOKEN != null
- #     env:
- #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
- #       SONAR_TOKEN: ${{ env.SONARCLOUD_TOKEN }}
+    - uses: SonarSource/sonarcloud-github-action@master
+      if: env.SONARCLOUD_TOKEN != null
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ env.SONARCLOUD_TOKEN }}
