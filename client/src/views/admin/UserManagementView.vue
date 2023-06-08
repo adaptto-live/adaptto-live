@@ -1,0 +1,85 @@
+<template>
+  <h2>Admin: User Management</h2>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Admin</th>
+        <th>Blocked</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="user in allUsers" :key="user.id">
+        <td>{{user.id}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.admin ? '☑' : '☐'}}</td>
+        <td>{{user.blocked ? '☑' : '☐'}}</td>
+        <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#userEditModal"
+            @click="selectedUser=user">Edit</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="modal" id="userEditModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Edit User</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" v-if="selectedUser">
+          <div class="mt-3">
+            <label for="userId" class="form-label">ID</label>
+            <input class="form-control" id="userId" v-model="selectedUser.id" disabled>
+          </div>
+          <div class="mt-3">
+            <label for="userName" class="form-label">Username</label>
+            <input class="form-control" id="userName" v-model="selectedUser.username">
+          </div>
+          <div class="mt-3 form-check">
+            <input type="checkbox" class="form-check-input" id="userAdmin" v-model="selectedUser.admin">
+            <label class="form-check-label" for="userAdmin">Admin</label>
+          </div>
+          <div class="mt-3 form-check">
+            <input type="checkbox" class="form-check-input" id="userBlocked" v-model="selectedUser.blocked">
+            <label class="form-check-label" for="userBlocked">Blocked</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+              @click="save" :disabled="!isValid()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type User from '@/services/User'
+import socket from '@/util/socket'
+import { onMounted, ref } from 'vue'
+
+const allUsers = ref([] as User[])
+const selectedUser = ref(undefined as User|undefined)
+
+onMounted(() => {
+  socket.emit('adminGetAllUsers')
+})
+socket.on('adminAllUsers', (users: User[]) => {
+  allUsers.value = users
+})
+
+function isValid() : boolean {
+  return selectedUser.value != undefined && selectedUser.value.username.trim() != ''
+}
+
+function save() : void {
+  if (selectedUser.value) {
+    const { id, username, admin, blocked } = selectedUser.value
+    socket.emit('adminUpdateUser', id, username, admin, blocked)
+  }
+}
+</script>
