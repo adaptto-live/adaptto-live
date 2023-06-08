@@ -38,7 +38,7 @@ jobs:
 
     - uses: SonarSource/sonarcloud-github-action@master
       with:
-        projectBaseDir: ./client
+        projectBaseDir: ./server
       if: env.SONAR_TOKEN != null
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
