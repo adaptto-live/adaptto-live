@@ -1,4 +1,4 @@
-name: Build
+name: Build Server
 
 on:
   push:
@@ -17,6 +17,10 @@ jobs:
 #    env:
 #      SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
 
+    defaults:
+      run:
+        working-directory: ./server
+
     steps:
     - uses: actions/checkout@v3
       with:
@@ -26,18 +30,11 @@ jobs:
       with:
         node-version: 18
         cache: npm
+        cache-dependency-path: ./server/package-lock.json
 
-    # client
-    - run: npm --no-fund --prefix client install
-    - run: npm --no-fund --prefix client run lint
-    # no unit tests yet
-    #- run: npm --no-fund --prefix client run test:unit
-    - run: npm --no-fund --prefix client run build
-
-    # server
-    - run: npm --no-fund --prefix server install
-    - run: npm --no-fund --prefix server run lint
-    - run: npm --no-fund --prefix server run build
+    - run: npm install
+    - run: npm run lint
+    - run: npm run build
 
  #   - uses: SonarSource/sonarcloud-github-action@master
  #     if: env.SONARCLOUD_TOKEN != null
