@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://live.adapt.to
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: npm
+
+    - run: npm install
+    - run: npm run lint
+    - run: npm run build
+
+    - name: Copy to Site
+      uses: cpina/github-action-push-to-another-repository@v1.4.1
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.GH_SITE_DEPLOY_PAT }}
+      with:
+        source-directory: dist
+        destination-repository-username: adaptto-live
+        destination-repository-name: adaptto-live.github.io
+        destination-github-username: ${{ secrets.GH_SITE_DEPLOY_USERNAME }}
+        user-email: ${{ secrets.GH_SITE_DEPLOY_EMAIL }}
+        user-name: ${{ secrets.GH_SITE_DEPLOY_NAME }}
+        target-branch: main
+        commit-message: deploy application
