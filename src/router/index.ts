@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import AllTalksView from '@/views/AllTalksView.vue'
 import LoginView from '@/views/LoginView.vue'
 import TalkView from '@/views/TalkView.vue'
@@ -13,7 +13,7 @@ import TalkRatingsViewVue from '@/views/admin/TalkRatingsView.vue'
 import StatisticsViewVue from '@/views/admin/StatisticsView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
