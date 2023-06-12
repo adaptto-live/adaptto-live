@@ -1,7 +1,7 @@
 <template>
-  <h2>Settings</h2>
+  <h2 id="headlineSettings">Settings</h2>
 
-  <table>
+  <table aria-describedby="headlineSettings">
     <tr>
       <th>User</th>
       <td><code>{{authenticationStore.username}}</code></td>

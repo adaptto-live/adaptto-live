@@ -1,7 +1,7 @@
 <template>
-  <h2>Admin: User Management</h2>
+  <h2 id="headlineAdminUserManagement">Admin: User Management</h2>
 
-  <table class="table table-striped table-hover">
+  <table class="table table-striped table-hover" aria-describedby="headlineAdminUserManagement">
     <thead>
       <tr>
         <th>ID</th>

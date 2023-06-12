@@ -1,7 +1,7 @@
 <template>
-  <h2>Admin: Statistics</h2>
+  <h2 id="headlineStatistics">Admin: Statistics</h2>
 
-  <table class="table table-striped table-hover">
+  <table class="table table-striped table-hover" aria-describedby="headlineStatistics">
     <tbody>
       <tr>
         <th># Talks</th>
