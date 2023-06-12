@@ -1,5 +1,7 @@
 # adaptTo() Live Client
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=adaptto_adaptto-live&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=adaptto_adaptto-live)
+
 adaptTo() Live Client web application.
 
 Technology Stack:
