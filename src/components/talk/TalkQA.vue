@@ -86,7 +86,9 @@ function sendMessage() {
   const message = selectedMessage.value
   if (message) {
     message.text = messageText.value
-    message.username = messageUsername
+    if (message.userid == authenticationStore.userid) {
+      message.username = messageUsername
+    }
     socket.emit('qaEntryUpdate', message.id, message.text, messageAnonymous.value)
   }
   else {
