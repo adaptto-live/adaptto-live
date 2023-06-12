@@ -24,6 +24,10 @@ jobs:
     - run: npm install
     - run: npm run lint
     - run: npm run build
+      env:
+        VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL }}
+        VITE_SCHEDULE_DATA_URL: ${{ vars.VITE_SCHEDULE_DATA_URL }}
+        VITE_QUERY_INDEX_URL: ${{ vars.VITE_QUERY_INDEX_URL }}
 
     - name: Copy to Site
       uses: cpina/github-action-push-to-another-repository@v1.7.2
