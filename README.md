@@ -1,6 +1,6 @@
 # adaptTo() Live Client
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=adaptto_adaptto-live&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=adaptto_adaptto-live)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=adaptto-live_adaptto-live&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=adaptto-live_adaptto-live)
 
 adaptTo() Live Client web application.
 
@@ -9,7 +9,7 @@ Technology Stack:
 * Uses Websockets (via socket.io) to communicate with server application
 
 Dependencies:
-* Requires [adaptTo() Live server](https://github.com/adaptto/adaptto-live-server) running on HTTP/HTTPS
+* Requires [adaptTo() Live server](https://github.com/adaptto-live/adaptto-live-server) running on HTTP/HTTPS
 
 
 ## Recommended IDE Setup
