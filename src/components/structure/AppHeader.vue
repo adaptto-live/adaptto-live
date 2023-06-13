@@ -21,6 +21,7 @@
                 Admin
               </a>
               <ul class="dropdown-menu">
+                <li><RouterLink to="/admin/loginCodes" class="dropdown-item">Login Codes</RouterLink></li>
                 <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
                 <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
                 <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>

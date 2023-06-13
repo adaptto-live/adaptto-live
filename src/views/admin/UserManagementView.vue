@@ -6,8 +6,16 @@
       <tr>
         <th>ID</th>
         <th>Username</th>
+        <th>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="showCodesSwitch" v-model="showCodes">
+            <label class="form-check-label" for="showCodesSwitch">Code</label>
+          </div>
+        </th>
         <th>Admin</th>
         <th>Blocked</th>
+        <th>Created</th>
+        <th>Updated</th>
         <th></th>
       </tr>
     </thead>
@@ -15,8 +23,11 @@
       <tr v-for="user in allUsers" :key="user.id">
         <td>{{user.id}}</td>
         <td>{{user.username}}</td>
+        <td>{{showCodes ? user.code : user.code.replace(/./g, '⚬')}}</td>
         <td>{{user.admin ? '☑' : '☐'}}</td>
         <td>{{user.blocked ? '☑' : '☐'}}</td>
+        <td><timeago :datetime="user.created"/></td>
+        <td><timeago :datetime="user.updated"/></td>
         <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#userEditModal"
             @click="selectedUser=user">Edit</button></td>
       </tr>
@@ -64,11 +75,12 @@ import { onMounted, ref } from 'vue'
 
 const allUsers = ref([] as User[])
 const selectedUser = ref(undefined as User|undefined)
+const showCodes = ref(false)
 
 onMounted(() => {
-  socket.emit('adminGetAllUsers')
+  socket.emit('adminGetUsers')
 })
-socket.on('adminAllUsers', (users: User[]) => {
+socket.on('adminUsers', (users: User[]) => {
   allUsers.value = users
 })
 
