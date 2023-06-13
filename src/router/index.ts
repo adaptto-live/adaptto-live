@@ -8,6 +8,7 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import SpeakerQAView from '@/views/SpeakerQAView.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
+import LoginCodeManagementViewVue from '@/views/admin/LoginCodeManagementViewVue.vue'
 import UserManagementViewVue from '@/views/admin/UserManagementView.vue'
 import TalkRatingsViewVue from '@/views/admin/TalkRatingsView.vue'
 import StatisticsViewVue from '@/views/admin/StatisticsView.vue'
@@ -51,6 +52,11 @@ const router = createRouter({
       path: '/noCurrentTalk',
       name: 'noCurrentTalk',
       component: NoCurrentTalkView
+    },
+    {
+      path: '/admin/loginCodes',
+      name: 'admin-loginCodes',
+      component: LoginCodeManagementViewVue
     },
     {
       path: '/admin/userManagement',

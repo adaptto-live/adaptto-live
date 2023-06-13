@@ -30,7 +30,7 @@ const route = useRoute()
 
 onMounted(() => {
   if (authenticationStore.isAuthenticated) {
-    socket.auth = { username: authenticationStore.username }
+    socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
     socket.connect()
   }
 

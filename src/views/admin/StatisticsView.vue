@@ -8,6 +8,10 @@
         <td>{{talkManager.talks.length}}</td>
       </tr>
       <tr>
+        <th># Login Codes</th>
+        <td>{{loginCodes}}</td>
+      </tr>
+      <tr>
         <th># Users</th>
         <td>{{users}}</td>
       </tr>
@@ -35,6 +39,7 @@ import { onMounted, ref } from 'vue'
 
 const talkManager = new TalkManager()
 
+const loginCodes = ref(undefined as number|undefined)
 const users = ref(undefined as number|undefined)
 const talkRatings = ref(undefined as number|undefined)
 const messages = ref(undefined as number|undefined)
@@ -43,7 +48,8 @@ const qAEntries = ref(undefined as number|undefined)
 onMounted(() => {
   socket.emit('adminGetStatistics')
 })
-socket.on('adminStatistics', (numUsers: number, numTalkRatings: number, numMessages: number, numQAEntries: number) => {
+socket.on('adminStatistics', (numLoginCodes, numUsers, numTalkRatings, numMessages, numQAEntries) => {
+  loginCodes.value = numLoginCodes
   users.value = numUsers
   talkRatings.value = numTalkRatings
   messages.value = numMessages

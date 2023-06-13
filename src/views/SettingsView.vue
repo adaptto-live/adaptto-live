@@ -7,7 +7,7 @@
       <td><code>{{authenticationStore.username}}</code></td>
     </tr>
     <tr>
-      <th>ID</th>
+      <th>User ID</th>
       <td><code>{{authenticationStore.userid}}</code></td>
     </tr>
     <tr v-if="authenticationStore.admin">

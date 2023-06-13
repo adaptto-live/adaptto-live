@@ -7,8 +7,14 @@
   <form v-else>
     <p v-if="loginError" class="alert alert-danger mt-3">{{loginError}}</p>
     <div class="mb-3 mt-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" id="username" v-model="username">
+      <label for="code" class="form-label">Login Code *</label>
+      <input type="text" class="form-control" id="code" aria-describedby="codeHelp" v-model="code">
+      <div id="codeHelp" class="form-text">You will get a unique login code at the reception.</div>
+    </div>
+    <div class="mb-3 mt-3">
+      <label for="username" class="form-label">Username *</label>
+      <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" v-model="username">
+      <div id="usernameHelp" class="form-text">Please provide a user name or nick name to be displayed in the chat rooms.</div>
     </div>
     <button type="submit" class="btn btn-primary" :disabled="!isValid()" @click.prevent="login">Login</button>
   </form>
@@ -24,12 +30,13 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
 
+const code = ref('')
 const username = ref('')
 const loginInProcess = ref(false)
 const loginError = ref('')
 
 function isValid() : boolean {
-  return username.value.trim() != ''
+  return code.value.trim() != '' && username.value.trim() != ''
 }
 
 function login() : void {
@@ -37,12 +44,12 @@ function login() : void {
   if (socket.connected) {
     socket.disconnect()
   }
-  socket.auth = { username: username.value }
+  socket.auth = { code: code.value.trim().toLocaleUpperCase(), username: username.value.trim() }
   socket.connect()
 }
 
 socket.on('login', (userid, admin) => {
-  authenticationStore.login(username.value, userid, admin)
+  authenticationStore.login(code.value.trim().toLocaleUpperCase(), username.value.trim(), userid, admin)
   router.push('/')
 })
 
