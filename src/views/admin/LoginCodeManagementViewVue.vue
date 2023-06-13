@@ -11,6 +11,7 @@
           </div>
         </th>
         <th>User ID</th>
+        <th>User</th>
         <th>Used</th>
       </tr>
     </thead>
@@ -18,6 +19,7 @@
       <tr v-for="code in allCodes" :key="code.code">
         <td>{{showCodes ? code.code : code.code.replace(/./g, '⚬')}}</td>
         <td>{{code.userid}}</td>
+        <td>{{code.username}}</td>
         <td><timeago v-if="code.used" :datetime="code.used"/></td>
       </tr>
     </tbody>

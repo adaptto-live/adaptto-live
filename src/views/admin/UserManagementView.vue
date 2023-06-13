@@ -26,8 +26,8 @@
         <td>{{showCodes ? user.code : user.code.replace(/./g, '⚬')}}</td>
         <td>{{user.admin ? '☑' : '☐'}}</td>
         <td>{{user.blocked ? '☑' : '☐'}}</td>
-        <td><timeago :datetime="user.created"/></td>
-        <td><timeago :datetime="user.updated"/></td>
+        <td><timeago v-if="user.created" :datetime="user.created"/></td>
+        <td><timeago v-if="user.updated" :datetime="user.updated"/></td>
         <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#userEditModal"
             @click="selectedUser=user">Edit</button></td>
       </tr>
