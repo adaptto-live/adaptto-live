@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="me-auto">
             <RouterLink to="/all-talks" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar">All Talks</RouterLink>
-            <RouterLink to="/feedback" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar">Conference Feedback</RouterLink>
+            <RouterLink to="/feedback" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar" v-if="showConferenceFeedback">Conference Feedback</RouterLink>
           </div>
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li v-if="authenticationStore.admin" class="nav-item dropdown">
@@ -46,10 +46,12 @@ import { Collapse } from 'bootstrap'
 import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
 import { useRatingStore } from '@/stores/rating'
+import { ref } from 'vue'
 
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
 const ratingStore = useRatingStore()
+const showConferenceFeedback = ref(false)
 
 function collapseNavbar() {
   const el = document.querySelector('#navbarSupportedContent')

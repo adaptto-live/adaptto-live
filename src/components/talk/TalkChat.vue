@@ -3,7 +3,7 @@
     <div class="chat-window">
       <MessageDisplay v-for="message in messages" :key="message.id" :message="message"
           @message-clicked="messageClicked(message)"/>
-      <div class="bottom"/>
+      <div class="bottom" ref="bottomPlaceholder"/>
     </div>
     <div class="new-message">
       <TextAreaEmojiPicker class="textarea" v-model="newMessageText" @enter-key="sendMessage"/>
@@ -52,6 +52,7 @@ const newMessageText = ref('')
 const hasMessage = computed(() => newMessageText.value.trim() != '')
 const messageText = ref('')
 const selectedMessage = ref(undefined as Message|undefined)
+const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
 
 function addMessage(message: Message) {
   messages.value.push(message)
@@ -63,16 +64,24 @@ function messageClicked(message: Message) {
   new Modal('#messageModal').show()
 }
 
-function isValid() {
+function isValid() : boolean {
   return messageText.value.trim() != ''
 }
 
 function sendMessage() {
+  if (!hasMessage.value) {
+    return
+  }
   const id = uuidv4()
   const text = newMessageText.value
   addMessage({id, date: new Date(), userid: authenticationStore.userid, username: authenticationStore.username, text})
   socket.emit('message', id, props.talk.id, text)
   newMessageText.value = ''
+  bottomPlaceholder.value?.scrollIntoView()
+  const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|undefined
+  if (textarea) {
+    textarea.focus()
+  }
 }
 
 function updateMessage() {
