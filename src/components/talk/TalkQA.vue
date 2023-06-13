@@ -6,7 +6,7 @@
         <MessageDisplay :message="message" :read-only="speakerView"
             @message-clicked="messageClicked(message)"/>
       </div>
-      <div class="bottom"/>
+      <div class="bottom" ref="bottomPlaceholder"/>
     </div>
     <button v-if="!speakerView" class="btn btn-primary" @click="addQuestion">Add Question</button>
   </div>
@@ -56,6 +56,7 @@ const messages = ref([] as Message[])
 const messageText = ref('')
 const messageAnonymous = ref(false)
 const selectedMessage = ref(undefined as Message|undefined)
+const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
 
 function addMessage(message: Message) {
   messages.value.push(message)
@@ -96,6 +97,7 @@ function sendMessage() {
     const text = messageText.value
     addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text})
     socket.emit('qaEntry', id, props.talk.id, text, messageAnonymous.value)
+    bottomPlaceholder.value?.scrollIntoView()
   }
 }
 
