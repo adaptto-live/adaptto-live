@@ -30,8 +30,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
 
-const code = ref('')
-const username = ref('')
+const code = ref(authenticationStore.code)
+const username = ref(authenticationStore.username)
 const loginInProcess = ref(false)
 const loginError = ref('')
 

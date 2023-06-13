@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const useAuthenticationStore = defineStore('authentication', {
   state: () => {
     return {
+      authenticated: false,
       code: '',
       username: '',
       userid: '',
@@ -11,7 +12,7 @@ export const useAuthenticationStore = defineStore('authentication', {
   },
   getters: {
     isAuthenticated() : boolean {
-      return this.code != '' && this.username != ''
+      return this.authenticated && this.code != '' && this.username != ''
     },
     isAdmin() : boolean {
       return this.admin
@@ -19,14 +20,14 @@ export const useAuthenticationStore = defineStore('authentication', {
   },
   actions: {
     login(code: string, username: string, userid: string, admin: boolean) {
+      this.authenticated = true
       this.code = code
       this.username = username
       this.userid = userid
       this.admin = admin
     },
     logout() {
-      this.code = ''
-      this.username = ''
+      this.authenticated = false
       this.userid = ''
       this.admin = false
     }
