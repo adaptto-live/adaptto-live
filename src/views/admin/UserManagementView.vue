@@ -4,8 +4,8 @@
   <table class="table table-striped table-hover" aria-describedby="headlineAdminUserManagement">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Username</th>
+        <th>ID</th>
         <th>
           <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" role="switch" id="showCodesSwitch" v-model="showCodes">
@@ -21,8 +21,8 @@
     </thead>
     <tbody>
       <tr v-for="user in allUsers" :key="user.id">
-        <td>{{user.id}}</td>
         <td>{{user.username}}</td>
+        <td>{{user.id}}</td>
         <td>{{showCodes ? user.code : user.code.replace(/./g, '⚬')}}</td>
         <td>{{user.admin ? '☑' : '☐'}}</td>
         <td>{{user.blocked ? '☑' : '☐'}}</td>

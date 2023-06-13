@@ -44,12 +44,12 @@ function login() : void {
   if (socket.connected) {
     socket.disconnect()
   }
-  socket.auth = { code: code.value.trim(), username: username.value.trim() }
+  socket.auth = { code: code.value.trim().toLocaleUpperCase(), username: username.value.trim() }
   socket.connect()
 }
 
 socket.on('login', (userid, admin) => {
-  authenticationStore.login(code.value.trim(), username.value.trim(), userid, admin)
+  authenticationStore.login(code.value.trim().toLocaleUpperCase(), username.value.trim(), userid, admin)
   router.push('/')
 })
 
