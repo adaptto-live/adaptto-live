@@ -6,7 +6,7 @@
       <div class="bottom" ref="bottomPlaceholder"/>
     </div>
     <div class="new-message">
-      <TextAreaEmojiPicker class="textarea" v-model="newMessageText" @enter-key="sendMessage" ref="messageTextElement"/>
+      <TextAreaEmojiPicker class="textarea" v-model="newMessageText" @enter-key="sendMessage"/>
       <button class="btn btn-primary" @click="sendMessage" :disabled="!hasMessage">Send</button>
     </div>
   </div>
@@ -64,11 +64,14 @@ function messageClicked(message: Message) {
   new Modal('#messageModal').show()
 }
 
-function isValid() {
+function isValid() : boolean {
   return messageText.value.trim() != ''
 }
 
 function sendMessage() {
+  if (!hasMessage.value) {
+    return
+  }
   const id = uuidv4()
   const text = newMessageText.value
   addMessage({id, date: new Date(), userid: authenticationStore.userid, username: authenticationStore.username, text})
