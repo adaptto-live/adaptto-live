@@ -3,10 +3,10 @@
     <div class="chat-window">
       <MessageDisplay v-for="message in messages" :key="message.id" :message="message"
           @message-clicked="messageClicked(message)"/>
-      <div class="bottom"/>
+      <div class="bottom" ref="bottomPlaceholder"/>
     </div>
     <div class="new-message">
-      <TextAreaEmojiPicker class="textarea" v-model="newMessageText" @enter-key="sendMessage"/>
+      <TextAreaEmojiPicker class="textarea" v-model="newMessageText" @enter-key="sendMessage" ref="messageTextElement"/>
       <button class="btn btn-primary" @click="sendMessage" :disabled="!hasMessage">Send</button>
     </div>
   </div>
@@ -52,6 +52,7 @@ const newMessageText = ref('')
 const hasMessage = computed(() => newMessageText.value.trim() != '')
 const messageText = ref('')
 const selectedMessage = ref(undefined as Message|undefined)
+const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
 
 function addMessage(message: Message) {
   messages.value.push(message)
@@ -73,6 +74,11 @@ function sendMessage() {
   addMessage({id, date: new Date(), userid: authenticationStore.userid, username: authenticationStore.username, text})
   socket.emit('message', id, props.talk.id, text)
   newMessageText.value = ''
+  bottomPlaceholder.value?.scrollIntoView()
+  const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|undefined
+  if (textarea) {
+    textarea.focus()
+  }
 }
 
 function updateMessage() {
