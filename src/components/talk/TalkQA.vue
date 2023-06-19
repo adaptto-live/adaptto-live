@@ -1,11 +1,27 @@
 <template>
   <div class="qa-container">
     <div class="qa-window">
-      <div class="message-container" v-for="(message, index) in messages" :key="message.id">
-        <div class="index">{{index+1}}.</div>
-        <MessageDisplay :message="message" :read-only="speakerView"
-            @message-clicked="messageClicked(message)"/>
-      </div>
+      <template v-for="(message, index) in messages" :key="message.id">
+        <div class="message-container" v-if="!message.replyTo">
+          <div class="index">{{index+1}}.</div>
+          <div class="message-and-replies">
+            <MessageDisplay :message="message" :read-only="speakerView"
+                @message-clicked="messageClicked(message)"/>
+            <div class="reply-list">
+              <button v-if="speakerView && !isShowRepliesInSpeakerView(message) && getReplies(message).length > 0"
+                class="btn btn-sm btn-secondary" @click="showRepliesInSpeakerView(message, true)">
+                {{getReplies(message).length}} Answers
+              </button>
+              <div v-else @click="showRepliesInSpeakerView(message, false)">
+                <MessageDisplay v-for="replyMessage in getReplies(message)" :key="replyMessage.id"
+                    :message="replyMessage" :read-only="speakerView"
+                    @message-clicked="messageClicked(replyMessage, message)"/>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!speakerView">Reply</button>
+        </div>
+      </template>
       <div class="bottom" ref="bottomPlaceholder"/>
     </div>
     <button v-if="!speakerView" class="btn btn-primary" @click="addQuestion">Add Question</button>
@@ -28,6 +44,27 @@
         <div class="modal-footer" :class="{'justify-content-between':selectedMessage}">
           <button v-if="selectedMessage" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteMessage">Delete</button>
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="sendMessage" :disabled="!isValid()">Submit Question</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="!speakerView" class="modal" id="qaEntryReplyModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Answer to Question</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="reply-to-question" v-if="replyToMessage">
+            {{replyToMessage.text}}
+          </div>
+          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+        </div>
+        <div class="modal-footer" :class="{'justify-content-between':selectedMessage}">
+          <button v-if="selectedMessage" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteMessage">Delete</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="sendMessage" :disabled="!isValid()">Submit Answer</button>
         </div>
       </div>
     </div>
@@ -56,7 +93,26 @@ const messages = ref([] as Message[])
 const messageText = ref('')
 const messageAnonymous = ref(false)
 const selectedMessage = ref(undefined as Message|undefined)
+const replyToMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
+const speakerViewShowRepliesForMessage = ref([] as string[])
+
+function getReplies(message: Message) {
+  return messages.value.filter(item => item.replyTo==message.id)
+}
+
+function isShowRepliesInSpeakerView(message: Message) {
+  return speakerViewShowRepliesForMessage.value.includes(message.id)
+}
+
+function showRepliesInSpeakerView(message: Message, show: boolean) {
+  if (show) {
+    speakerViewShowRepliesForMessage.value.push(message.id)
+  }
+  else {
+    speakerViewShowRepliesForMessage.value = speakerViewShowRepliesForMessage.value.filter(id => id != message.id)
+  }
+}
 
 function addMessage(message: Message) {
   messages.value.push(message)
@@ -64,15 +120,31 @@ function addMessage(message: Message) {
 
 function addQuestion() {
   selectedMessage.value = undefined
+  replyToMessage.value = undefined
   messageText.value = ''
+  messageAnonymous.value = false
   new Modal('#qaEntryModal').show()
 }
 
-function messageClicked(message: Message) {
+function addReply(message : Message) {
+  selectedMessage.value = undefined
+  replyToMessage.value = message
+  messageText.value = ''
+  messageAnonymous.value = false
+  new Modal('#qaEntryReplyModal').show()
+}
+
+function messageClicked(message: Message, replyTo?: Message) {
   selectedMessage.value = message
+  replyToMessage.value = replyTo
   messageText.value = message.text
   messageAnonymous.value = (message.username == undefined)
-  new Modal('#qaEntryModal').show()
+  if (replyTo) {
+    new Modal('#qaEntryReplyModal').show()
+  }
+  else {
+    new Modal('#qaEntryModal').show()
+  }
 }
 
 function isValid() {
@@ -95,9 +167,12 @@ function sendMessage() {
   else {
     const id = uuidv4()
     const text = messageText.value
-    addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text})
-    socket.emit('qaEntry', id, props.talk.id, text, messageAnonymous.value)
-    bottomPlaceholder.value?.scrollIntoView()
+    const replyTo = replyToMessage.value?.id
+    addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, replyTo})
+    socket.emit('qaEntry', id, props.talk.id, text, messageAnonymous.value, replyTo)
+    if (!replyToMessage.value) {
+      bottomPlaceholder.value?.scrollIntoView()
+    }
   }
 }
 
@@ -110,8 +185,8 @@ function deleteMessage() {
 }
 
 onMounted(() => {
-  socket.on('qaEntry', (id: string, date: Date, userid: string, username: string|undefined, text: string) => {
-    addMessage({id, date, userid, username, text})
+  socket.on('qaEntry', (id: string, date: Date, userid: string, username: string|undefined, text: string, replyTo?: string) => {
+    addMessage({id, date, userid, username, text, replyTo})
   })
   socket.on('qaEntryUpdate', (id: string, date: Date, userid: string, username: string|undefined, text: string) => {
     const message = messages.value.find(item => item.id == id)
@@ -161,6 +236,10 @@ onUnmounted(() => {
 .modal .textarea {
   height: 220px;
 }
+.modal .reply-to-question {
+  white-space: pre-line;
+  margin-bottom: 20px;
+}
 .message-container {
   display: flex;
   .index {
@@ -168,11 +247,25 @@ onUnmounted(() => {
     margin-right: 0.25em;
     font-size: 1.25em;
   }
-  .message {
+  > .message-and-replies > .message {
+    flex-grow: 10;
     background-color: #004;
     padding: 8px;
     border-radius: 10px;
     margin-bottom: 10px;
+  }
+  .reply-button {
+    height: 40px;
+    margin-right: 0;
+    margin-left: 15px;
+  }
+  .reply-list {
+    margin-left: 20px;
+    margin-top: -5px;
+    margin-bottom: 5px;
+    button {
+      margin-top: 0;
+    }
   }
 }
 </style>
