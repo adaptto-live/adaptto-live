@@ -247,12 +247,14 @@ onUnmounted(() => {
     margin-right: 0.25em;
     font-size: 1.25em;
   }
-  > .message-and-replies > .message {
+  .message-and-replies {
     flex-grow: 10;
-    background-color: #004;
-    padding: 8px;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    > .message {
+      background-color: #004;
+      padding: 8px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
   }
   .reply-button {
     height: 40px;
