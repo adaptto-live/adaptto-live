@@ -8,5 +8,8 @@ const socket : Socket<ServerToClientEvents,ClientToServerEvents> = io(import.met
 socket.on('connect_error', (err) => {
   console.error('Unable to connect to backend - ', err)
 })
+socket.onAny((event, ...args) => {
+  console.log(event, JSON.stringify(args));
+});
 
 export default socket;

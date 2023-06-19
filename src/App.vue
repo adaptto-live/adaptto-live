@@ -63,12 +63,6 @@ function goToCurrentTalk() {
 }
 
 onBeforeMount(() => {
-  if (authenticationStore.isAuthenticated) {
-    console.log(`reconnect`)
-    socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
-    socket.connect()
-  }
-
   socket.on('currentTalk', talkId => {
     const talkChanged = talkId != currentTalkStore.talkId && currentTalkStore.talkId != undefined
     currentTalkStore.set(talkId)
@@ -88,6 +82,12 @@ onBeforeMount(() => {
       ratingStore.removeRating(talkId)
     }
   })
+
+  if (authenticationStore.isAuthenticated) {
+    console.log(`> reconnect`)
+    socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
+    socket.connect()
+  }
 })
 
 onUnmounted(() => {
