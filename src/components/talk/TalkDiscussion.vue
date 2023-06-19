@@ -68,7 +68,10 @@ const props = defineProps<{
 const usersInRoom = ref([] as string[])
 
 onMounted(() => {
-  socket.emit('roomEnter', props.talk.id)
+  // delay to avoid problems on reloading the page/reconnect
+  window.setTimeout(() => {
+    socket.emit('roomEnter', props.talk.id)
+  }, 250);
 })
 onUnmounted(() => {
   socket.emit('roomLeave', props.talk.id)

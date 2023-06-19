@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onBeforeMount, onUnmounted, ref } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 import AppHeader from './components/structure/AppHeader.vue'
 import { useAuthenticationStore } from './stores/authentication'
@@ -62,12 +62,7 @@ function goToCurrentTalk() {
   }
 }
 
-onMounted(() => {
-  if (authenticationStore.isAuthenticated) {
-    socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
-    socket.connect()
-  }
-
+onBeforeMount(() => {
   socket.on('currentTalk', talkId => {
     const talkChanged = talkId != currentTalkStore.talkId && currentTalkStore.talkId != undefined
     currentTalkStore.set(talkId)
@@ -87,6 +82,11 @@ onMounted(() => {
       ratingStore.removeRating(talkId)
     }
   })
+
+  if (authenticationStore.isAuthenticated) {
+    socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
+    socket.connect()
+  }
 })
 
 onUnmounted(() => {
