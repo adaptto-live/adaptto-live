@@ -68,9 +68,11 @@ const props = defineProps<{
 const usersInRoom = ref([] as string[])
 
 onMounted(() => {
+  console.log(`roomEnter ${props.talk.id}`)
   socket.emit('roomEnter', props.talk.id)
 })
 onUnmounted(() => {
+  console.log(`roomLeave ${props.talk.id}`)
   socket.emit('roomLeave', props.talk.id)
 })
 socket.on('roomUsers', (usernames: string[]) => {

@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onBeforeMount, onUnmounted, ref } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 import AppHeader from './components/structure/AppHeader.vue'
 import { useAuthenticationStore } from './stores/authentication'
@@ -62,8 +62,9 @@ function goToCurrentTalk() {
   }
 }
 
-onMounted(() => {
+onBeforeMount(() => {
   if (authenticationStore.isAuthenticated) {
+    console.log(`reconnect`)
     socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
     socket.connect()
   }
