@@ -4,4 +4,5 @@ export default interface Message {
   userid: string
   username?: string
   text: string
+  replyTo?: string
 }
