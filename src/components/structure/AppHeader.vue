@@ -46,7 +46,7 @@ import { Collapse } from 'bootstrap'
 import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
 import { useRatingStore } from '@/stores/rating'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
@@ -67,6 +67,14 @@ function logout() {
   ratingStore.removeAll()
   router.push('/login')
 }
+
+onMounted(() => {
+  socket.on('userBlocked', userid => {
+    if (authenticationStore.userid == userid) {
+      logout()
+    }
+  })
+})
 </script>
 
 <style lang="scss" scoped>

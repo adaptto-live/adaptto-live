@@ -78,7 +78,7 @@ function sendMessage() {
   socket.emit('message', id, props.talk.id, text)
   newMessageText.value = ''
   bottomPlaceholder.value?.scrollIntoView()
-  const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|undefined
+  const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|null
   if (textarea) {
     textarea.focus()
   }
