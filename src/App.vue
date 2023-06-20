@@ -57,6 +57,9 @@ const currentTalkChangeModal = ref(undefined as HTMLElement|undefined)
 const currentTalkId = ref(undefined as string|undefined)
 const currentTalk = ref(undefined as Talk|undefined)
 
+let connectionCheckInterval : number|undefined
+let lastConnectionCheckResult = false
+
 function goToCurrentTalk() {
   if (currentTalkId.value) {
     router.push(`/talk/${currentTalkId.value}`)
@@ -89,9 +92,20 @@ onBeforeMount(() => {
     socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
     socket.connect()
   }
+
+  connectionCheckInterval = window.setInterval(() => {
+    const connectionCheckResult = socket.connected
+    if (connectionCheckResult != lastConnectionCheckResult) {
+      debugConsoleLog(`connection alive: ${connectionCheckResult}`)
+    }
+    lastConnectionCheckResult = connectionCheckResult
+  }, 1000)
 })
 
 onUnmounted(() => {
+  if (connectionCheckInterval) {
+    window.clearInterval(connectionCheckInterval)
+  }
   debugConsoleLog(`disconnect`)
   socket.disconnect()
 })
