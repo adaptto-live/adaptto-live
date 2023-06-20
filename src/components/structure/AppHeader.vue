@@ -13,7 +13,9 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="me-auto">
             <RouterLink to="/all-talks" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar">All Talks</RouterLink>
-            <RouterLink to="/feedback" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar" v-if="showConferenceFeedback">Conference Feedback</RouterLink>
+            <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar" v-if="lamaPollUrl">
+              Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg"/>
+            </a>
           </div>
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li v-if="authenticationStore.admin" class="nav-item dropdown">
@@ -46,12 +48,17 @@ import { Collapse } from 'bootstrap'
 import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
 import { useRatingStore } from '@/stores/rating'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
 const ratingStore = useRatingStore()
-const showConferenceFeedback = ref(false)
+
+let lamaPollUrl : string|undefined
+const lamaPollUrlPrefix = import.meta.env.VITE_LAMAPOLL_URL
+if (lamaPollUrlPrefix) {
+  lamaPollUrl = lamaPollUrlPrefix + authenticationStore.code
+}
 
 function collapseNavbar() {
   const el = document.querySelector('#navbarSupportedContent')
@@ -81,5 +88,9 @@ onMounted(() => {
 .logo {
   height: 25px;
   margin-top: -0.25rem;
+}
+.external-link-icon {
+  width: 20px;
+  margin-top: -3px;
 }
 </style>
