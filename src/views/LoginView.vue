@@ -25,12 +25,13 @@
 import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const authenticationStore = useAuthenticationStore()
 
-const code = ref(authenticationStore.code)
+const code = ref(getInitialLoginCode())
 const username = ref(authenticationStore.username)
 const loginInProcess = ref(false)
 const loginError = ref('')
@@ -46,6 +47,15 @@ function login() : void {
   }
   socket.auth = { code: code.value.trim().toLocaleUpperCase(), username: username.value.trim() }
   socket.connect()
+}
+
+function getInitialLoginCode() : string {
+  if (authenticationStore.code != '') {
+    return authenticationStore.code
+  }
+  else {
+    return route.params.code as string ?? ''
+  }
 }
 
 socket.on('login', (userid, admin) => {
