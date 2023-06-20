@@ -55,7 +55,7 @@ const showConferenceFeedback = ref(false)
 
 function collapseNavbar() {
   const el = document.querySelector('#navbarSupportedContent')
-  if (el && el.classList.contains('show')) {
+  if (el?.classList.contains('show')) {
     new Collapse(el).hide()
   }
 }

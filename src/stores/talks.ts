@@ -12,7 +12,7 @@ export const useTalksStore = defineStore('talks', {
   state: () => {
     return {
       talks: [] as Talk[],
-      loadingError: undefined as any|undefined
+      loadingError: undefined as any
     }
   },
   actions: {
@@ -56,8 +56,8 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
     const path = `/${year}/schedule/${entry.Entry}`
     const queryIndexEntry = queryIndexEntries.find(entry => entry.path == path)
     if (queryIndexEntry) {
-      let title = queryIndexEntry.title as string
-      const titleMatcher = title.match(titleWithoutSuffixPattern)
+      let title = queryIndexEntry.title
+      const titleMatcher = titleWithoutSuffixPattern.exec(title)
       if (titleMatcher) {
         title = titleMatcher[1]
       }
@@ -70,10 +70,10 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
 }
 
 const scheduleUrlPattern = /^.*\/(\d{4})\/schedule-data\.json$/
-const titleWithoutSuffixPattern = /^(.*)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
+const titleWithoutSuffixPattern = /^(.+)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
 
 function extractYear(scheduleDataUrl : string) : string {
-  const matcher = scheduleDataUrl.match(scheduleUrlPattern)
+  const matcher = scheduleUrlPattern.exec(scheduleDataUrl)
   if (matcher) {
     return matcher[1]
   }

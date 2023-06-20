@@ -17,7 +17,7 @@ export default class TalkManager {
   public get days() : readonly Day[] {
     if (!this._days) {
       const dayNumbers = Array.from(this.talks.reduce((set, talk) => set.add(talk.day), new Set<number>()))
-      dayNumbers.sort()
+      dayNumbers.sort((a,b) => a - b)
       this._days = dayNumbers.map(day => ({ day, talks: this.talks.filter(talk => talk.day == day) }))  
     }
     return this._days

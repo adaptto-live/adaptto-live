@@ -8,9 +8,8 @@
 
 <script setup lang="ts">
 import { useRatingStore } from '@/stores/rating'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import TalkRatingModal from './TalkRatingModal.vue'
-import { ref } from 'vue'
 import type { Talk } from '@/stores/talks'
 import SvgStar from '../structure/SvgStar.vue'
 
