@@ -84,6 +84,7 @@ onBeforeMount(() => {
   })
 
   if (authenticationStore.isAuthenticated) {
+    console.log(`> reconnect`)
     socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
     socket.connect()
   }
