@@ -14,7 +14,7 @@
           <div class="me-auto">
             <RouterLink to="/all-talks" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar">All Talks</RouterLink>
             <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar" v-if="lamaPollUrl">
-              Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg"/>
+              Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg" alt=""/>
             </a>
           </div>
           <ul class="navbar-nav mb-2 mb-lg-0">
