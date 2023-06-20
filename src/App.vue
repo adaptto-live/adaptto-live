@@ -43,6 +43,7 @@ import { useCurrentTalkStore } from './stores/currentTalk'
 import { useTalksStore, type Talk } from './stores/talks'
 import { Modal } from 'bootstrap'
 import TalkManager from './services/TalkManager'
+import debugConsoleLog from './util/debugConsoleLog'
 
 const authenticationStore = useAuthenticationStore()
 const talkStore = useTalksStore()
@@ -84,13 +85,14 @@ onBeforeMount(() => {
   })
 
   if (authenticationStore.isAuthenticated) {
-    console.log(`> reconnect`)
+    debugConsoleLog(`connect: ${authenticationStore.username}`)
     socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
     socket.connect()
   }
 })
 
 onUnmounted(() => {
+  debugConsoleLog(`disconnect`)
   socket.disconnect()
 })
 </script>

@@ -70,12 +70,10 @@ const usersInRoom = ref([] as string[])
 onMounted(() => {
   // delay to avoid problems on reloading the page/reconnect
   window.setTimeout(() => {
-    console.log(`> roomEnter ${props.talk.id}`)
     socket.emit('roomEnter', props.talk.id)
   }, 250);
 })
 onUnmounted(() => {
-  console.log(`> roomLeave ${props.talk.id}`)
   socket.emit('roomLeave', props.talk.id)
 })
 socket.on('roomUsers', (usernames: string[]) => {
