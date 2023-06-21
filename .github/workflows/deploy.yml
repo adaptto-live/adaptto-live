@@ -29,6 +29,7 @@ jobs:
         VITE_SCHEDULE_DATA_URL: ${{ vars.VITE_SCHEDULE_DATA_URL }}
         VITE_QUERY_INDEX_URL: ${{ vars.VITE_QUERY_INDEX_URL }}
         VITE_LAMAPOLL_URL: ${{ vars.VITE_LAMAPOLL_URL }}
+        VITE_DEBUG_MODE: ${{ vars.VITE_DEBUG_MODE }}
 
     - name: Copy to Site
       uses: cpina/github-action-push-to-another-repository@v1.7.2

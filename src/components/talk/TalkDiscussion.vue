@@ -67,17 +67,26 @@ const props = defineProps<{
 
 const usersInRoom = ref([] as string[])
 
+function socketConnectFunction() {
+  // if a socket (re)connect happens while use is in the room, emit roomEnter again
+  window.setTimeout(() => socket.emit('roomEnter', props.talk.id), 500);
+}
+function roomUsersFunction(usernames: string[]) {
+  usersInRoom.value = usernames
+}
+
 onMounted(() => {
+  socket.on('roomUsers', roomUsersFunction)
   // delay to avoid problems on reloading the page/reconnect
   window.setTimeout(() => {
     socket.emit('roomEnter', props.talk.id)
+    socket.on('connect', socketConnectFunction)
   }, 250);
 })
 onUnmounted(() => {
+  socket.off('roomUsers', roomUsersFunction)
+  socket.off('connect', socketConnectFunction)
   socket.emit('roomLeave', props.talk.id)
-})
-socket.on('roomUsers', (usernames: string[]) => {
-  usersInRoom.value = usernames
 })
 
 function showChat() {

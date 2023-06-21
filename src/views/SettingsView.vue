@@ -19,14 +19,21 @@
       <td><code>{{version}}</code></td>
     </tr>
   </table>
-  
+
+  <div class="mt-3 form-chec small">
+    <input type="checkbox" class="form-check-input" id="messageAnonymous" v-model="debugModeStore.debugMode">
+    <label class="form-check-label ms-2" for="messageAnonymous">Enable Debug Mode</label>
+  </div>
+
 </template>
 
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
 import { version} from '@/../package.json'
+import { useDebugModeStore } from '@/stores/debugMode';
 
 const authenticationStore = useAuthenticationStore()
+const debugModeStore = useDebugModeStore()
 </script>
 
 <style lang="scss" scoped>
