@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
-import debugConsoleLog from '@/util/debugConsoleLog';
 import socket from '@/util/socket'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -44,10 +43,8 @@ function isValid() : boolean {
 function login() : void {
   loginInProcess.value = true
   if (socket.connected) {
-    debugConsoleLog('disconnect')
     socket.disconnect()
   }
-  debugConsoleLog(`connect: ${username.value.trim()}`)
   socket.auth = { code: code.value.trim().toLocaleUpperCase(), username: username.value.trim() }
   socket.connect()
 }

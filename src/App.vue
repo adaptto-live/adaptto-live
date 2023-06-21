@@ -43,7 +43,6 @@ import { useCurrentTalkStore } from './stores/currentTalk'
 import { useTalksStore, type Talk } from './stores/talks'
 import { Modal } from 'bootstrap'
 import TalkManager from './services/TalkManager'
-import debugConsoleLog from './util/debugConsoleLog'
 
 const authenticationStore = useAuthenticationStore()
 const talkStore = useTalksStore()
@@ -56,9 +55,6 @@ const talkManager = new TalkManager()
 const currentTalkChangeModal = ref(undefined as HTMLElement|undefined)
 const currentTalkId = ref(undefined as string|undefined)
 const currentTalk = ref(undefined as Talk|undefined)
-
-let connectionCheckInterval : number|undefined
-let lastConnectionCheckResult = false
 
 function goToCurrentTalk() {
   if (currentTalkId.value) {
@@ -88,25 +84,12 @@ onBeforeMount(() => {
   })
 
   if (authenticationStore.isAuthenticated) {
-    debugConsoleLog(`connect: ${authenticationStore.username}`)
     socket.auth = { code: authenticationStore.code, username: authenticationStore.username }
     socket.connect()
   }
-
-  connectionCheckInterval = window.setInterval(() => {
-    const connectionCheckResult = socket.connected
-    if (connectionCheckResult != lastConnectionCheckResult) {
-      debugConsoleLog(`connection alive: ${connectionCheckResult}`)
-    }
-    lastConnectionCheckResult = connectionCheckResult
-  }, 1000)
 })
 
 onUnmounted(() => {
-  if (connectionCheckInterval) {
-    window.clearInterval(connectionCheckInterval)
-  }
-  debugConsoleLog(`disconnect`)
   socket.disconnect()
 })
 </script>

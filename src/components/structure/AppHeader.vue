@@ -49,7 +49,6 @@ import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
 import { useRatingStore } from '@/stores/rating'
 import { onMounted } from 'vue'
-import debugConsoleLog from '@/util/debugConsoleLog'
 
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
@@ -70,7 +69,6 @@ function collapseNavbar() {
 
 function logout() {
   collapseNavbar()
-  debugConsoleLog(`disconnect`)
   socket.disconnect()
   authenticationStore.logout()
   ratingStore.removeAll()
