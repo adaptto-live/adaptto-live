@@ -55,6 +55,8 @@ const selectedMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
 
 function addMessage(message: Message) {
+  // ensure no duplicates in list
+  messages.value = messages.value.filter(item => item.id != message.id)
   messages.value.push(message)
 }
 
@@ -78,7 +80,7 @@ function sendMessage() {
   socket.emit('message', id, props.talk.id, text)
   newMessageText.value = ''
   bottomPlaceholder.value?.scrollIntoView()
-  const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|undefined
+  const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|null
   if (textarea) {
     textarea.focus()
   }

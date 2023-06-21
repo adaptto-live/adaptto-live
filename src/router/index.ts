@@ -22,6 +22,11 @@ const router = createRouter({
       component: LoginView
     },
     {
+      path: '/login/:code',
+      name: 'loginWithCode',
+      component: LoginView
+    },
+    {
       path: '/',
       redirect: () => {
         const currentTalkId = useCurrentTalkStore().talkId
@@ -91,7 +96,7 @@ const router = createRouter({
 
 router.beforeEach(function (to, from, next) {
   const authenticationStore = useAuthenticationStore()
-  if ((to.name != 'login') && !authenticationStore.isAuthenticated) {
+  if ((to.name != 'login' && to.name != 'loginWithCode') && !authenticationStore.isAuthenticated) {
     next({ path: '/login' })
   }
   else if ((to.name == 'login') && authenticationStore.isAuthenticated) {

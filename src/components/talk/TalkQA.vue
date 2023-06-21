@@ -115,6 +115,8 @@ function showRepliesInSpeakerView(message: Message, show: boolean) {
 }
 
 function addMessage(message: Message) {
+  // ensure no duplicates in list
+  messages.value = messages.value.filter(item => item.id != message.id)
   messages.value.push(message)
 }
 
