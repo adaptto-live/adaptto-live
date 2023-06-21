@@ -60,7 +60,6 @@ import TalkChat from './TalkChat.vue'
 import TalkQA from './TalkQA.vue'
 import { onMounted, onUnmounted, ref } from 'vue'
 import socket from '@/util/socket'
-import debugConsoleLog from '@/util/debugConsoleLog'
 
 const props = defineProps<{
   talk: Talk
@@ -70,8 +69,7 @@ const usersInRoom = ref([] as string[])
 
 function socketConnectFunction() {
   // if a socket (re)connect happens while use is in the room, emit roomEnter again
-  debugConsoleLog('Sending roomEnter again because socket got disconnected while user in room')
-  socket.emit('roomEnter', props.talk.id)
+  window.setTimeout(() => socket.emit('roomEnter', props.talk.id), 500);
 }
 function roomUsersFunction(usernames: string[]) {
   usersInRoom.value = usernames
