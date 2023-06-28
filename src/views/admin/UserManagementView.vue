@@ -69,10 +69,12 @@
 </template>
 
 <script setup lang="ts">
-import type User from '@/services/User'
+import { useErrorMessagesStore } from '@/stores/errorMessages';
 import socket from '@/util/socket'
+import type { User } from '@/util/socket.types';
 import { onMounted, ref } from 'vue'
 
+const errorMessagesStore = useErrorMessagesStore()
 const allUsers = ref([] as User[])
 const selectedUser = ref(undefined as User|undefined)
 const showCodes = ref(false)
@@ -91,7 +93,11 @@ function isValid() : boolean {
 function save() : void {
   if (selectedUser.value) {
     const { id, username, admin, blocked } = selectedUser.value
-    socket.emit('adminUpdateUser', id, username, admin, blocked)
+    socket.emit('adminUpdateUser', {id, username, admin, blocked}, result => {
+      if (result.error) {
+        errorMessagesStore.add(`Unable to set current talk: ${result.error}`)
+      }
+    })
   }
 }
 </script>
