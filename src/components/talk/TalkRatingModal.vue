@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import { useRatingStore } from '@/stores/rating'
+import { useErrorMessagesStore } from '@/stores/errorMessages'
 import { Modal } from 'bootstrap'
 import { ref } from 'vue'
 import type { Talk } from '@/stores/talks'
@@ -45,6 +46,7 @@ const ratingStore = useRatingStore()
 const modalId = `talk-rating-modal-${props.talk.id}`
 const rating = ref(ratingStore.getRating(props.talk.id) || 0)
 const ratingDisplay = ref(rating.value)
+const errorMessagesStore = useErrorMessagesStore()
 
 const commentText = ref(ratingStore.getComment(props.talk.id))
 
@@ -56,14 +58,26 @@ function show() {
   modal.show()
 }
 
-function save() {
-  ratingStore.addRating(props.talk.id, rating.value, commentText.value)
-  socket.emit('talkRating', props.talk.id, rating.value, commentText.value)
+function save() { 
+  socket.emit('talkRating', {talkId: props.talk.id, rating: rating.value, comment: commentText.value}, result => {
+    if (result.success) {
+      ratingStore.addRating(props.talk.id, rating.value, commentText.value)
+    }
+    else if (result.error) {
+      errorMessagesStore.add(`Unable to store talk rating: ${result.error}`)
+    }
+  })
 }
 
 function remove() {
-  ratingStore.removeRating(props.talk.id)
-  socket.emit('talkRating', props.talk.id, undefined)
+  socket.emit('talkRating', {talkId: props.talk.id}, result => {
+    if (result.success) {
+      ratingStore.removeRating(props.talk.id)
+    }
+    else if (result.error) {
+      errorMessagesStore.add(`Unable to remove talk rating: ${result.error}`)
+    }
+  })
 }
 
 function isValid() {
