@@ -88,7 +88,7 @@ function sendMessage() {
     }
   })
   newMessageText.value = ''
-  bottomPlaceholder.value?.scrollIntoView()
+  scrollToEndOfList()
   const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|null
   if (textarea) {
     textarea.focus()
@@ -124,9 +124,17 @@ function deleteMessage() {
   }
 }
 
+function scrollToEndOfList() {
+  window.setTimeout(() => bottomPlaceholder.value?.scrollIntoView(), 200)
+}
+
 onMounted(() => {
-  socket.on('messages', messages => {
-    messages.forEach(message => addMessage(message))
+  socket.on('messages', incomingMessages => {
+    const scrollToEnd = (messages.value.length == 0)
+    incomingMessages.forEach(message => addMessage(message))
+    if (scrollToEnd) {
+      scrollToEndOfList()
+    }
   })
   socket.on('messageUpdate', updatedMessage => {
     const message = messages.value.find(item => item.id == updatedMessage.id)
