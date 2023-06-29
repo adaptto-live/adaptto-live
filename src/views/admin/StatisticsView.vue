@@ -48,7 +48,7 @@ const qAEntries = ref(undefined as number|undefined)
 onMounted(() => {
   socket.emit('adminGetStatistics')
 })
-socket.on('adminStatistics', (numLoginCodes, numUsers, numTalkRatings, numMessages, numQAEntries) => {
+socket.on('adminStatistics', ({numLoginCodes, numUsers, numTalkRatings, numMessages, numQAEntries}) => {
   loginCodes.value = numLoginCodes
   users.value = numUsers
   talkRatings.value = numTalkRatings

@@ -8,12 +8,12 @@
     <p v-if="loginError" class="alert alert-danger mt-3">{{loginError}}</p>
     <div class="mb-3 mt-3">
       <label for="code" class="form-label">Login Code *</label>
-      <input type="text" class="form-control" id="code" aria-describedby="codeHelp" v-model="code">
+      <input type="text" class="form-control" id="code" aria-describedby="codeHelp" v-model="code" maxlength="10">
       <div id="codeHelp" class="form-text">You will get a unique login code at the reception.</div>
     </div>
     <div class="mb-3 mt-3">
       <label for="username" class="form-label">Username *</label>
-      <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" v-model="username">
+      <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" v-model="username" maxlength="30">
       <div id="usernameHelp" class="form-text">Please provide a user name or nick name to be displayed in the chat rooms.</div>
     </div>
     <button type="submit" class="btn btn-primary" :disabled="!isValid()" @click.prevent="login">Login</button>

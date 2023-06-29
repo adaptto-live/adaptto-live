@@ -37,6 +37,7 @@ import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import socket from '@/util/socket'
+import { useErrorMessagesStore } from '@/stores/errorMessages'
 
 const router = useRouter()
 const talkManager = new TalkManager()
@@ -44,6 +45,7 @@ const currentTalkStore = useCurrentTalkStore()
 const currentTalkId = computed(() => currentTalkStore.talkId)
 const currentTalk = computed(() => talkManager.getTalk(currentTalkId.value))
 const admin = useAuthenticationStore().isAdmin
+const errorMessagesStore = useErrorMessagesStore()
 
 let currentDay = ref(currentTalk.value?.day ?? 1)
 const talks = computed(() => {
@@ -63,7 +65,11 @@ function navigateTo(talk : Talk) : void {
 
 function setCurrentTalk(talk : Talk) : void {
   currentTalkStore.set(talk.id)
-  socket.emit('currentTalk', talk.id)
+  socket.emit('currentTalk', talk.id, result => {
+    if (result.error) {
+      errorMessagesStore.add(`Unable to set current talk: ${result.error}`)
+    }
+  })
 }
 </script>
 

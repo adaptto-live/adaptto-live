@@ -27,8 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import type LoginCode from '@/services/LoginCode';
 import socket from '@/util/socket'
+import type { LoginCode } from '@/util/socket.types';
 import { onMounted, ref } from 'vue'
 
 const allCodes = ref([] as LoginCode[])

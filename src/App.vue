@@ -7,6 +7,10 @@
       <div class="alert alert-danger mt-3" role="alert" v-if="talkStore.loadingError">
         {{talkStore.loadingError}}
       </div>
+      <div class="alert alert-danger alert-dismissible mt-3" role="alert" v-for="(error,index) in errorMessagesStore.errorMessages" :key="index">
+        {{error}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="errorMessagesStore.remove(index)"></button>
+      </div>
       <RouterView :key="$route.fullPath"/>
 
       <div class="modal" tabindex="-1" ref="currentTalkChangeModal">
@@ -43,11 +47,13 @@ import { useCurrentTalkStore } from './stores/currentTalk'
 import { useTalksStore, type Talk } from './stores/talks'
 import { Modal } from 'bootstrap'
 import TalkManager from './services/TalkManager'
+import { useErrorMessagesStore } from './stores/errorMessages'
 
 const authenticationStore = useAuthenticationStore()
 const talkStore = useTalksStore()
 const currentTalkStore = useCurrentTalkStore()
 const ratingStore = useRatingStore()
+const errorMessagesStore = useErrorMessagesStore()
 const route = useRoute()
 const router = useRouter()
 const talkManager = new TalkManager()
@@ -74,13 +80,15 @@ onBeforeMount(() => {
       }
     }
   })
-  socket.on('talkRating', (talkId: string, rating?: number, comment?: string) => {
-    if (rating) {
-      ratingStore.addRating(talkId, rating, comment)
-    }
-    else {
-      ratingStore.removeRating(talkId)
-    }
+  socket.on('talkRatings', (talkRatings) => {
+    talkRatings.forEach((({talkId, rating, comment}) => {
+      if (rating) {
+        ratingStore.addRating(talkId, rating, comment)
+      }
+      else {
+        ratingStore.removeRating(talkId)
+      }
+    }))
   })
 
   if (authenticationStore.isAuthenticated) {
