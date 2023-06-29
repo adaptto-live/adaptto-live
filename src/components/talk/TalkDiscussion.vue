@@ -34,14 +34,14 @@
     <div class="tab-discussion">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" href="#">Discussion</a>
+          <a class="nav-link active">Discussion</a>
         </li>
       </ul>
     </div>
     <div class="tab-qa">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" href="#">Q&amp;A</a>
+          <a class="nav-link active">Q&amp;A</a>
         </li>
       </ul>
     </div>
