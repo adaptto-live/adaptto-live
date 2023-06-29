@@ -9,7 +9,6 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      registerType: 'autoUpdate',
       includeAssets: [
         'adaptto-favicon.svg',
         'favicon.ico',
