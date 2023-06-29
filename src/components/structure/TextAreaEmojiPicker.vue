@@ -48,7 +48,6 @@ function insertAtCursorPosition(text : string) : void {
   if (value.value) {
     const selectionStart = field.selectionStart
     const selectionEnd = field.selectionEnd
-    console.log(`selectionStart: ${selectionStart}, selectionEnd=${selectionEnd}`)
     if (selectionStart >= 0) {
       value.value = value.value.substring(0, selectionStart)
           + text
