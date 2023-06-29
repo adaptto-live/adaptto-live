@@ -1,7 +1,7 @@
 <template>
   <div v-if="talk" class="talk-view">
     <div class="title">
-      <h3>{{talk.title}}</h3>
+      <h3><a :href="talk.url" target="_blank">{{talk.title}}</a></h3>
       <p>{{talk.speakers}}</p>
     </div>
     <div class="rating">
@@ -37,6 +37,9 @@ const talk = talkManager.getTalk(talkId)
   padding-bottom: 10px;
   .title {
     grid-area: title;
+    a {
+      text-decoration: none;
+    }
   }
   .rating {
     grid-area: rating;
