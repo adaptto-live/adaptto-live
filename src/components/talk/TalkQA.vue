@@ -301,4 +301,8 @@ onUnmounted(() => {
     }
   }
 }
+
+.modal {
+  --bs-modal-zindex: 5000;
+}
 </style>
