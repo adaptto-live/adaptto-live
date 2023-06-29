@@ -48,7 +48,7 @@
           </div>
           <div class="mt-3">
             <label for="userName" class="form-label">Username</label>
-            <input class="form-control" id="userName" v-model="selectedUser.username">
+            <input class="form-control" id="userName" v-model="selectedUser.username" maxlength="30">
           </div>
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="userAdmin" v-model="selectedUser.admin">

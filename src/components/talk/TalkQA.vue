@@ -162,35 +162,44 @@ function sendMessage() {
   }
   const message = selectedMessage.value
   if (message) {
-    socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: message.text, anonymous: messageAnonymous.value}, result => {
-      if (result.success) {
-        message.text = messageText.value
-        if (message.userid == authenticationStore.userid) {
-          message.username = messageUsername
-        }
-      }
-      else if (result.error) {
-        errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
-      }
-    })
+    sendUpdatedMessage(message, messageUsername)
   }
   else {
-    const id = uuidv4()
-    const text = messageText.value
-    const replyTo = replyToMessage.value?.id
-    socket.emit('qaEntry', { id, talkId: props.talk.id, text, anonymous: messageAnonymous.value, replyTo}, result => {
-      if (result.success) {
-        addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, replyTo})
-      }
-      else if (result.error) {
-        errorMessagesStore.add(`Unable to create QA entry: ${result.error}`)
-      }
-    })
-    if (!replyToMessage.value) {
-      bottomPlaceholder.value?.scrollIntoView()
-    }
+    sendNewMessage(messageUsername)
   }
 }
+
+function sendNewMessage(messageUsername?: string) : void {
+  const id = uuidv4()
+  const text = messageText.value
+  const replyTo = replyToMessage.value?.id
+  socket.emit('qaEntry', { id, talkId: props.talk.id, text, anonymous: messageAnonymous.value, replyTo}, result => {
+    if (result.success) {
+      addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, replyTo})
+    }
+    else if (result.error) {
+      errorMessagesStore.add(`Unable to create QA entry: ${result.error}`)
+    }
+  })
+  if (!replyToMessage.value) {
+    bottomPlaceholder.value?.scrollIntoView()
+  }
+}
+
+function sendUpdatedMessage(message : Message, messageUsername?: string) : void {
+  socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: message.text, anonymous: messageAnonymous.value}, result => {
+  if (result.success) {
+    message.text = messageText.value
+    if (message.userid == authenticationStore.userid) {
+      message.username = messageUsername
+    }
+  }
+  else if (result.error) {
+    errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
+  }
+})
+}
+
 
 function deleteMessage() {
   const message = selectedMessage.value
