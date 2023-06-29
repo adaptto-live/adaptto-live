@@ -81,6 +81,7 @@ import type Message from '@/services/Message'
 import MessageDisplay from './MessageDisplay.vue'
 import TextAreaEmojiPicker from '../structure/TextAreaEmojiPicker.vue'
 import { Modal } from 'bootstrap'
+import { useErrorMessagesStore } from '@/stores/errorMessages'
 
 const props = defineProps<{
   talk: Talk,
@@ -88,6 +89,7 @@ const props = defineProps<{
 }>()
 
 const authenticationStore = useAuthenticationStore()
+const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
 
 const messageText = ref('')
@@ -160,51 +162,78 @@ function sendMessage() {
   }
   const message = selectedMessage.value
   if (message) {
+    sendUpdatedMessage(message, messageUsername)
+  }
+  else {
+    sendNewMessage(messageUsername)
+  }
+}
+
+function sendNewMessage(messageUsername?: string) : void {
+  const id = uuidv4()
+  const text = messageText.value
+  const replyTo = replyToMessage.value?.id
+  socket.emit('qaEntry', { id, talkId: props.talk.id, text, anonymous: messageAnonymous.value, replyTo}, result => {
+    if (result.success) {
+      addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, replyTo})
+    }
+    else if (result.error) {
+      errorMessagesStore.add(`Unable to create QA entry: ${result.error}`)
+    }
+  })
+  if (!replyToMessage.value) {
+    bottomPlaceholder.value?.scrollIntoView()
+  }
+}
+
+function sendUpdatedMessage(message : Message, messageUsername?: string) : void {
+  socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: message.text, anonymous: messageAnonymous.value}, result => {
+  if (result.success) {
     message.text = messageText.value
     if (message.userid == authenticationStore.userid) {
       message.username = messageUsername
     }
-    socket.emit('qaEntryUpdate', message.id, message.text, messageAnonymous.value)
   }
-  else {
-    const id = uuidv4()
-    const text = messageText.value
-    const replyTo = replyToMessage.value?.id
-    addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, replyTo})
-    socket.emit('qaEntry', id, props.talk.id, text, messageAnonymous.value, replyTo)
-    if (!replyToMessage.value) {
-      bottomPlaceholder.value?.scrollIntoView()
-    }
+  else if (result.error) {
+    errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
   }
+})
 }
+
 
 function deleteMessage() {
   const message = selectedMessage.value
   if (message) {
-    messages.value = messages.value.filter(item => item.id != message.id)
-    socket.emit('qaEntryDelete', message.id)
+    socket.emit('qaEntryDelete', message.id, result => {
+      if (result.success) {
+        messages.value = messages.value.filter(item => item.id != message.id)
+      }
+      else if (result.error) {
+        errorMessagesStore.add(`Unable to delete QA entry: ${result.error}`)
+      }
+    })
   }
 }
 
 onMounted(() => {
-  socket.on('qaEntry', (id: string, date: Date, userid: string, username: string|undefined, text: string, replyTo?: string) => {
-    addMessage({id, date, userid, username, text, replyTo})
+  socket.on('qaEntries', messages => {
+    messages.forEach(message => addMessage(message))
   })
-  socket.on('qaEntryUpdate', (id: string, date: Date, userid: string, username: string|undefined, text: string) => {
-    const message = messages.value.find(item => item.id == id)
+  socket.on('qaEntryUpdate', updatesMessage => {
+    const message = messages.value.find(item => item.id == updatesMessage.id)
     if (message) {
-      message.date = date
-      message.userid = userid
-      message.username = username
-      message.text = text
+      message.date = updatesMessage.date
+      message.userid = updatesMessage.userid
+      message.username = updatesMessage.username
+      message.text = updatesMessage.text
     }
   })
-  socket.on('qaEntryDelete', (id: string) => {
+  socket.on('qaEntryDelete', id => {
     messages.value = messages.value.filter(item => item.id != id)
   })
 })
 onUnmounted(() => {
-  socket.off('qaEntry')
+  socket.off('qaEntries')
 })
 </script>
 

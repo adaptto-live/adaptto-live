@@ -40,12 +40,14 @@ import { v4 as uuidv4 } from 'uuid'
 import type Message from '@/services/Message'
 import MessageDisplay from './MessageDisplay.vue'
 import { Modal } from 'bootstrap'
+import { useErrorMessagesStore } from '@/stores/errorMessages'
 
 const props = defineProps<{
   talk: Talk
 }>()
 
 const authenticationStore = useAuthenticationStore()
+const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
 
 const newMessageText = ref('')
@@ -76,8 +78,14 @@ function sendMessage() {
   }
   const id = uuidv4()
   const text = newMessageText.value
-  addMessage({id, date: new Date(), userid: authenticationStore.userid, username: authenticationStore.username, text})
-  socket.emit('message', id, props.talk.id, text)
+  socket.emit('message', {id, talkId: props.talk.id, text}, result => {
+    if (result.success) {
+      addMessage({id, date: new Date(), userid: authenticationStore.userid, username: authenticationStore.username, text})
+    }
+    else if (result.error) {
+      errorMessagesStore.add(`Unable to create message: ${result.error}`)
+    }
+  })
   newMessageText.value = ''
   bottomPlaceholder.value?.scrollIntoView()
   const textarea = document.querySelector('.chat-container .new-message textarea') as HTMLElement|null
@@ -89,8 +97,14 @@ function sendMessage() {
 function updateMessage() {
   const message = selectedMessage.value
   if (message) {
-    message.text = messageText.value
-    socket.emit('messageUpdate', message.id, message.text)
+    socket.emit('messageUpdate', {id: message.id, talkId: props.talk.id, text: message.text}, result => {
+      if (result.success) {
+        message.text = messageText.value
+      }
+      else if (result.error) {
+        errorMessagesStore.add(`Unable to update message: ${result.error}`)
+      }
+    })
   }
 }
 
@@ -98,29 +112,36 @@ function deleteMessage() {
   const message = selectedMessage.value
   if (message) {
     messages.value = messages.value.filter(item => item.id != message.id)
-    socket.emit('messageDelete', message.id)
+    socket.emit('messageDelete', message.id, result => {
+      if (result.success) {
+        messages.value = messages.value.filter(item => item.id != message.id)
+      }
+      else if (result.error) {
+        errorMessagesStore.add(`Unable to delete message: ${result.error}`)
+      }
+    })
   }
 }
 
 onMounted(() => {
-  socket.on('message', (id: string, date: Date, userid: string, username: string, text: string) => {
-    addMessage({id, date, userid, username, text})
+  socket.on('messages', messages => {
+    messages.forEach(message => addMessage(message))
   })
-  socket.on('messageUpdate', (id: string, date: Date, userid: string, username: string, text: string) => {
-    const message = messages.value.find(item => item.id == id)
+  socket.on('messageUpdate', updatedMessage => {
+    const message = messages.value.find(item => item.id == updatedMessage.id)
     if (message) {
-      message.date = date
-      message.userid = userid
-      message.username = username
-      message.text = text
+      message.date = updatedMessage.date
+      message.userid = updatedMessage.userid
+      message.username = updatedMessage.username
+      message.text = updatedMessage.text
     }
   })
-  socket.on('messageDelete', (id: string) => {
+  socket.on('messageDelete', id => {
     messages.value = messages.value.filter(item => item.id != id)
   })
 })
 onUnmounted(() => {
-  socket.off('message')
+  socket.off('messages')
 })
 </script>
 
