@@ -183,7 +183,7 @@ function sendNewMessage(messageUsername?: string) : void {
     }
   })
   if (!replyToMessage.value) {
-    bottomPlaceholder.value?.scrollIntoView()
+    scrollToEndOfList()
   }
 }
 
@@ -201,7 +201,6 @@ function sendUpdatedMessage(message : Message, messageUsername?: string) : void 
 })
 }
 
-
 function deleteMessage() {
   const message = selectedMessage.value
   if (message) {
@@ -216,9 +215,17 @@ function deleteMessage() {
   }
 }
 
+function scrollToEndOfList() {
+  window.setTimeout(() => bottomPlaceholder.value?.scrollIntoView(), 200)
+}
+
 onMounted(() => {
-  socket.on('qaEntries', messages => {
-    messages.forEach(message => addMessage(message))
+  socket.on('qaEntries', incomingMessages => {
+    const scrollToEnd = (messages.value.length == 0)
+    incomingMessages.forEach(message => addMessage(message))
+    if (scrollToEnd) {
+      scrollToEndOfList()
+    }
   })
   socket.on('qaEntryUpdate', updatesMessage => {
     const message = messages.value.find(item => item.id == updatesMessage.id)

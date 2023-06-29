@@ -9,7 +9,7 @@ Technology Stack:
 * Uses Websockets (via socket.io) to communicate with server application
 
 Dependencies:
-* Requires [adaptTo() Live server](https://github.com/adaptto-live/adaptto-live-server) running on HTTP/HTTPS
+* Requires [adaptTo() Live Server](https://github.com/adaptto-live/adaptto-live-server) running on HTTP/HTTPS
 
 
 ## Recommended IDE Setup
