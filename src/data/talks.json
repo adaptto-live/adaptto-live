@@ -1,164 +1,191 @@
 [
   {
-    "id": "whats-up-with-core-components",
+    "id": "2023-whats-up-with-core-components",
     "day": 1,
     "title": "What’s up with Core Components?",
-    "speakers": "Vlad Bailescu"
+    "speakers": "Vlad Bailescu",
+    "url": "https://adapt.to/2023/whats-up-with-core-components"
   },
   {
-    "id": "franklin-content-import",
+    "id": "2023-franklin-content-import",
     "day": 1,
     "title": "Franklin Content Import - migrate almost any website",
-    "speakers": "Markus Haack"
+    "speakers": "Markus Haack",
+    "url": "https://adapt.to/2023/franklin-content-import"
   },
   {
-    "id": "building-adaptto-website-with-aem-franklin",
+    "id": "2023-building-adaptto-website-with-aem-franklin",
     "day": 1,
     "title": "Building adaptTo() Website with AEM Franklin",
-    "speakers": "Stefan Seifert"
+    "speakers": "Stefan Seifert",
+    "url": "https://adapt.to/2023/building-adaptto-website-with-aem-franklin"
   },
   {
-    "id": "build-super-fast-storefront-experiences",
+    "id": "2023-build-super-fast-storefront-experiences",
     "day": 1,
     "title": "Build Super Fast Storefront Experiences with AEM Next Gen Composability and Adobe Commerce",
-    "speakers": "Mark J. Becker"
+    "speakers": "Mark J. Becker",
+    "url": "https://adapt.to/2023/build-super-fast-storefront-experiences"
   },
   {
-    "id": "aem-headless-panel-discussion",
+    "id": "2023-aem-headless-panel-discussion",
     "day": 1,
     "title": "AEM Headless Panel Discussion",
-    "speakers": "TBA"
+    "speakers": "TBA",
+    "url": "https://adapt.to/2023/aem-headless-panel-discussion"
   },
   {
-    "id": "rapid-development-environments-aem-cloud-service",
+    "id": "2023-rapid-development-environments-aem-cloud-service",
     "day": 1,
     "title": "Rapid Development Environments for AEM Cloud Service",
-    "speakers": "David Boschaert, Karl Pauls"
+    "speakers": "David Boschaert, Karl Pauls",
+    "url": "https://adapt.to/2023/rapid-development-environments-aem-cloud-service"
   },
   {
-    "id": "automated-ci-with-aem-cloud-service",
+    "id": "2023-automated-ci-with-aem-cloud-service",
     "day": 1,
     "title": "Automated CI with AEM Cloud service",
-    "speakers": "Andres Bott, Jakub Wądołowski"
+    "speakers": "Andres Bott, Jakub Wądołowski",
+    "url": "https://adapt.to/2023/automated-ci-with-aem-cloud-service"
   },
   {
-    "id": "dispatcher-caching-best-pratices",
+    "id": "2023-dispatcher-caching-best-pratices",
     "day": 1,
     "title": "Dispatcher Caching: Best Practices for TTL-Based Optimization",
-    "speakers": "Ben Peter, Robert Botha, Anomitra Mondal"
+    "speakers": "Ben Peter, Robert Botha, Anomitra Mondal",
+    "url": "https://adapt.to/2023/dispatcher-caching-best-pratices"
   },
   {
-    "id": "integration-grow-repeat-website-dxp",
+    "id": "2023-integration-grow-repeat-website-dxp",
     "day": 1,
     "title": "Integrate, grow, repeat. How WebSight real-time DXP provides a way to break out of the content-centric model",
-    "speakers": "Michał Cukierman, Maciej Laskowski"
+    "speakers": "Michał Cukierman, Maciej Laskowski",
+    "url": "https://adapt.to/2023/integration-grow-repeat-website-dxp"
   },
   {
-    "id": "edit-anything-with-the-universal-editor",
+    "id": "2023-edit-anything-with-the-universal-editor",
     "day": 2,
     "title": "Edit anything with the Universal Editor",
-    "speakers": "Sharanya Vinod, Artur Kudlacz"
+    "speakers": "Sharanya Vinod, Artur Kudlacz",
+    "url": "https://adapt.to/2023/edit-anything-with-the-universal-editor"
   },
   {
-    "id": "unleashing-web-development-ppowerwoer-headless-hybrid",
+    "id": "2023-unleashing-web-development-ppowerwoer-headless-hybrid",
     "day": 2,
     "title": "Unleashing Web Development Power: Using AEM Headless with Hybrid Rendering Frontend Frameworks",
-    "speakers": "Duy Nguyen, Lucian Ghita"
+    "speakers": "Duy Nguyen, Lucian Ghita",
+    "url": "https://adapt.to/2023/unleashing-web-development-ppowerwoer-headless-hybrid"
   },
   {
-    "id": "aem-headless-with-wcm-io-site-api",
+    "id": "2023-aem-headless-with-wcm-io-site-api",
     "day": 2,
     "title": "AEM Headless with wcm.io Site API",
-    "speakers": "Stefan Seifert"
+    "speakers": "Stefan Seifert",
+    "url": "https://adapt.to/2023/aem-headless-with-wcm-io-site-api"
   },
   {
-    "id": "archieving-agility-and-flexibility",
+    "id": "2023-archieving-agility-and-flexibility",
     "day": 2,
     "title": "Achieving Agility and Flexibility with AEM Hybrid Implementation",
-    "speakers": "Shruti Damle, Nikola Vasilev, Juan Sanchez"
+    "speakers": "Shruti Damle, Nikola Vasilev, Juan Sanchez",
+    "url": "https://adapt.to/2023/archieving-agility-and-flexibility"
   },
   {
-    "id": "the-curios-case-of-misrendered-json",
+    "id": "2023-the-curios-case-of-misrendered-json",
     "day": 2,
     "title": "The curious case of misrendered JSON",
-    "speakers": "Jakub Wądołowski"
+    "speakers": "Jakub Wądołowski",
+    "url": "https://adapt.to/2023/the-curios-case-of-misrendered-json"
   },
   {
-    "id": "aem-headless-frontend-develop-made-easy",
+    "id": "2023-aem-headless-frontend-develop-made-easy",
     "day": 2,
     "title": "AEM Headless Frontend Development Made Easy: A Glimpse of Developer Tools",
-    "speakers": "Duy Nguyen, Dragan Filipovic"
+    "speakers": "Duy Nguyen, Dragan Filipovic",
+    "url": "https://adapt.to/2023/aem-headless-frontend-develop-made-easy"
   },
   {
-    "id": "optimising-graphqul-delivering-in-aem",
+    "id": "2023-optimising-graphqul-delivering-in-aem",
     "day": 2,
     "title": "Optimising GraphQL delivery in AEM",
-    "speakers": "Evgeny Tugarev, Georg Henzler"
+    "speakers": "Evgeny Tugarev, Georg Henzler",
+    "url": "https://adapt.to/2023/optimising-graphqul-delivering-in-aem"
   },
   {
-    "id": "evolution-of-the-aemaacs-build-pipeline",
+    "id": "2023-evolution-of-the-aemaacs-build-pipeline",
     "day": 2,
     "title": "Evolution of the AEMaaCS Build Pipeline",
-    "speakers": "Dominik Süß"
+    "speakers": "Dominik Süß",
+    "url": "https://adapt.to/2023/evolution-of-the-aemaacs-build-pipeline"
   },
   {
-    "id": "extending-aem-authoring-experience-though-js-extension",
+    "id": "2023-extending-aem-authoring-experience-though-js-extension",
     "day": 2,
     "title": "Extending AEM authoring experience through Javascript Extension",
-    "speakers": "Félix Delval, Corey Dulimba"
+    "speakers": "Félix Delval, Corey Dulimba",
+    "url": "https://adapt.to/2023/extending-aem-authoring-experience-though-js-extension"
   },
   {
-    "id": "seamless-ai-powered-search-solution",
+    "id": "2023-seamless-ai-powered-search-solution",
     "day": 3,
     "title": "Seamless AI-Powered Search Solution: Merging Adobe’s Next-Gen Composability and Chatbottery for an Enhanced User Experience",
-    "speakers": "Tino Truppel"
+    "speakers": "Tino Truppel",
+    "url": "https://adapt.to/2023/seamless-ai-powered-search-solution"
   },
   {
-    "id": "markting-technology-without-sacrificing-performance-a-web-developers-guide-to-ensuring-experience-success",
+    "id": "2023-markting-technology-without-sacrificing-performance-a-web-developers-guide-to-ensuring-experience-success",
     "day": 3,
     "title": "Marketing technology without sacrificing performance: A web developer's guide to ensuring experience success",
-    "speakers": "Ekrem Dogan, Dominique Jaeggi"
+    "speakers": "Ekrem Dogan, Dominique Jaeggi",
+    "url": "https://adapt.to/2023/markting-technology-without-sacrificing-performance-a-web-developers-guide-to-ensuring-experience-success"
   },
   {
-    "id": "where-to-render",
+    "id": "2023-where-to-render",
     "day": 3,
     "title": "Where to render? That is the question!",
-    "speakers": "Bertrand Delacretaz"
+    "speakers": "Bertrand Delacretaz",
+    "url": "https://adapt.to/2023/where-to-render"
   },
   {
-    "id": "hot-to-improve-the-backend-performance",
+    "id": "2023-hot-to-improve-the-backend-performance",
     "day": 3,
     "title": "How to improve the backend performance of your AEM application",
-    "speakers": "Jörg Hoh"
+    "speakers": "Jörg Hoh",
+    "url": "https://adapt.to/2023/hot-to-improve-the-backend-performance"
   },
   {
-    "id": "api-first-and-rest",
+    "id": "2023-api-first-and-rest",
     "day": 3,
     "title": "API-first and REST, can they complement each other?",
-    "speakers": "Radu Cotescu"
+    "speakers": "Radu Cotescu",
+    "url": "https://adapt.to/2023/api-first-and-rest"
   },
   {
-    "id": "bullseye-adobe-target-extras",
+    "id": "2023-bullseye-adobe-target-extras",
     "day": 3,
     "title": "Bullseye - Adobe Target Extras",
-    "speakers": "Bryan Williams"
+    "speakers": "Bryan Williams",
+    "url": "https://adapt.to/2023/bullseye-adobe-target-extras"
   },
   {
-    "id": "get-your-aem-together-aem-compose-devex-tool",
+    "id": "2023-get-your-aem-together-aem-compose-devex-tool",
     "day": 3,
     "title": "Get Your AEM Together: AEM Compose, the Ultimate DevEx Tool",
-    "speakers": "Krystian Panek, Tomasz Sobczyk"
+    "speakers": "Krystian Panek, Tomasz Sobczyk",
+    "url": "https://adapt.to/2023/get-your-aem-together-aem-compose-devex-tool"
   },
   {
-    "id": "sling-application-devops-perspective",
+    "id": "2023-sling-application-devops-perspective",
     "day": 3,
     "title": "Sling Applications - a DevOps perspective",
-    "speakers": "Robert Munteanu"
+    "speakers": "Robert Munteanu",
+    "url": "https://adapt.to/2023/sling-application-devops-perspective"
   },
   {
-    "id": "dont-reduce-dispatcher-testing",
+    "id": "2023-dont-reduce-dispatcher-testing",
     "day": 3,
     "title": "Don’t reduce dispatcher testing to an afterthought",
-    "speakers": "Jakub Wądołowski"
+    "speakers": "Jakub Wądołowski",
+    "url": "https://adapt.to/2023/dont-reduce-dispatcher-testing"
   }
 ]

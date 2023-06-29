@@ -42,9 +42,13 @@ function insertEmoji(emoji : string) : void {
 
 function insertAtCursorPosition(text : string) : void {
   const field = textarea.value
-  if (field && value.value) {
+  if (!field) {
+    return
+  }
+  if (value.value) {
     const selectionStart = field.selectionStart
     const selectionEnd = field.selectionEnd
+    console.log(`selectionStart: ${selectionStart}, selectionEnd=${selectionEnd}`)
     if (selectionStart >= 0) {
       value.value = value.value.substring(0, selectionStart)
           + text
@@ -58,6 +62,10 @@ function insertAtCursorPosition(text : string) : void {
       value.value += text
       field.focus()
     }
+  }
+  else {
+    value.value = text
+    field.focus()
   }
 }
 

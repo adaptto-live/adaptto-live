@@ -37,9 +37,10 @@
         <div class="modal-body">
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
           <div class="mt-3 form-check">
-            <input type="checkbox" class="form-check-input" id="messageAnonymous"  v-model="messageAnonymous">
+            <input type="checkbox" class="form-check-input" id="messageAnonymous" v-model="messageAnonymous">
             <label class="form-check-label" for="messageAnonymous">Anonymous (without user name)</label>
           </div>
+          <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
         <div class="modal-footer" :class="{'justify-content-between':selectedMessage}">
           <button v-if="selectedMessage" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteMessage">Delete</button>
@@ -300,5 +301,9 @@ onUnmounted(() => {
       margin-top: 0;
     }
   }
+}
+
+.modal {
+  --bs-modal-zindex: 5000;
 }
 </style>

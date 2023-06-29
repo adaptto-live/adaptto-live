@@ -6,6 +6,7 @@ export interface Talk {
   day: number
   title: string
   speakers: string
+  url: string
 }
 
 export const useTalksStore = defineStore('talks', {
@@ -43,6 +44,7 @@ async function getLocalTalks() : Promise<Talk[]> {
 // load talk data from adapt.to website
 async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : Promise<Talk[]> {
   const year = extractYear(scheduleDataUrl)
+  const urlPrefix = getUrlPrefix(scheduleDataUrl)
   const schedule = await loadJson(scheduleDataUrl)
   const queryIndex = await loadJson(queryIndexUrl)
 
@@ -62,22 +64,31 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         title = titleMatcher[1]
       }
       const speakers = queryIndexEntry.speakers
-      result.push({id, day, title, speakers})
+      const url = `${urlPrefix}${path}`
+      result.push({id, day, title, speakers, url})
     }
   })
 
   return result
 }
 
-const scheduleUrlPattern = /^.*\/(\d{4})\/schedule-data\.json$/
+const scheduleUrlPattern = /^(.*)\/(\d{4})\/schedule-data\.json$/
 const titleWithoutSuffixPattern = /^(.+)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
 
 function extractYear(scheduleDataUrl : string) : string {
   const matcher = scheduleUrlPattern.exec(scheduleDataUrl)
   if (matcher) {
-    return matcher[1]
+    return matcher[2]
   }
   throw new Error(`Unable to extract year from url ${scheduleDataUrl}`)
+}
+
+function getUrlPrefix(scheduleDataUrl : string) {
+  const matcher = scheduleUrlPattern.exec(scheduleDataUrl)
+  if (matcher) {
+    return matcher[1]
+  }
+  throw new Error(`Unable to extract URL prefix from url ${scheduleDataUrl}`)
 }
 
 async function loadJson(url: string) : Promise<any> {

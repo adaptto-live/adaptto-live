@@ -20,6 +20,7 @@
         </div>
         <div class="modal-body">
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+          <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteMessage">Delete</button>
