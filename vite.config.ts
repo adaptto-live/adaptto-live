@@ -18,7 +18,7 @@ export default defineConfig({
       ],
       manifest: {
         name: 'adaptTo() Live',
-        short_name: 'adaptToLive',
+        short_name: 'adaptTo() Live',
         description: 'adaptTo() Live Community Application',
         theme_color: '#212529',
         icons: [
