@@ -1,10 +1,14 @@
 <template>
   <div v-if="talk" class="talk-view">
     <div class="title">
-      <h3><a :href="talk.url" target="_blank">{{talk.title}}</a></h3>
-      <p>{{talk.speakers}}</p>
+      <h3>
+        <a v-if="talk.url" :href="talk.url" target="_blank">{{talk.title}}</a>
+        <span v-else>{{talk.title}}</span>
+      </h3>
+      <p v-if="talk.speakers">{{talk.speakers}}</p>
+      <p v-if="talk.lobby">Welcome to the Lobby. This room is active when there is currently no talk.</p>
     </div>
-    <div class="rating">
+    <div class="rating" v-if="!talk.lobby">
       <TalkRating v-if="talk" :talk="talk"/>
     </div>
     <TalkDiscussion :talk="talk" class="content"/>
