@@ -80,7 +80,30 @@ const talkManager = new TalkManager()
 const currentTalkId = ref(undefined as string|undefined)
 const currentTalk = ref(undefined as Talk|undefined)
 
+// handle PWA updates with prompt if a new version is detected, check every 5min for a new version
+const checkForNewVersionsIntervalMilliseconds = 5 * 60 * 1000
 const updateServiceWorker = registerSW({
+  // check for new app version, see https://vite-pwa-org.netlify.app/guide/periodic-sw-updates.html
+  onRegisteredSW(swUrl:string, r:any) {
+    r && setInterval(async () => {
+      if (!(!r.installing && navigator)) {
+        return
+      }
+      if (('connection' in navigator) && !navigator.onLine) {
+        return
+      }
+      const resp = await fetch(swUrl, {
+        cache: 'no-store',
+        headers: {
+          'cache': 'no-store',
+          'cache-control': 'no-cache',
+        },
+      })
+      if (resp?.status === 200) {
+        await r.update()
+      }
+    }, checkForNewVersionsIntervalMilliseconds)
+  },
   onNeedRefresh() {
     showModalIfExist('serviceWorkerOnNeedRefreshModal')
   }
