@@ -50,23 +50,6 @@
         </div>
       </div>
 
-      <div class="modal" tabindex="-1" id="serviceWorkerOnOfflineReadyModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5">Application ready</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p>Application is ready to work.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </main>
   </div>
 </template>
@@ -100,9 +83,6 @@ const currentTalk = ref(undefined as Talk|undefined)
 const updateServiceWorker = registerSW({
   onNeedRefresh() {
     showModalIfExist('serviceWorkerOnNeedRefreshModal')
-  },
-  onOfflineReady() {
-    showModalIfExist('serviceWorkerOnOfflineReadyModal')
   }
 })
 
