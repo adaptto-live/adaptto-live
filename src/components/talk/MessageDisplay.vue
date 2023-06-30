@@ -1,5 +1,5 @@
 <template>
-  <div class="message" :class="{editable, currentUser}" @click="clickMessage">
+  <div class="message" :class="{editable, currentUser, highlight}" @click="clickMessage">
     <div class="meta">
       <div v-if="message.username" class="author">{{message.username}}</div>
       <div v-if="!readOnly" class="date text-muted">
@@ -28,6 +28,7 @@ const currentUser = computed(() =>
 const editable = computed(() =>
     ((props.message.userid == authenticationStore.userid) || authenticationStore.admin)
     && !props.readOnly)
+const highlight = computed(() => props.message.highlight ?? false)
 
 function clickMessage() {
   if (editable.value) {
@@ -62,6 +63,9 @@ function clickMessage() {
     background-color: midnightblue !important;
     border-radius: 5px;
     cursor: pointer;
+  }
+  &.highlight {
+    background-color: purple !important;
   }
 }
 </style>

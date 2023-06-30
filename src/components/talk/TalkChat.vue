@@ -20,6 +20,10 @@
         </div>
         <div class="modal-body">
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+          <div v-if="authenticationStore.admin" class="mt-3 form-check">
+            <input type="checkbox" class="form-check-input" id="messageHighlight" v-model="highlightMessage">
+            <label class="form-check-label" for="messageHighlight">Highlight message (Admin)</label>
+          </div>
           <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
         <div class="modal-footer justify-content-between">
@@ -54,6 +58,7 @@ const messages = ref([] as Message[])
 const newMessageText = ref('')
 const hasMessage = computed(() => newMessageText.value.trim() != '')
 const messageText = ref('')
+const highlightMessage = ref(false as boolean|undefined)
 const selectedMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
 
@@ -66,6 +71,7 @@ function addMessage(message: Message) {
 function messageClicked(message: Message) {
   selectedMessage.value = message
   messageText.value = message.text
+  highlightMessage.value = message.highlight
   new Modal('#messageModal').show()
 }
 
@@ -98,9 +104,11 @@ function sendMessage() {
 function updateMessage() {
   const message = selectedMessage.value
   if (message) {
-    socket.emit('messageUpdate', {id: message.id, talkId: props.talk.id, text: message.text}, result => {
+    socket.emit('messageUpdate', {id: message.id, talkId: props.talk.id, text: message.text,
+        highlight: highlightMessage.value}, result => {
       if (result.success) {
         message.text = messageText.value
+        message.highlight = highlightMessage.value
       }
       else if (result.error) {
         errorMessagesStore.add(`Unable to update message: ${result.error}`)
@@ -143,6 +151,7 @@ onMounted(() => {
       message.userid = updatedMessage.userid
       message.username = updatedMessage.username
       message.text = updatedMessage.text
+      message.highlight = updatedMessage.highlight
     }
   })
   socket.on('messageDelete', id => {
