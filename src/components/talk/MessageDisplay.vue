@@ -65,7 +65,8 @@ function clickMessage() {
     cursor: pointer;
   }
   &.highlight {
-    background-color: purple !important;
+    border: 2px solid lightyellow;
+    border-radius: 5px;
   }
 }
 </style>

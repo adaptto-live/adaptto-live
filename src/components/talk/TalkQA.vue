@@ -205,8 +205,8 @@ function sendUpdatedMessage(message : Message, messageUsername?: string) : void 
     message.text = messageText.value
     if (message.userid == authenticationStore.userid) {
       message.username = messageUsername
-      message.highlight = highlightMessage.value
     }
+    message.highlight = highlightMessage.value
   }
   else if (result.error) {
     errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
