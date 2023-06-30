@@ -13,7 +13,7 @@
       </div>
       <RouterView :key="$route.fullPath"/>
 
-      <div class="modal" tabindex="-1" ref="currentTalkChangeModal">
+      <div class="modal" tabindex="-1" id="currentTalkChangeModal">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -26,6 +26,24 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="goToCurrentTalk">OK</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" tabindex="-1" id="serviceWorkerOnNeedRefreshModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5">Application Update</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>The application was updated, do you want to update?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateServiceWorker()">OK</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
           </div>
@@ -45,9 +63,11 @@ import socket from './util/socket'
 import { useRatingStore } from './stores/rating'
 import { useCurrentTalkStore } from './stores/currentTalk'
 import { useTalksStore, type Talk } from './stores/talks'
-import { Modal } from 'bootstrap'
 import TalkManager from './services/TalkManager'
 import { useErrorMessagesStore } from './stores/errorMessages'
+import { showModalIfExist } from './util/showModal'
+import { registerSW } from 'virtual:pwa-register'
+import { setIntervalAsync } from 'set-interval-async';
 
 const authenticationStore = useAuthenticationStore()
 const talkStore = useTalksStore()
@@ -58,9 +78,37 @@ const route = useRoute()
 const router = useRouter()
 const talkManager = new TalkManager()
 
-const currentTalkChangeModal = ref(undefined as HTMLElement|undefined)
 const currentTalkId = ref(undefined as string|undefined)
 const currentTalk = ref(undefined as Talk|undefined)
+
+// handle PWA updates with prompt if a new version is detected, check every 5min for a new version
+const checkForNewVersionsIntervalMilliseconds = 5 * 60 * 1000
+const updateServiceWorker = registerSW({
+  // check for new app version, see https://vite-pwa-org.netlify.app/guide/periodic-sw-updates.html
+  onRegisteredSW(swUrl:string, r:any) {
+    r && setIntervalAsync(async () => {
+      if (!(!r.installing && navigator)) {
+        return
+      }
+      if (('connection' in navigator) && !navigator.onLine) {
+        return
+      }
+      const resp = await fetch(swUrl, {
+        cache: 'no-store',
+        headers: {
+          'cache': 'no-store',
+          'cache-control': 'no-cache',
+        },
+      })
+      if (resp?.status === 200) {
+        await r.update()
+      }
+    }, checkForNewVersionsIntervalMilliseconds)
+  },
+  onNeedRefresh() {
+    showModalIfExist('serviceWorkerOnNeedRefreshModal')
+  }
+})
 
 function goToCurrentTalk() {
   if (currentTalkId.value) {
@@ -72,12 +120,10 @@ onBeforeMount(() => {
   socket.on('currentTalk', talkId => {
     const talkChanged = talkId != currentTalkStore.talkId && currentTalkStore.talkId != undefined
     currentTalkStore.set(talkId)
-    if (talkChanged && currentTalkChangeModal.value) {
+    if (talkChanged) {
       currentTalkId.value = talkId
       currentTalk.value = talkManager.getTalk(talkId)
-      if (!currentTalkChangeModal.value.classList.contains('show')) {
-        new Modal(currentTalkChangeModal.value).show()
-      }
+      showModalIfExist('currentTalkChangeModal')
     }
   })
   socket.on('talkRatings', (talkRatings) => {
