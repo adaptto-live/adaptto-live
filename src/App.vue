@@ -43,7 +43,7 @@
               <p>The application was updated, do you want to update?</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="$router.go(0)">OK</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateServiceWorkerApplication">OK</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
           </div>
@@ -105,6 +105,11 @@ const updateServiceWorker = registerSW({
     showModalIfExist('serviceWorkerOnOfflineReadyModal')
   }
 })
+
+function updateServiceWorkerApplication() {
+  updateServiceWorker()
+  router.go(0)
+}
 
 function goToCurrentTalk() {
   if (currentTalkId.value) {
