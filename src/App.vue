@@ -13,7 +13,7 @@
       </div>
       <RouterView :key="$route.fullPath"/>
 
-      <div class="modal" tabindex="-1" ref="currentTalkChangeModal">
+      <div class="modal" tabindex="-1" id="currentTalkChangeModal">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -32,6 +32,41 @@
         </div>
       </div>
 
+      <div class="modal" tabindex="-1" id="serviceWorkerOnNeedRefreshModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5">Application Update</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>The application was updated, do you want to update?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="$router.go(0)">OK</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" tabindex="-1" id="serviceWorkerOnOfflineReadyModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5">Application ready</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Application is ready to work.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 </template>
@@ -45,9 +80,10 @@ import socket from './util/socket'
 import { useRatingStore } from './stores/rating'
 import { useCurrentTalkStore } from './stores/currentTalk'
 import { useTalksStore, type Talk } from './stores/talks'
-import { Modal } from 'bootstrap'
 import TalkManager from './services/TalkManager'
 import { useErrorMessagesStore } from './stores/errorMessages'
+import { showModalIfExist } from './util/showModal'
+import { registerSW } from 'virtual:pwa-register'
 
 const authenticationStore = useAuthenticationStore()
 const talkStore = useTalksStore()
@@ -58,9 +94,17 @@ const route = useRoute()
 const router = useRouter()
 const talkManager = new TalkManager()
 
-const currentTalkChangeModal = ref(undefined as HTMLElement|undefined)
 const currentTalkId = ref(undefined as string|undefined)
 const currentTalk = ref(undefined as Talk|undefined)
+
+const updateServiceWorker = registerSW({
+  onNeedRefresh() {
+    showModalIfExist('serviceWorkerOnNeedRefreshModal')
+  },
+  onOfflineReady() {
+    showModalIfExist('serviceWorkerOnOfflineReadyModal')
+  }
+})
 
 function goToCurrentTalk() {
   if (currentTalkId.value) {
@@ -72,12 +116,10 @@ onBeforeMount(() => {
   socket.on('currentTalk', talkId => {
     const talkChanged = talkId != currentTalkStore.talkId && currentTalkStore.talkId != undefined
     currentTalkStore.set(talkId)
-    if (talkChanged && currentTalkChangeModal.value) {
+    if (talkChanged) {
       currentTalkId.value = talkId
       currentTalk.value = talkManager.getTalk(talkId)
-      if (!currentTalkChangeModal.value.classList.contains('show')) {
-        new Modal(currentTalkChangeModal.value).show()
-      }
+      showModalIfExist('currentTalkChangeModal')
     }
   })
   socket.on('talkRatings', (talkRatings) => {
