@@ -67,6 +67,7 @@ import TalkManager from './services/TalkManager'
 import { useErrorMessagesStore } from './stores/errorMessages'
 import { showModalIfExist } from './util/showModal'
 import { registerSW } from 'virtual:pwa-register'
+import { setIntervalAsync } from 'set-interval-async';
 
 const authenticationStore = useAuthenticationStore()
 const talkStore = useTalksStore()
@@ -85,7 +86,7 @@ const checkForNewVersionsIntervalMilliseconds = 5 * 60 * 1000
 const updateServiceWorker = registerSW({
   // check for new app version, see https://vite-pwa-org.netlify.app/guide/periodic-sw-updates.html
   onRegisteredSW(swUrl:string, r:any) {
-    r && setInterval(async () => {
+    r && setIntervalAsync(async () => {
       if (!(!r.installing && navigator)) {
         return
       }
