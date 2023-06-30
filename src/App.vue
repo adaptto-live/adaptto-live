@@ -82,8 +82,7 @@ const currentTalkId = ref(undefined as string|undefined)
 const currentTalk = ref(undefined as Talk|undefined)
 
 // handle PWA updates with prompt if a new version is detected, check every 5min for a new version
-// TODO: set back to 5 min
-const checkForNewVersionsIntervalMilliseconds = 1 * 60 * 1000
+const checkForNewVersionsIntervalMilliseconds = 5 * 60 * 1000
 const updateServiceWorker = registerSW({
   // check for new app version, see https://vite-pwa-org.netlify.app/guide/periodic-sw-updates.html
   onRegisteredSW(swUrl:string, r:any) {
