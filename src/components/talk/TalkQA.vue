@@ -37,8 +37,12 @@
         <div class="modal-body">
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
           <div class="mt-3 form-check">
-            <input type="checkbox" class="form-check-input" id="messageAnonymous" v-model="messageAnonymous">
-            <label class="form-check-label" for="messageAnonymous">Anonymous (without user name)</label>
+            <input type="checkbox" class="form-check-input" id="qaEntryAnonymous" v-model="messageAnonymous">
+            <label class="form-check-label" for="qaEntryAnonymous">Anonymous (without user name)</label>
+          </div>
+          <div v-if="authenticationStore.admin" class="form-check">
+            <input type="checkbox" class="form-check-input" id="qaEntryHighlight" v-model="highlightMessage">
+            <label class="form-check-label" for="qaEntryHighlight">Highlight</label>
           </div>
           <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
@@ -62,6 +66,11 @@
             {{replyToMessage.text}}
           </div>
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+          <div v-if="authenticationStore.admin" class="form-check mt-3">
+            <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="highlightMessage">
+            <label class="form-check-label" for="qaEntryReplyHighlight">Highlight</label>
+          </div>
+          <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
         <div class="modal-footer" :class="{'justify-content-between':selectedMessage}">
           <button v-if="selectedMessage" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteMessage">Delete</button>
@@ -95,6 +104,7 @@ const messages = ref([] as Message[])
 
 const messageText = ref('')
 const messageAnonymous = ref(false)
+const highlightMessage = ref(false as boolean|undefined)
 const selectedMessage = ref(undefined as Message|undefined)
 const replyToMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
@@ -144,6 +154,7 @@ function messageClicked(message: Message, replyTo?: Message) {
   replyToMessage.value = replyTo
   messageText.value = message.text
   messageAnonymous.value = (message.username == undefined)
+  highlightMessage.value = message.highlight
   if (replyTo) {
     new Modal('#qaEntryReplyModal').show()
   }
@@ -188,12 +199,14 @@ function sendNewMessage(messageUsername?: string) : void {
 }
 
 function sendUpdatedMessage(message : Message, messageUsername?: string) : void {
-  socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: message.text, anonymous: messageAnonymous.value}, result => {
+  socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: message.text,
+     anonymous: messageAnonymous.value, highlight: highlightMessage.value}, result => {
   if (result.success) {
     message.text = messageText.value
     if (message.userid == authenticationStore.userid) {
       message.username = messageUsername
     }
+    message.highlight = highlightMessage.value
   }
   else if (result.error) {
     errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
@@ -227,13 +240,14 @@ onMounted(() => {
       scrollToEndOfList()
     }
   })
-  socket.on('qaEntryUpdate', updatesMessage => {
-    const message = messages.value.find(item => item.id == updatesMessage.id)
+  socket.on('qaEntryUpdate', updatedMessage => {
+    const message = messages.value.find(item => item.id == updatedMessage.id)
     if (message) {
-      message.date = updatesMessage.date
-      message.userid = updatesMessage.userid
-      message.username = updatesMessage.username
-      message.text = updatesMessage.text
+      message.date = updatedMessage.date
+      message.userid = updatedMessage.userid
+      message.username = updatedMessage.username
+      message.text = updatedMessage.text
+      message.highlight = updatedMessage.highlight
     }
   })
   socket.on('qaEntryDelete', id => {
