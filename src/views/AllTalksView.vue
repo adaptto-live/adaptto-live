@@ -19,7 +19,7 @@
         :class="{active:currentTalkId == talk.id}"
         @click="navigateTo(talk)">
       <button v-if="admin && currentTalkId != talk.id" class="float-end btn btn-sm btn-outline-primary ms-3" @click.stop="setCurrentTalk(talk)">Set Current</button>
-      <div class="float-end" v-if="currentTalk && !talkManager.isAfter(talk, currentTalk)" @click.stop="">
+      <div class="float-end" v-if="!talk.lobby" @click.stop="">
         <TalkRating :talk="talk" :small-button="true"/>
       </div>
       <span class="title">{{talk.title}}</span>
