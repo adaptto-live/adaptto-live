@@ -42,7 +42,7 @@
           </div>
           <div v-if="authenticationStore.admin" class="form-check">
             <input type="checkbox" class="form-check-input" id="qaEntryHighlight" v-model="highlightMessage">
-            <label class="form-check-label" for="qaEntryHighlight">Highlight message (Admin)</label>
+            <label class="form-check-label" for="qaEntryHighlight">Highlight</label>
           </div>
           <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
@@ -68,7 +68,7 @@
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
           <div v-if="authenticationStore.admin" class="form-check mt-3">
             <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="highlightMessage">
-            <label class="form-check-label" for="qaEntryReplyHighlight">Highlight message (Admin)</label>
+            <label class="form-check-label" for="qaEntryReplyHighlight">Highlight</label>
           </div>
           <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>

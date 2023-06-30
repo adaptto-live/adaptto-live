@@ -22,7 +22,7 @@
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
           <div v-if="authenticationStore.admin" class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="messageHighlight" v-model="highlightMessage">
-            <label class="form-check-label" for="messageHighlight">Highlight message (Admin)</label>
+            <label class="form-check-label" for="messageHighlight">Highlight</label>
           </div>
           <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
