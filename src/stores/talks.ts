@@ -5,8 +5,9 @@ export interface Talk {
   id: string
   day: number
   title: string
-  speakers: string
-  url: string
+  speakers?: string
+  url?: string
+  lobby?: boolean
 }
 
 export const useTalksStore = defineStore('talks', {
@@ -38,7 +39,7 @@ export const useTalksStore = defineStore('talks', {
 
 // load talk data from local json (for testing/development only)
 async function getLocalTalks() : Promise<Talk[]> {
-  return (await import('@/data/talks.json')).default
+  return addDailyLobbyTalks((await import('@/data/talks.json')).default)
 }
 
 // load talk data from adapt.to website
@@ -69,6 +70,34 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
     }
   })
 
+  return addDailyLobbyTalks(result)
+}
+
+/**
+ * Adds a "Lobby" talk for each day before the actual talks.
+ * @param talks Talks
+ * @returns Talks with lobby talks
+ */
+function addDailyLobbyTalks(talks : Talk[]) : Talk[] {
+  const days : number[] = []
+  const result : Talk[] = []
+  talks.forEach(talk => {
+    if (!days.includes(talk.day)) {
+      let talkIdPrefix = ''
+      const firstDashPos = talk.id.indexOf('-')
+      if (firstDashPos > 0) {
+        talkIdPrefix = talk.id.substring(0, firstDashPos)
+      }
+      result.push({
+        id: `${talkIdPrefix}-lobby-day-${talk.day}`,
+        day: talk.day,
+        title: `Lobby Day ${talk.day}`,
+        lobby: true
+      })
+      days.push(talk.day)
+    }
+    result.push(talk)
+  })
   return result
 }
 
