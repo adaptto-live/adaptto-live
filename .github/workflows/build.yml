@@ -28,8 +28,6 @@ jobs:
       with:
         file_path: package.json
 
-    - run: echo version=${{steps.package_json.outputs.version}}
-
     - uses: actions/setup-node@v3
       with:
         node-version: 18
