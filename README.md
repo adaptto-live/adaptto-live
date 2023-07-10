@@ -1,5 +1,6 @@
 # adaptTo() Live Client
 
+[![Build](https://github.com/adaptto-live/adaptto-live/workflows/Build/badge.svg?branch=develop)](https://github.com/adaptto-live/adaptto-live/actions?query=workflow%3ABuild+branch%3Adevelop)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=adaptto-live_adaptto-live&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=adaptto-live_adaptto-live)
 
 adaptTo() Live Client web application.
