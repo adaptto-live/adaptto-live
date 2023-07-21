@@ -200,7 +200,7 @@ function sendNewMessage(messageUsername?: string) : void {
 }
 
 function sendUpdatedMessage(message : Message, messageUsername?: string) : void {
-  socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: message.text,
+  socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: messageText.value,
      anonymous: messageAnonymous.value, highlight: highlightMessage.value}, result => {
   if (result.success) {
     message.text = messageText.value

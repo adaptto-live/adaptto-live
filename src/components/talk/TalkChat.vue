@@ -104,7 +104,7 @@ function sendMessage() {
 function updateMessage() {
   const message = selectedMessage.value
   if (message) {
-    socket.emit('messageUpdate', {id: message.id, talkId: props.talk.id, text: message.text,
+    socket.emit('messageUpdate', {id: message.id, talkId: props.talk.id, text: messageText.value,
         highlight: highlightMessage.value}, result => {
       if (result.success) {
         message.text = messageText.value
