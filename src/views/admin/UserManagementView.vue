@@ -95,7 +95,7 @@ function save() : void {
     const { id, username, admin, blocked } = selectedUser.value
     socket.emit('adminUpdateUser', {id, username, admin, blocked}, result => {
       if (result.error) {
-        errorMessagesStore.add(`Unable to set current talk: ${result.error}`)
+        errorMessagesStore.add(`Unable to update user: ${result.error}`)
       }
     })
   }
