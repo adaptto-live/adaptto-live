@@ -1,8 +1,8 @@
 <template>
   <div class="qa-container">
     <div class="qa-window">
-      <template v-for="(message, index) in messages" :key="message.id">
-        <div class="message-container" v-if="!message.replyTo">
+      <template v-for="(message, index) in messageWithoutReplies" :key="message.id">
+        <div class="message-container">
           <div class="index">{{index+1}}.</div>
           <div class="message-and-replies">
             <MessageDisplay :message="message" :read-only="speakerView"
@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
 import type { Talk } from '@/stores/talks'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import socket from '@/util/socket'
 import type Message from '@/services/Message'
@@ -101,6 +101,7 @@ const props = defineProps<{
 const authenticationStore = useAuthenticationStore()
 const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
+const messageWithoutReplies = computed(() => messages.value.filter(item => item.replyTo == undefined))
 
 const messageText = ref('')
 const messageAnonymous = ref(false)
