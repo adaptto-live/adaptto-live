@@ -26,12 +26,10 @@ function showModalInternal(modalId : string, ignoreError? : boolean) : boolean {
     }
     return true
   }
+  else if (ignoreError) {
+    return false
+  }
   else {
-    if (ignoreError) {
-      return false
-    }
-    else {
-      throw new Error(`Modal '#${modalId}' not found.`)
-    }
+    throw new Error(`Modal '#${modalId}' not found.`)
   }
 }
