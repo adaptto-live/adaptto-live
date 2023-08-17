@@ -3,7 +3,7 @@
     <div class="meta">
       <div v-if="message.username" class="author">{{message.username}}</div>
       <div v-if="!readOnly" class="date text-muted">
-        <timeago :datetime="message.date" :auto-update="true"/>
+        <timeago :datetime="messageDate" :auto-update="true"/>
       </div>
     </div>
     <div class="text">{{message.text}}</div>
@@ -29,6 +29,13 @@ const editable = computed(() =>
     ((props.message.userid == authenticationStore.userid) || authenticationStore.admin)
     && !props.readOnly)
 const highlight = computed(() => props.message.highlight ?? false)
+
+// safeguard for dates that may lay slightly in the future
+let messageDate = new Date(props.message.date)
+const now = new Date()
+if (messageDate > now) {
+  messageDate = now
+}
 
 function clickMessage() {
   if (editable.value) {
