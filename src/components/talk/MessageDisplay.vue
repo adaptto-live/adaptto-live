@@ -47,8 +47,7 @@ const messageHtml = linkifyString(props.message.text, {
 function clickMessage(event : Event) {
   if (editable.value) {
     if (event.target instanceof HTMLElement) {
-      const htmlElement = event.target as HTMLElement
-      if (htmlElement.tagName == 'A') {
+      if (event.target.tagName == 'A') {
         // skip opening edit dialog if an anchor element was clicked
         return
       }
