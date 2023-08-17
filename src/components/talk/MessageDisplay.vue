@@ -3,7 +3,7 @@
     <div class="meta">
       <div v-if="message.username" class="author">{{message.username}}</div>
       <div v-if="!readOnly" class="date text-muted">
-        <timeago :datetime="messageDate" :auto-update="true"/>
+        <timeago :datetime="messageDate" :auto-update="true"/><span v-if="editable" class="pencil">✎</span>
       </div>
     </div>
     <div class="text">{{message.text}}</div>
@@ -75,6 +75,9 @@ function clickMessage() {
   &.highlight {
     border: 2px solid lightyellow;
     border-radius: 5px;
+  }
+  .pencil {
+    margin-left: 0.25rem;
   }
 }
 </style>
