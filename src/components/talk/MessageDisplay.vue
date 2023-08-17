@@ -6,7 +6,7 @@
         <timeago :datetime="messageDate" :auto-update="true"/><span v-if="editable" class="pencil">✎</span>
       </div>
     </div>
-    <div class="text">{{message.text}}</div>
+    <div class="text" v-html="messageHtml"></div>
   </div>
 </template>
 
@@ -14,6 +14,7 @@
 import type Message from '@/services/Message'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { computed } from 'vue'
+import linkifyString from 'linkify-string';
 
 const authenticationStore = useAuthenticationStore()
 
@@ -37,8 +38,21 @@ if (messageDate > now) {
   messageDate = now
 }
 
-function clickMessage() {
+// linkify message text
+const messageHtml = linkifyString(props.message.text, {
+  defaultProtocol: 'https',
+  target: '_blank'
+})
+
+function clickMessage(event : Event) {
   if (editable.value) {
+    if (event.target instanceof HTMLElement) {
+      const htmlElement = event.target as HTMLElement
+      if (htmlElement.tagName == 'A') {
+        // skip opening edit dialog if an anchor element was clicked
+        return
+      }
+    }
     emit('messageClicked')
   }
 }
