@@ -20,7 +20,7 @@
     </tr>
   </table>
 
-  <div class="mt-3 form-chec small">
+  <div class="mt-3 form-chec small" v-if="!hideDebugMode">
     <input type="checkbox" class="form-check-input" id="messageAnonymous" v-model="debugModeStore.debugMode">
     <label class="form-check-label ms-2" for="messageAnonymous">Enable Debug Mode</label>
   </div>
@@ -34,6 +34,7 @@ import { useDebugModeStore } from '@/stores/debugMode';
 
 const authenticationStore = useAuthenticationStore()
 const debugModeStore = useDebugModeStore()
+const hideDebugMode = (import.meta.env.VITE_HIDE_DEBUG_MODE == 'true')
 </script>
 
 <style lang="scss" scoped>
