@@ -16,7 +16,11 @@ pinia.use(piniaPluginPersistedState)
 const app = createApp(App)
   .use(pinia)
   .use(router)
-  .use(timeago)
+  .use(timeago, {
+    converterOptions: {
+      roundingMethod: 'floor'
+    }
+  })
 
 // load talk data
 useTalksStore().fill()
