@@ -3,12 +3,12 @@
     <div class="title">
       <h4>{{talk.title}}</h4>
     </div>
-    <SpeakerTalkQA :talk="talk" class="content" :key="talk.id"/>
+    <TalkQABigView :talk="talk" class="content" :key="talk.id"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import SpeakerTalkQA from '@/components/speakerQA/SpeakerTalkQA.vue'
+import TalkQABigView from '@/components/talkQA/TalkQABigView.vue'
 import TalkManager from '@/services/TalkManager'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { computed } from 'vue'

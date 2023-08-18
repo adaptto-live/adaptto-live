@@ -1,5 +1,5 @@
 <template>
-  <div class="speaker-view">
+  <div class="qa-big-view">
     <TalkQA :talk="talk" :speaker-view="true"/>
   </div>
 </template>
@@ -22,9 +22,13 @@ onUnmounted(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-.speaker-view {
+<style lang="scss">
+.qa-big-view {
   font-size: xx-large;
   color: #eee;
+ .author {
+    font-size: large;
+    font-weight: normal !important;
+  }
 }
 </style>
