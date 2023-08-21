@@ -11,7 +11,8 @@ import { onMounted, onUnmounted } from 'vue'
 import socket from '@/util/socket'
 
 const props = defineProps<{
-  talk: Talk
+  talk: Talk,
+  showUnanswered: boolean
 }>()
 
 onMounted(() => {

@@ -8,7 +8,7 @@
             <MessageDisplay :message="message" :read-only="qaBigView"
                 @message-clicked="messageClicked(message)"/>
             <div class="reply-list">
-              <button v-if="qaBigView && !isShowRepliesInqaBigView(message) && getReplies(message).length > 0"
+              <button v-if="qaBigView && !isShowRepliesInQABigView(message) && getReplies(message).length > 0"
                 class="btn btn-sm btn-secondary" @click="showRepliesInqaBigView(message, true)">
                 {{getReplies(message).length}} Answers
               </button>
@@ -20,6 +20,7 @@
             </div>
           </div>
           <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
+          <button class="btn btn-secondary btn-lg" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
         </div>
       </template>
       <div class="bottom" ref="bottomPlaceholder"/>
@@ -115,7 +116,7 @@ function getReplies(message: Message) {
   return messages.value.filter(item => item.replyTo==message.id)
 }
 
-function isShowRepliesInqaBigView(message: Message) {
+function isShowRepliesInQABigView(message: Message) {
   return qaBigViewShowRepliesForMessage.value.includes(message.id)
 }
 
@@ -227,6 +228,10 @@ function deleteMessage() {
       }
     })
   }
+}
+
+function markAnswered(message : Message) {
+  message.answered = !message.answered
 }
 
 function scrollToEndOfList() {
