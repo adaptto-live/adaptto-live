@@ -1,6 +1,6 @@
 <template>
   <div class="qa-big-view">
-    <TalkQA :talk="talk" :speaker-view="true"/>
+    <TalkQA :talk="talk" :qa-big-view="true"/>
   </div>
 </template>
 

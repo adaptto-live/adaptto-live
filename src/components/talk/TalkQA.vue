@@ -5,29 +5,29 @@
         <div class="message-container">
           <div class="index">{{index+1}}.</div>
           <div class="message-and-replies">
-            <MessageDisplay :message="message" :read-only="speakerView"
+            <MessageDisplay :message="message" :read-only="qaBigView"
                 @message-clicked="messageClicked(message)"/>
             <div class="reply-list">
-              <button v-if="speakerView && !isShowRepliesInSpeakerView(message) && getReplies(message).length > 0"
-                class="btn btn-sm btn-secondary" @click="showRepliesInSpeakerView(message, true)">
+              <button v-if="qaBigView && !isShowRepliesInqaBigView(message) && getReplies(message).length > 0"
+                class="btn btn-sm btn-secondary" @click="showRepliesInqaBigView(message, true)">
                 {{getReplies(message).length}} Answers
               </button>
-              <div v-else @click="showRepliesInSpeakerView(message, false)">
+              <div v-else @click="showRepliesInqaBigView(message, false)">
                 <MessageDisplay v-for="replyMessage in getReplies(message)" :key="replyMessage.id"
-                    :message="replyMessage" :read-only="speakerView"
+                    :message="replyMessage" :read-only="qaBigView"
                     @message-clicked="messageClicked(replyMessage, message)"/>
               </div>
             </div>
           </div>
-          <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!speakerView">Reply</button>
+          <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
         </div>
       </template>
       <div class="bottom" ref="bottomPlaceholder"/>
     </div>
-    <button v-if="!speakerView" class="btn btn-primary" @click="addQuestion">Add Question</button>
+    <button v-if="!qaBigView" class="btn btn-primary" @click="addQuestion">Add Question</button>
   </div>
 
-  <div v-if="!speakerView" class="modal" id="qaEntryModal" tabindex="-1">
+  <div v-if="!qaBigView" class="modal" id="qaEntryModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <div v-if="!speakerView" class="modal" id="qaEntryReplyModal" tabindex="-1">
+  <div v-if="!qaBigView" class="modal" id="qaEntryReplyModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -95,7 +95,7 @@ import { useErrorMessagesStore } from '@/stores/errorMessages'
 
 const props = defineProps<{
   talk: Talk,
-  speakerView?: boolean
+  qaBigView?: boolean
 }>()
 
 const authenticationStore = useAuthenticationStore()
@@ -109,22 +109,22 @@ const highlightMessage = ref(false as boolean|undefined)
 const selectedMessage = ref(undefined as Message|undefined)
 const replyToMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
-const speakerViewShowRepliesForMessage = ref([] as string[])
+const qaBigViewShowRepliesForMessage = ref([] as string[])
 
 function getReplies(message: Message) {
   return messages.value.filter(item => item.replyTo==message.id)
 }
 
-function isShowRepliesInSpeakerView(message: Message) {
-  return speakerViewShowRepliesForMessage.value.includes(message.id)
+function isShowRepliesInqaBigView(message: Message) {
+  return qaBigViewShowRepliesForMessage.value.includes(message.id)
 }
 
-function showRepliesInSpeakerView(message: Message, show: boolean) {
+function showRepliesInqaBigView(message: Message, show: boolean) {
   if (show) {
-    speakerViewShowRepliesForMessage.value.push(message.id)
+    qaBigViewShowRepliesForMessage.value.push(message.id)
   }
   else {
-    speakerViewShowRepliesForMessage.value = speakerViewShowRepliesForMessage.value.filter(id => id != message.id)
+    qaBigViewShowRepliesForMessage.value = qaBigViewShowRepliesForMessage.value.filter(id => id != message.id)
   }
 }
 
@@ -237,7 +237,7 @@ onMounted(() => {
   socket.on('qaEntries', incomingMessages => {
     const scrollToEnd = (messages.value.length == 0)
     incomingMessages.forEach(message => addMessage(message))
-    if (scrollToEnd) {
+    if (scrollToEnd && !props.qaBigView) {
       scrollToEndOfList()
     }
   })
