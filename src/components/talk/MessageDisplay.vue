@@ -39,10 +39,10 @@ if (messageDate > now) {
 }
 
 // linkify message text
-const messageHtml = linkifyString(props.message.text, {
+const messageHtml = computed(() => linkifyString(props.message.text, {
   defaultProtocol: 'https',
   target: '_blank'
-})
+}))
 
 function clickMessage(event : Event) {
   if (editable.value) {
