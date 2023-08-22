@@ -42,8 +42,12 @@
             <label class="form-check-label" for="qaEntryAnonymous">Anonymous (without user name)</label>
           </div>
           <div v-if="authenticationStore.admin" class="form-check">
-            <input type="checkbox" class="form-check-input" id="qaEntryHighlight" v-model="highlightMessage">
+            <input type="checkbox" class="form-check-input" id="qaEntryHighlight" v-model="messageHighlight">
             <label class="form-check-label" for="qaEntryHighlight">Highlight</label>
+          </div>
+          <div v-if="authenticationStore.admin" class="form-check">
+            <input type="checkbox" class="form-check-input" id="qaEntryAnswered" v-model="messageAnswered">
+            <label class="form-check-label" for="qaEntryAnswered">Answered</label>
           </div>
           <p class="small mt-2" v-if="authenticationStore.admin && selectedMessage?.userid">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
@@ -68,7 +72,7 @@
           </div>
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
           <div v-if="authenticationStore.admin" class="form-check mt-3">
-            <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="highlightMessage">
+            <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="messageHighlight">
             <label class="form-check-label" for="qaEntryReplyHighlight">Highlight</label>
           </div>
           <p class="small mt-2" v-if="authenticationStore.admin && selectedMessage?.userid">User ID: <code>{{selectedMessage?.userid}}</code></p>
@@ -93,20 +97,25 @@ import MessageDisplay from './MessageDisplay.vue'
 import TextAreaEmojiPicker from '../structure/TextAreaEmojiPicker.vue'
 import { Modal } from 'bootstrap'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
+import MessageAnswerFilter from '@/services/MessageAnswerFilter'
 
 const props = defineProps<{
   talk: Talk,
-  qaBigView?: boolean
+  qaBigView?: boolean,
+  messageAnswerFilter?: MessageAnswerFilter
 }>()
 
 const authenticationStore = useAuthenticationStore()
 const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
-const messageWithoutReplies = computed(() => messages.value.filter(item => item.replyTo == undefined))
+const messageWithoutReplies = computed(() => messages.value
+    .filter(item => item.replyTo == undefined)
+    .filter(item => item.answered && props.messageAnswerFilter != MessageAnswerFilter.UNANSWERED || !item.answered && props.messageAnswerFilter != MessageAnswerFilter.ANSWERED))
 
 const messageText = ref('')
 const messageAnonymous = ref(false)
-const highlightMessage = ref(false as boolean|undefined)
+const messageHighlight = ref(false as boolean|undefined)
+const messageAnswered = ref(false as boolean|undefined)
 const selectedMessage = ref(undefined as Message|undefined)
 const replyToMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
@@ -156,7 +165,8 @@ function messageClicked(message: Message, replyTo?: Message) {
   replyToMessage.value = replyTo
   messageText.value = message.text
   messageAnonymous.value = (message.username == undefined)
-  highlightMessage.value = message.highlight
+  messageHighlight.value = message.highlight
+  messageAnswered.value = message.answered
   if (replyTo) {
     new Modal('#qaEntryReplyModal').show()
   }
@@ -202,13 +212,14 @@ function sendNewMessage(messageUsername?: string) : void {
 
 function sendUpdatedMessage(message : Message, messageUsername?: string) : void {
   socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: messageText.value,
-     anonymous: messageAnonymous.value, highlight: highlightMessage.value}, result => {
+     anonymous: messageAnonymous.value, highlight: messageHighlight.value, answered: messageAnswered.value}, result => {
   if (result.success) {
     message.text = messageText.value
     if (message.userid == authenticationStore.userid) {
       message.username = messageUsername
     }
-    message.highlight = highlightMessage.value
+    message.highlight = messageHighlight.value
+    message.answered = messageAnswered.value
   }
   else if (result.error) {
     errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
@@ -231,7 +242,17 @@ function deleteMessage() {
 }
 
 function markAnswered(message : Message) {
-  message.answered = !message.answered
+  const answered = !message.answered
+  const {id, text, highlight} = message
+  const anonymous = message.username == undefined
+  socket.emit('qaEntryUpdate', {id, talkId: props.talk.id, text, anonymous, highlight, answered}, result => {
+    if (result.success) {
+      message.answered = answered
+    }
+    else if (result.error) {
+      errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
+    }
+  })
 }
 
 function scrollToEndOfList() {
@@ -254,6 +275,7 @@ onMounted(() => {
       message.username = updatedMessage.username
       message.text = updatedMessage.text
       message.highlight = updatedMessage.highlight
+      message.answered = updatedMessage.answered
     }
   })
   socket.on('qaEntryDelete', id => {

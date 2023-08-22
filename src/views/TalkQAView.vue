@@ -3,16 +3,19 @@
     <div class="title mb-1">
       <h4>{{talk.title}}</h4>
       <div class="btn-group">
-        <button class="btn btn-outline-secondary" :class="{active:showUnanswered}" @click="showUnanswered=true">Unanswered</button>
-        <button class="btn btn-outline-secondary" :class="{active:!showUnanswered}" @click="showUnanswered=false">Answered</button>
+        <button class="btn btn-outline-secondary" :class="{active:messageAnswerFilter==MessageAnswerFilter.UNANSWERED}"
+            @click="messageAnswerFilter = MessageAnswerFilter.UNANSWERED">Unanswered</button>
+        <button class="btn btn-outline-secondary" :class="{active:messageAnswerFilter==MessageAnswerFilter.ANSWERED}"
+            @click="messageAnswerFilter = MessageAnswerFilter.ANSWERED">Answered</button>
       </div>
     </div>
-    <TalkQABigView :talk="talk" :show-unanswered="showUnanswered" class="content" :key="talk.id"/>
+    <TalkQABigView :talk="talk" :message-answer-filter="messageAnswerFilter" class="content" :key="talk.id"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import TalkQABigView from '@/components/talkQA/TalkQABigView.vue'
+import MessageAnswerFilter from '@/services/MessageAnswerFilter';
 import TalkManager from '@/services/TalkManager'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { computed, ref } from 'vue'
@@ -20,7 +23,7 @@ import { computed, ref } from 'vue'
 const talkManager = new TalkManager()
 const currentTalkId = computed(() => useCurrentTalkStore().talkId)
 const talk = computed(() => talkManager.getTalk(currentTalkId.value))
-const showUnanswered = ref(true)
+const messageAnswerFilter = ref(MessageAnswerFilter.UNANSWERED)
 </script>
 
 <style lang="scss" scoped>
