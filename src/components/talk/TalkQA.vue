@@ -245,7 +245,7 @@ function markAnswered(message : Message) {
   const answered = !message.answered
   const {id, text, highlight} = message
   const anonymous = message.username == undefined
-  socket.emit('qaEntryUpdate', {id, talkId: props.talk.id, text, anonymous, highlight, answered}, result => {
+  socket.emit('qaEntryUpdateAnswered', {id, answered}, result => {
     if (result.success) {
       message.answered = answered
     }
