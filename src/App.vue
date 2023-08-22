@@ -120,7 +120,7 @@ onBeforeMount(() => {
   socket.on('currentTalk', talkId => {
     const talkChanged = talkId != currentTalkStore.talkId && currentTalkStore.talkId != undefined
     currentTalkStore.set(talkId)
-    if (talkChanged) {
+    if (talkChanged && route.name?.toString() != 'qa') {
       currentTalkId.value = talkId
       currentTalk.value = talkManager.getTalk(talkId)
       showModalIfExist('currentTalkChangeModal')

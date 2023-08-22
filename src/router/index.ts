@@ -5,7 +5,7 @@ import TalkView from '@/views/TalkView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import NoCurrentTalkView from '@/views/NoCurrentTalkView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
-import SpeakerQAView from '@/views/SpeakerQAView.vue'
+import TalkQAView from '@/views/TalkQAView.vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import LoginCodeManagementViewVue from '@/views/admin/LoginCodeManagementViewVue.vue'
@@ -79,9 +79,9 @@ const router = createRouter({
       component: StatisticsViewVue
     },
     {
-      path: '/speaker',
-      name: 'speaker',
-      component: SpeakerQAView,
+      path: '/qa',
+      name: 'qa',
+      component: TalkQAView,
       meta: {
         noHeader: true
       }

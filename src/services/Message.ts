@@ -6,4 +6,5 @@ export default interface Message {
   text: string
   replyTo?: string
   highlight?: boolean
+  answered?: boolean
 }
