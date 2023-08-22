@@ -1,6 +1,6 @@
 <template>
-  <div class="speaker-view">
-    <TalkQA :talk="talk" :speaker-view="true"/>
+  <div class="qa-big-view">
+    <TalkQA :talk="talk" :qa-big-view="true" :message-answer-filter="messageAnswerFilter"/>
   </div>
 </template>
 
@@ -9,9 +9,11 @@ import type { Talk } from '@/stores/talks'
 import TalkQA from '../talk/TalkQA.vue'
 import { onMounted, onUnmounted } from 'vue'
 import socket from '@/util/socket'
+import type MessageAnswerFilter from '@/services/MessageAnswerFilter';
 
 const props = defineProps<{
-  talk: Talk
+  talk: Talk,
+  messageAnswerFilter: MessageAnswerFilter
 }>()
 
 onMounted(() => {
@@ -22,9 +24,13 @@ onUnmounted(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-.speaker-view {
+<style lang="scss">
+.qa-big-view {
   font-size: xx-large;
   color: #eee;
+ .author {
+    font-size: large;
+    font-weight: normal !important;
+  }
 }
 </style>

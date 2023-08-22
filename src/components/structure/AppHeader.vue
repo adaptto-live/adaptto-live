@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-md bg-secondary-subtle">
+  <nav class="navbar navbar-expand-lg bg-secondary-subtle">
     <div class="container-fluid">
       <RouterLink to="/" class="navbar-brand" @click="collapseNavbar">
         <img src="@/assets/logo.svg" class="logo" alt="">
@@ -12,9 +12,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="me-auto">
-            <RouterLink to="/all-talks" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar">All Talks</RouterLink>
-            <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-md-2 mt-2 mt-md-0 d-block d-md-inline" @click="collapseNavbar" v-if="lamaPollUrl">
+            <RouterLink to="/all-talks" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">All Talks</RouterLink>
+            <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
               Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg" alt=""/>
+            </a>
+            <a href="mailto:info@adapt.to?subject=Lightning Talk Proposal" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
+              Submit Lightning Talk
             </a>
           </div>
           <ul class="navbar-nav mb-2 mb-lg-0">
@@ -27,6 +30,8 @@
                 <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
                 <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
                 <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><RouterLink to="/qa" class="dropdown-item">Q&A View</RouterLink></li>
               </ul>
             </li>
             <li class="nav-item">

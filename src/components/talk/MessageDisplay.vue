@@ -1,12 +1,12 @@
 <template>
-  <div class="message" :class="{editable, currentUser, highlight}" @click="clickMessage">
+  <div class="message" :class="{editable, currentUser, highlight, answered}" @click="clickMessage">
     <div class="meta">
       <div v-if="message.username" class="author">{{message.username}}</div>
       <div v-if="!readOnly" class="date text-muted">
-        <timeago :datetime="message.date" :auto-update="true"/>
+        <timeago :datetime="messageDate" :auto-update="true"/><span v-if="editable" class="icon">✎</span><span v-if="answered" class="icon">✓</span>
       </div>
     </div>
-    <div class="text">{{message.text}}</div>
+    <div class="text" v-html="messageHtml"></div>
   </div>
 </template>
 
@@ -14,6 +14,7 @@
 import type Message from '@/services/Message'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { computed } from 'vue'
+import linkifyString from 'linkify-string';
 
 const authenticationStore = useAuthenticationStore()
 
@@ -29,9 +30,29 @@ const editable = computed(() =>
     ((props.message.userid == authenticationStore.userid) || authenticationStore.admin)
     && !props.readOnly)
 const highlight = computed(() => props.message.highlight ?? false)
+const answered = computed(() => props.message.answered ?? false)
 
-function clickMessage() {
+// safeguard for dates that may lay slightly in the future
+let messageDate = new Date(props.message.date)
+const now = new Date()
+if (messageDate > now) {
+  messageDate = now
+}
+
+// linkify message text
+const messageHtml = computed(() => linkifyString(props.message.text, {
+  defaultProtocol: 'https',
+  target: '_blank'
+}))
+
+function clickMessage(event : Event) {
   if (editable.value) {
+    if (event.target instanceof HTMLElement) {
+      if (event.target.tagName == 'A') {
+        // skip opening edit dialog if an anchor element was clicked
+        return
+      }
+    }
     emit('messageClicked')
   }
 }
@@ -55,6 +76,7 @@ function clickMessage() {
   }
   .text {
     white-space: pre-line;
+    overflow-wrap: break-word;
   }
   &.editable {
     cursor: pointer;
@@ -67,6 +89,9 @@ function clickMessage() {
   &.highlight {
     border: 2px solid lightyellow;
     border-radius: 5px;
+  }
+  .icon {
+    margin-left: 0.25rem;
   }
 }
 </style>

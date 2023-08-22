@@ -5,29 +5,30 @@
         <div class="message-container">
           <div class="index">{{index+1}}.</div>
           <div class="message-and-replies">
-            <MessageDisplay :message="message" :read-only="speakerView"
+            <MessageDisplay :message="message" :read-only="qaBigView"
                 @message-clicked="messageClicked(message)"/>
             <div class="reply-list">
-              <button v-if="speakerView && !isShowRepliesInSpeakerView(message) && getReplies(message).length > 0"
-                class="btn btn-sm btn-secondary" @click="showRepliesInSpeakerView(message, true)">
+              <button v-if="qaBigView && !isShowRepliesInQABigView(message) && getReplies(message).length > 0"
+                class="btn btn-sm btn-secondary" @click="showRepliesInqaBigView(message, true)">
                 {{getReplies(message).length}} Answers
               </button>
-              <div v-else @click="showRepliesInSpeakerView(message, false)">
+              <div v-else @click="showRepliesInqaBigView(message, false)">
                 <MessageDisplay v-for="replyMessage in getReplies(message)" :key="replyMessage.id"
-                    :message="replyMessage" :read-only="speakerView"
+                    :message="replyMessage" :read-only="qaBigView"
                     @message-clicked="messageClicked(replyMessage, message)"/>
               </div>
             </div>
           </div>
-          <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!speakerView">Reply</button>
+          <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
+          <button class="btn btn-secondary btn-lg" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
         </div>
       </template>
       <div class="bottom" ref="bottomPlaceholder"/>
     </div>
-    <button v-if="!speakerView" class="btn btn-primary" @click="addQuestion">Add Question</button>
+    <button v-if="!qaBigView" class="btn btn-primary" @click="addQuestion">Add Question</button>
   </div>
 
-  <div v-if="!speakerView" class="modal" id="qaEntryModal" tabindex="-1">
+  <div v-if="!qaBigView" class="modal" id="qaEntryModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -41,10 +42,14 @@
             <label class="form-check-label" for="qaEntryAnonymous">Anonymous (without user name)</label>
           </div>
           <div v-if="authenticationStore.admin" class="form-check">
-            <input type="checkbox" class="form-check-input" id="qaEntryHighlight" v-model="highlightMessage">
+            <input type="checkbox" class="form-check-input" id="qaEntryHighlight" v-model="messageHighlight">
             <label class="form-check-label" for="qaEntryHighlight">Highlight</label>
           </div>
-          <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
+          <div v-if="authenticationStore.admin" class="form-check">
+            <input type="checkbox" class="form-check-input" id="qaEntryAnswered" v-model="messageAnswered">
+            <label class="form-check-label" for="qaEntryAnswered">Answered</label>
+          </div>
+          <p class="small mt-2" v-if="authenticationStore.admin && selectedMessage?.userid">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
         <div class="modal-footer" :class="{'justify-content-between':selectedMessage}">
           <button v-if="selectedMessage" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteMessage">Delete</button>
@@ -54,7 +59,7 @@
     </div>
   </div>
 
-  <div v-if="!speakerView" class="modal" id="qaEntryReplyModal" tabindex="-1">
+  <div v-if="!qaBigView" class="modal" id="qaEntryReplyModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -67,10 +72,10 @@
           </div>
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
           <div v-if="authenticationStore.admin" class="form-check mt-3">
-            <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="highlightMessage">
+            <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="messageHighlight">
             <label class="form-check-label" for="qaEntryReplyHighlight">Highlight</label>
           </div>
-          <p class="small mt-2" v-if="authenticationStore.admin">User ID: <code>{{selectedMessage?.userid}}</code></p>
+          <p class="small mt-2" v-if="authenticationStore.admin && selectedMessage?.userid">User ID: <code>{{selectedMessage?.userid}}</code></p>
         </div>
         <div class="modal-footer" :class="{'justify-content-between':selectedMessage}">
           <button v-if="selectedMessage" type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteMessage">Delete</button>
@@ -92,39 +97,44 @@ import MessageDisplay from './MessageDisplay.vue'
 import TextAreaEmojiPicker from '../structure/TextAreaEmojiPicker.vue'
 import { Modal } from 'bootstrap'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
+import MessageAnswerFilter from '@/services/MessageAnswerFilter'
 
 const props = defineProps<{
   talk: Talk,
-  speakerView?: boolean
+  qaBigView?: boolean,
+  messageAnswerFilter?: MessageAnswerFilter
 }>()
 
 const authenticationStore = useAuthenticationStore()
 const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
-const messageWithoutReplies = computed(() => messages.value.filter(item => item.replyTo == undefined))
+const messageWithoutReplies = computed(() => messages.value
+    .filter(item => item.replyTo == undefined)
+    .filter(item => item.answered && props.messageAnswerFilter != MessageAnswerFilter.UNANSWERED || !item.answered && props.messageAnswerFilter != MessageAnswerFilter.ANSWERED))
 
 const messageText = ref('')
 const messageAnonymous = ref(false)
-const highlightMessage = ref(false as boolean|undefined)
+const messageHighlight = ref(false as boolean|undefined)
+const messageAnswered = ref(false as boolean|undefined)
 const selectedMessage = ref(undefined as Message|undefined)
 const replyToMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
-const speakerViewShowRepliesForMessage = ref([] as string[])
+const qaBigViewShowRepliesForMessage = ref([] as string[])
 
 function getReplies(message: Message) {
   return messages.value.filter(item => item.replyTo==message.id)
 }
 
-function isShowRepliesInSpeakerView(message: Message) {
-  return speakerViewShowRepliesForMessage.value.includes(message.id)
+function isShowRepliesInQABigView(message: Message) {
+  return qaBigViewShowRepliesForMessage.value.includes(message.id)
 }
 
-function showRepliesInSpeakerView(message: Message, show: boolean) {
+function showRepliesInqaBigView(message: Message, show: boolean) {
   if (show) {
-    speakerViewShowRepliesForMessage.value.push(message.id)
+    qaBigViewShowRepliesForMessage.value.push(message.id)
   }
   else {
-    speakerViewShowRepliesForMessage.value = speakerViewShowRepliesForMessage.value.filter(id => id != message.id)
+    qaBigViewShowRepliesForMessage.value = qaBigViewShowRepliesForMessage.value.filter(id => id != message.id)
   }
 }
 
@@ -155,7 +165,8 @@ function messageClicked(message: Message, replyTo?: Message) {
   replyToMessage.value = replyTo
   messageText.value = message.text
   messageAnonymous.value = (message.username == undefined)
-  highlightMessage.value = message.highlight
+  messageHighlight.value = message.highlight
+  messageAnswered.value = message.answered
   if (replyTo) {
     new Modal('#qaEntryReplyModal').show()
   }
@@ -201,13 +212,14 @@ function sendNewMessage(messageUsername?: string) : void {
 
 function sendUpdatedMessage(message : Message, messageUsername?: string) : void {
   socket.emit('qaEntryUpdate', {id: message.id, talkId: props.talk.id, text: messageText.value,
-     anonymous: messageAnonymous.value, highlight: highlightMessage.value}, result => {
+     anonymous: messageAnonymous.value, highlight: messageHighlight.value, answered: messageAnswered.value}, result => {
   if (result.success) {
     message.text = messageText.value
     if (message.userid == authenticationStore.userid) {
       message.username = messageUsername
     }
-    message.highlight = highlightMessage.value
+    message.highlight = messageHighlight.value
+    message.answered = messageAnswered.value
   }
   else if (result.error) {
     errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
@@ -229,6 +241,20 @@ function deleteMessage() {
   }
 }
 
+function markAnswered(message : Message) {
+  const answered = !message.answered
+  const {id, text, highlight} = message
+  const anonymous = message.username == undefined
+  socket.emit('qaEntryUpdate', {id, talkId: props.talk.id, text, anonymous, highlight, answered}, result => {
+    if (result.success) {
+      message.answered = answered
+    }
+    else if (result.error) {
+      errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
+    }
+  })
+}
+
 function scrollToEndOfList() {
   window.setTimeout(() => bottomPlaceholder.value?.scrollIntoView(), 200)
 }
@@ -237,7 +263,7 @@ onMounted(() => {
   socket.on('qaEntries', incomingMessages => {
     const scrollToEnd = (messages.value.length == 0)
     incomingMessages.forEach(message => addMessage(message))
-    if (scrollToEnd) {
+    if (scrollToEnd && !props.qaBigView) {
       scrollToEndOfList()
     }
   })
@@ -249,6 +275,7 @@ onMounted(() => {
       message.username = updatedMessage.username
       message.text = updatedMessage.text
       message.highlight = updatedMessage.highlight
+      message.answered = updatedMessage.answered
     }
   })
   socket.on('qaEntryDelete', id => {
@@ -308,6 +335,9 @@ onUnmounted(() => {
       padding: 8px;
       border-radius: 10px;
       margin-bottom: 10px;
+    }
+    > .message.answered {
+      background-color: unset;
     }
   }
   .reply-button {

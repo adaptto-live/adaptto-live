@@ -44,14 +44,14 @@ const props = defineProps<{
 
 const ratingStore = useRatingStore()
 const modalId = `talk-rating-modal-${props.talk.id}`
-const rating = ref(ratingStore.getRating(props.talk.id) || 0)
+const rating = ref(ratingStore.getRating(props.talk.id) ?? 0)
 const ratingDisplay = ref(rating.value)
 const errorMessagesStore = useErrorMessagesStore()
 
 const commentText = ref(ratingStore.getComment(props.talk.id))
 
 function show() {
-  rating.value = ratingStore.getRating(props.talk.id) || 0
+  rating.value = ratingStore.getRating(props.talk.id) ?? 0
   ratingDisplay.value = rating.value
   commentText.value = ratingStore.getComment(props.talk.id)
   const modal = new Modal(document.getElementById(modalId) as Element)
