@@ -8,6 +8,7 @@
         <button class="btn btn-outline-secondary" :class="{active:messageAnswerFilter==MessageAnswerFilter.ANSWERED}"
             @click="messageAnswerFilter = MessageAnswerFilter.ANSWERED">Answered</button>
       </div>
+      <RouterLink to="/" class="btn">✕</RouterLink>
     </div>
     <TalkQABigView :talk="talk" :message-answer-filter="messageAnswerFilter" class="content" :key="talk.id"/>
   </div>
@@ -19,6 +20,7 @@ import MessageAnswerFilter from '@/services/MessageAnswerFilter';
 import TalkManager from '@/services/TalkManager'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { computed, ref } from 'vue'
+import { RouterLink } from 'vue-router';
 
 const talkManager = new TalkManager()
 const currentTalkId = computed(() => useCurrentTalkStore().talkId)
