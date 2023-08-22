@@ -27,7 +27,7 @@
     </tr>
   </table>
 
-  <div class="mt-3 form-chec small" v-if="!hideDebugMode">
+  <div class="mt-3 form-chec small" v-if="showDebugMode">
     <input type="checkbox" class="form-check-input" id="messageAnonymous" v-model="debugModeStore.debugMode">
     <label class="form-check-label ms-2" for="messageAnonymous">Enable Debug Mode</label>
   </div>
@@ -42,7 +42,7 @@ import { ref } from 'vue';
 
 const authenticationStore = useAuthenticationStore()
 const debugModeStore = useDebugModeStore()
-const hideDebugMode = (import.meta.env.VITE_HIDE_DEBUG_MODE == 'true')
+const showDebugMode = (import.meta.env.VITE_SHOW_DEBUG_MODE == 'true')
 const showChangeHint = ref(false)
 </script>
 

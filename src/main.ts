@@ -5,6 +5,7 @@ import piniaPluginPersistedState from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 import timeago from 'vue-timeago3'
+import { vLongpress } from '@nanogiants/vue3-longpress';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
@@ -21,6 +22,7 @@ const app = createApp(App)
       roundingMethod: 'floor'
     }
   })
+app.directive('use-longpress', vLongpress)
 
 // load talk data
 useTalksStore().fill()
