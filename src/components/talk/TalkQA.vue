@@ -243,8 +243,7 @@ function deleteMessage() {
 
 function markAnswered(message : Message) {
   const answered = !message.answered
-  const {id, text, highlight} = message
-  const anonymous = message.username == undefined
+  const {id} = message
   socket.emit('qaEntryUpdateAnswered', {id, answered}, result => {
     if (result.success) {
       message.answered = answered
