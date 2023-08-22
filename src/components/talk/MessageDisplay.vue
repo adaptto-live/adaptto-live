@@ -1,9 +1,9 @@
 <template>
-  <div class="message" :class="{editable, currentUser, highlight}" @click="clickMessage">
+  <div class="message" :class="{editable, currentUser, highlight, answered}" @click="clickMessage">
     <div class="meta">
       <div v-if="message.username" class="author">{{message.username}}</div>
       <div v-if="!readOnly" class="date text-muted">
-        <timeago :datetime="messageDate" :auto-update="true"/><span v-if="editable" class="pencil">✎</span>
+        <timeago :datetime="messageDate" :auto-update="true"/><span v-if="editable" class="icon">✎</span><span v-if="answered" class="icon">✓</span>
       </div>
     </div>
     <div class="text" v-html="messageHtml"></div>
@@ -30,6 +30,7 @@ const editable = computed(() =>
     ((props.message.userid == authenticationStore.userid) || authenticationStore.admin)
     && !props.readOnly)
 const highlight = computed(() => props.message.highlight ?? false)
+const answered = computed(() => props.message.answered ?? false)
 
 // safeguard for dates that may lay slightly in the future
 let messageDate = new Date(props.message.date)
@@ -89,7 +90,7 @@ function clickMessage(event : Event) {
     border: 2px solid lightyellow;
     border-radius: 5px;
   }
-  .pencil {
+  .icon {
     margin-left: 0.25rem;
   }
 }

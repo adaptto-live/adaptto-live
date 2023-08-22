@@ -336,6 +336,9 @@ onUnmounted(() => {
       border-radius: 10px;
       margin-bottom: 10px;
     }
+    > .message.answered {
+      background-color: unset;
+    }
   }
   .reply-button {
     height: 40px;
