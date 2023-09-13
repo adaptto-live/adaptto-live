@@ -5,13 +5,7 @@
     <tr>
       <th>User</th>
       <td><code>{{authenticationStore.username}}</code>
-        <button v-if="!showChangeHint" class="btn btn-sm btn-outline-secondary ms-3" @click="showChangeHint=true">Change</button></td>
-    </tr>
-    <tr v-if="showChangeHint">
-      <th></th>
-      <td>
-        <p>If you want to change your user name: Please log out, and login with the same login code but a different user name. Other users will see this change only after they reload the page or switch the talk.</p>
-      </td>
+        <button class="btn btn-sm btn-outline-secondary ms-3"  data-bs-toggle="modal" data-bs-target="#changeUserNameModal">Change</button></td>
     </tr>
     <tr>
       <th>User ID</th>
@@ -32,18 +26,34 @@
     <label class="form-check-label ms-2" for="messageAnonymous">Enable Debug Mode</label>
   </div>
 
+  <div class="modal" tabindex="-1" id="changeUserNameModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Change User Name</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>If you want to change your user name: Please log out, and login with the same login code but a different user name.</p>
+          <p>Other users will see this change only after they reload the page or switch the talk.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
 import { version} from '@/../package.json'
 import { useDebugModeStore } from '@/stores/debugMode';
-import { ref } from 'vue';
 
 const authenticationStore = useAuthenticationStore()
 const debugModeStore = useDebugModeStore()
 const showDebugMode = (import.meta.env.VITE_SHOW_DEBUG_MODE == 'true')
-const showChangeHint = ref(false)
 </script>
 
 <style lang="scss" scoped>

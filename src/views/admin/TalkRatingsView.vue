@@ -47,3 +47,9 @@ socket.on('adminTalkRatings', (ratings: AverageTalkRating[]) => {
   }))
 })
 </script>
+
+<style lang="scss" scoped>
+td {
+  word-break: break-word;
+}
+</style>
