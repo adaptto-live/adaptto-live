@@ -23,7 +23,7 @@
 
   <div class="mt-3 form-chec small" v-if="showDebugMode">
     <input type="checkbox" class="form-check-input" id="messageAnonymous" v-model="debugModeStore.debugMode">
-    <label class="form-check-label ms-2" for="messageAnonymous">Enable Debug Mode</label>
+    <label class="form-check-label ms-2" for="messageAnonymous">Enable Debug Mode [VITE_SHOW_DEBUG_MODE={{showDebugModeObject}}, type={{typeof showDebugModeObject}}]</label>
   </div>
 
   <div class="modal" tabindex="-1" id="changeUserNameModal">
@@ -54,6 +54,7 @@ import { useDebugModeStore } from '@/stores/debugMode';
 const authenticationStore = useAuthenticationStore()
 const debugModeStore = useDebugModeStore()
 const showDebugMode = (import.meta.env.VITE_SHOW_DEBUG_MODE == 'true')
+const showDebugModeObject = import.meta.env.VITE_SHOW_DEBUG_MODE
 </script>
 
 <style lang="scss" scoped>
