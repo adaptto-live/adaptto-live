@@ -26,6 +26,8 @@
     <label class="form-check-label ms-2" for="messageAnonymous">Enable Debug Mode [VITE_SHOW_DEBUG_MODE={{showDebugModeObject}}, type={{typeof showDebugModeObject}}]</label>
   </div>
 
+  <code>{{envObject}}</code>
+
   <div class="modal" tabindex="-1" id="changeUserNameModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -55,6 +57,7 @@ const authenticationStore = useAuthenticationStore()
 const debugModeStore = useDebugModeStore()
 const showDebugMode = (import.meta.env.VITE_SHOW_DEBUG_MODE == 'true')
 const showDebugModeObject = import.meta.env.VITE_SHOW_DEBUG_MODE
+const envObject = JSON.stringify(import.meta.env)
 </script>
 
 <style lang="scss" scoped>
