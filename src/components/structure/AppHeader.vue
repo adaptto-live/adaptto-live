@@ -13,26 +13,29 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="me-auto">
             <RouterLink to="/all-talks" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">All Talks</RouterLink>
-            <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
-              Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg" alt=""/>
-            </a>
-            <a href="mailto:info@adapt.to?subject=Lightning Talk Proposal" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
-              Submit Lightning Talk
-            </a>
+            <template v-if="authenticationStore.qaadmin">
+              <RouterLink to="/qa" class="btn btn-warning me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">Q&A View</RouterLink>
+            </template>
+            <template v-else>
+              <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
+                Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg" alt=""/>
+              </a>
+              <a href="mailto:info@adapt.to?subject=Lightning Talk Proposal" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
+                Submit Lightning Talk
+              </a>
+            </template>
           </div>
           <ul class="navbar-nav mb-2 mb-lg-0">
-            <li v-if="authenticationStore.admin || authenticationStore.qaadmin" class="nav-item dropdown">
+            <li v-if="authenticationStore.admin" class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Admin
               </a>
               <ul class="dropdown-menu">
-                <template v-if="authenticationStore.admin">
-                  <li><RouterLink to="/admin/loginCodes" class="dropdown-item">Login Codes</RouterLink></li>
-                  <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
-                  <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
-                  <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>
-                  <li><hr class="dropdown-divider"></li>
-                </template>
+                <li><RouterLink to="/admin/loginCodes" class="dropdown-item">Login Codes</RouterLink></li>
+                <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
+                <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
+                <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>
+                <li><hr class="dropdown-divider"></li>
                 <li><RouterLink to="/qa" class="dropdown-item">Q&A View</RouterLink></li>
               </ul>
             </li>
