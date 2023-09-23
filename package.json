@@ -14,7 +14,6 @@
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
-    "@nanogiants/vue3-longpress": "^1.0.8",
     "@popperjs/core": "~2.11.8",
     "axios": "^1.4.0",
     "bootstrap": "~5.3.1",
