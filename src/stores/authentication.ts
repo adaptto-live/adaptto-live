@@ -7,7 +7,8 @@ export const useAuthenticationStore = defineStore('authentication', {
       code: '',
       username: '',
       userid: '',
-      admin: false
+      admin: false,
+      qaadmin: false
     }
   },
   getters: {
@@ -19,17 +20,19 @@ export const useAuthenticationStore = defineStore('authentication', {
     }
   },
   actions: {
-    login(code: string, username: string, userid: string, admin: boolean) {
+    login(code: string, username: string, userid: string, admin: boolean, qaadmin: boolean) {
       this.authenticated = true
       this.code = code
       this.username = username
       this.userid = userid
       this.admin = admin
+      this.qaadmin = qaadmin
     },
     logout() {
       this.authenticated = false
       this.userid = ''
       this.admin = false
+      this.qaadmin = false
     }
   },
   persist: true

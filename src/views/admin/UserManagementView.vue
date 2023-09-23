@@ -13,6 +13,7 @@
           </div>
         </th>
         <th>Admin</th>
+        <th>Q&A</th>
         <th>Blocked</th>
         <th>Created</th>
         <th>Updated</th>
@@ -25,6 +26,7 @@
         <td>{{user.id}}</td>
         <td>{{showCodes ? user.code : user.code.replace(/./g, '⚬')}}</td>
         <td>{{user.admin ? '☑' : '☐'}}</td>
+        <td>{{user.qaadmin ? '☑' : '☐'}}</td>
         <td>{{user.blocked ? '☑' : '☐'}}</td>
         <td><timeago v-if="user.created" :datetime="user.created"/></td>
         <td><timeago v-if="user.updated" :datetime="user.updated"/></td>
@@ -53,6 +55,10 @@
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="userAdmin" v-model="selectedUser.admin">
             <label class="form-check-label" for="userAdmin">Admin</label>
+          </div>
+          <div class="mt-3 form-check">
+            <input type="checkbox" class="form-check-input" id="userQAAdmin" v-model="selectedUser.qaadmin">
+            <label class="form-check-label" for="userQAAdmin">Q&A</label>
           </div>
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="userBlocked" v-model="selectedUser.blocked">
@@ -92,8 +98,8 @@ function isValid() : boolean {
 
 function save() : void {
   if (selectedUser.value) {
-    const { id, username, admin, blocked } = selectedUser.value
-    socket.emit('adminUpdateUser', {id, username, admin, blocked}, result => {
+    const { id, username, admin, qaadmin, blocked } = selectedUser.value
+    socket.emit('adminUpdateUser', {id, username, admin, qaadmin, blocked}, result => {
       if (result.error) {
         errorMessagesStore.add(`Unable to update user: ${result.error}`)
       }
