@@ -60,7 +60,6 @@ import TalkChat from './TalkChat.vue'
 import TalkQA from './TalkQA.vue'
 import { onMounted, onUnmounted, ref } from 'vue'
 import socket from '@/util/socket'
-import router from '@/router'
 
 const props = defineProps<{
   talk: Talk
