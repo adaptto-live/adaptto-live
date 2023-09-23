@@ -27,7 +27,7 @@
           <a id="navLinkChat" class="nav-link active" href="#" @click.prevent="showChat">Discussion</a>
         </li>
         <li class="nav-item">
-          <a id="navLinkQA" class="nav-link" href="#" @click.prevent="showQA" v-use-longpress="3000" @longpress="showQABigView">Q&amp;A</a>
+          <a id="navLinkQA" class="nav-link" href="#" @click.prevent="showQA">Q&amp;A</a>
         </li>
       </ul>
     </div>
@@ -41,7 +41,7 @@
     <div class="tab-qa">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" v-use-longpress="3000" @longpress="showQABigView">Q&amp;A</a>
+          <a class="nav-link active">Q&amp;A</a>
         </li>
       </ul>
     </div>
@@ -60,7 +60,6 @@ import TalkChat from './TalkChat.vue'
 import TalkQA from './TalkQA.vue'
 import { onMounted, onUnmounted, ref } from 'vue'
 import socket from '@/util/socket'
-import router from '@/router'
 
 const props = defineProps<{
   talk: Talk
@@ -101,10 +100,6 @@ function showQA() {
   document.getElementById('contentChat')?.classList.remove('active')
   document.getElementById('navLinkQA')?.classList.add('active')
   document.getElementById('contentQA')?.classList.add('active')
-}
-
-function showQABigView() {
-  router.push('/qa')
 }
 </script>
 
