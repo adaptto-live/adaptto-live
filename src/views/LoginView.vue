@@ -58,8 +58,8 @@ function getInitialLoginCode() : string {
   }
 }
 
-socket.on('login', (userid, admin) => {
-  authenticationStore.login(code.value.trim().toLocaleUpperCase(), username.value.trim(), userid, admin)
+socket.on('login', (userid, admin, qaadmin?) => {
+  authenticationStore.login(code.value.trim().toLocaleUpperCase(), username.value.trim(), userid, admin, qaadmin ?? false)
   router.push('/')
 })
 

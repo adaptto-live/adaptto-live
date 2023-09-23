@@ -13,7 +13,11 @@
     </tr>
     <tr v-if="authenticationStore.admin">
       <th>Admin</th>
-      <td><code>{{authenticationStore.admin}}</code></td>
+      <td><code>{{authenticationStore.admin ? '☑' : '☐'}}</code></td>
+    </tr>
+    <tr v-if="authenticationStore.qaadmin">
+      <th>Q&A Admin</th>
+      <td><code>{{authenticationStore.qaadmin ? '☑' : '☐'}}</code></td>
     </tr>
     <tr>
       <th>Client Version</th>
