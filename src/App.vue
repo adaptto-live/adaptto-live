@@ -165,5 +165,8 @@ onUnmounted(() => {
 
 .modal {
   --bs-modal-border-width: 5px;
+  &.show {
+    z-index: 10000;  /* fix: show above other stuff, e.g. number of users */
+  }
 }
 </style>
