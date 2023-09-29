@@ -113,7 +113,7 @@ function copyToClipboard() {
   if (table) {
     table.classList.remove('d-none')
     // create a Range object
-    var range = document.createRange()
+    const range = document.createRange()
     // set the Node to select the "range"
     range.selectNode(table)
     // add the Range to the set of window selections
