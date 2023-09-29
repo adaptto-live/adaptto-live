@@ -1,4 +1,5 @@
 <template>
+  <button class="btn btn-primary float-end btn-sm mt-2" @click="copyToClipboard" title="To convert the ';' in comments with a newline, replace them with CTRL+J in Excel">Copy to Clipboard</button>
   <h2 id="headlineAdminTalkRatings">Admin: Talk Ratings</h2>
 
   <table class="table table-striped table-hover" aria-describedby="headlineAdminTalkRatings">
@@ -6,7 +7,7 @@
       <tr>
         <th>Talk</th>
         <th>Speaker</th>
-        <th>Average Rating</th>
+        <th>Rating</th>
         <th>Participants</th>
         <th>Comments</th>
       </tr>
@@ -48,7 +49,7 @@
     </tbody>
   </table>
 
-  <table class="excel-export">
+  <table id="excel-export" class="table d-none" data-bs-theme="light" aria-describedby="headlineAdminTalkRatings">
     <thead>
       <tr>
         <th>Talk</th>
@@ -65,8 +66,8 @@
           <td>{{talkRating.talk.speakers}}</td>
           <td>{{formatRatingLocalized(talkRating.result?.averageRating)}}</td>
           <td>{{talkRating.result?.participants}}</td>
-          <td>
-            <div v-for="(comment,index) in talkRating.result?.comments" :key="index">{{comment}}</div>
+          <td style="white-space:pre;">
+            <span v-for="(comment,index) in talkRating.result?.comments" :key="index">{{`${comment};`}}</span>
           </td>
         </tr>
       </template>
@@ -106,14 +107,26 @@ function formatRatingLocalized(rating? : number) : string|undefined {
     })
   }
 }
+
+function copyToClipboard() {
+  const table = document.querySelector('#excel-export')
+  if (table) {
+    table.classList.remove('d-none')
+    // create a Range object
+    var range = document.createRange()
+    // set the Node to select the "range"
+    range.selectNode(table)
+    // add the Range to the set of window selections
+    window.getSelection()?.addRange(range);   
+    // execute 'copy', can't 'cut' in this case
+    document.execCommand('copy')
+    table.classList.add('d-none')
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 td {
   word-break: break-word;
-}
-
-.excel-export {
-  display: none;
 }
 </style>
