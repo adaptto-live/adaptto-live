@@ -24,7 +24,7 @@
         </div>
       </template>
 
-      <table id="excel-export" class="table d-none" data-bs-theme="light" aria-describedby="excelExportCaption">
+      <table id="document-export" class="table d-none" data-bs-theme="light" aria-describedby="excelExportCaption">
         <tr>
           <th colspan="2" id="excelExportCaption">Talk QA</th>
         </tr>
@@ -281,7 +281,7 @@ function scrollToEndOfList() {
 }
 
 function copyToClipboard() {
-  const table = document.querySelector('#excel-export')
+  const table = document.querySelector('#document-export')
   if (table) {
     copyElementToClipboard(table)
   }
@@ -393,10 +393,12 @@ onUnmounted(() => {
   --bs-modal-zindex: 5000;
 }
 
-#excel-export {
+#document-export {
   background-color: #fff;
   color: #000;
   width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
   th {
     background-color: #ffe599;
     text-align: left;
