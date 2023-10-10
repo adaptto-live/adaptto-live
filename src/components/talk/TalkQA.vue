@@ -23,9 +23,29 @@
           <button class="btn btn-secondary btn-lg" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
         </div>
       </template>
+
+      <table id="excel-export" class="table d-none" data-bs-theme="light" aria-describedby="excelExportCaption">
+        <tr>
+          <th colspan="2" id="excelExportCaption">Talk QA</th>
+        </tr>
+        <tr v-for="message in messageWithoutReplies" :key="message.id">
+          <td>
+            <MessageDisplayExport :message="message"/>
+          </td>
+          <td>
+            <p v-if="message.answered && getReplies(message).length == 0">(see answer in talk video)</p>
+            <MessageDisplayExport v-else v-for="replyMessage in getReplies(message)" :key="replyMessage.id"
+                :message="replyMessage"/>
+          </td>
+        </tr>
+      </table>
+
       <div class="bottom" ref="bottomPlaceholder"/>
     </div>
-    <button v-if="!qaBigView" class="btn btn-primary" @click="addQuestion">Add Question</button>
+    <div class="buttons">
+      <button v-if="!qaBigView" class="btn btn-primary" @click="addQuestion">Add Question</button>
+      <button v-if="!qaBigView && authenticationStore.admin" class="btn btn-secondary" @click="copyToClipboard">Copy to Clipboard</button>
+    </div>
   </div>
 
   <div v-if="!qaBigView" class="modal" id="qaEntryModal" tabindex="-1">
@@ -98,6 +118,8 @@ import TextAreaEmojiPicker from '../structure/TextAreaEmojiPicker.vue'
 import { Modal } from 'bootstrap'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
 import MessageAnswerFilter from '@/services/MessageAnswerFilter'
+import MessageDisplayExport from './MessageDisplayExport.vue'
+import copyElementToClipboard from '@/util/copyElementToClipboard'
 
 const props = defineProps<{
   talk: Talk,
@@ -258,6 +280,13 @@ function scrollToEndOfList() {
   window.setTimeout(() => bottomPlaceholder.value?.scrollIntoView(), 200)
 }
 
+function copyToClipboard() {
+  const table = document.querySelector('#excel-export')
+  if (table) {
+    copyElementToClipboard(table)
+  }
+}
+
 onMounted(() => {
   socket.on('qaEntries', incomingMessages => {
     const scrollToEnd = (messages.value.length == 0)
@@ -293,6 +322,12 @@ onUnmounted(() => {
   grid-template-rows: 1fr auto;
   width: 100%;
   height: 100%;
+  .buttons {
+    display: flex;
+    > *:first-child {
+      flex-grow: 1;
+    }
+  }
 }
 .qa-window {
   background-color: #444;
@@ -356,5 +391,24 @@ onUnmounted(() => {
 
 .modal {
   --bs-modal-zindex: 5000;
+}
+
+#excel-export {
+  background-color: #fff;
+  color: #000;
+  width: 100%;
+  th {
+    background-color: #ffe599;
+    text-align: left;
+    padding: 5px;
+    font-weight: normal;
+    border: 1px solid black;
+  }
+  td {
+    vertical-align: top;
+    width: 50% !important;
+    border: 1px solid black;
+    word-break: break-word;
+  }
 }
 </style>
