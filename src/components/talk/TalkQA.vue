@@ -24,9 +24,9 @@
         </div>
       </template>
 
-      <table id="excel-export" class="table d-none" data-bs-theme="light">
+      <table id="excel-export" class="table d-none" data-bs-theme="light" aria-describedby="excelExportCaption">
         <tr>
-          <th colspan="2">Talk QA</th>
+          <th colspan="2" id="excelExportCaption">Talk QA</th>
         </tr>
         <tr v-for="message in messageWithoutReplies" :key="message.id">
           <td>
