@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-primary float-end btn-sm mt-2" @click="copyToClipboard" title="To convert the ';' in comments with a newline, replace them with CTRL+J in Excel">Copy to Clipboard</button>
+  <button class="btn btn-secondary float-end btn-sm mt-2" @click="copyToClipboard" title="To convert the ';' in comments with a newline, replace them with CTRL+J in Excel">Copy to Clipboard</button>
   <h2 id="headlineAdminTalkRatings">Admin: Talk Ratings</h2>
 
   <table class="table table-striped table-hover" aria-describedby="headlineAdminTalkRatings">
@@ -79,6 +79,7 @@
 <script setup lang="ts">
 import TalkManager from '@/services/TalkManager'
 import { type Talk } from '@/stores/talks'
+import copyElementToClipboard from '@/util/copyElementToClipboard';
 import socket from '@/util/socket'
 import type { AverageTalkRating } from '@/util/socket.types';
 import { onMounted, ref } from 'vue'
@@ -111,16 +112,7 @@ function formatRatingLocalized(rating? : number) : string|undefined {
 function copyToClipboard() {
   const table = document.querySelector('#excel-export')
   if (table) {
-    table.classList.remove('d-none')
-    // create a Range object
-    const range = document.createRange()
-    // set the Node to select the "range"
-    range.selectNode(table)
-    // add the Range to the set of window selections
-    window.getSelection()?.addRange(range);   
-    // execute 'copy', can't 'cut' in this case
-    document.execCommand('copy')
-    table.classList.add('d-none')
+    copyElementToClipboard(table)
   }
 }
 </script>
