@@ -12,6 +12,9 @@ import LoginCodeManagementViewVue from '@/views/admin/LoginCodeManagementViewVue
 import UserManagementViewVue from '@/views/admin/UserManagementView.vue'
 import TalkRatingsViewVue from '@/views/admin/TalkRatingsView.vue'
 import StatisticsViewVue from '@/views/admin/StatisticsView.vue'
+import ShutdownPage from '@/views/ShutdownPage.vue'
+
+const shutdownPage = (import.meta.env.VITE_SHUTDOWN_PAGE == 'true')
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -87,6 +90,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/shutdown',
+      name: 'shutdown',
+      component: ShutdownPage,
+      meta: {
+        noHeader: true
+      }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'notfound',
       component: NotFoundView
@@ -95,15 +106,25 @@ const router = createRouter({
 })
 
 router.beforeEach(function (to, from, next) {
-  const authenticationStore = useAuthenticationStore()
-  if ((to.name != 'login' && to.name != 'loginWithCode') && !authenticationStore.isAuthenticated) {
-    next({ path: '/login' })
-  }
-  else if ((to.name == 'login') && authenticationStore.isAuthenticated) {
-    next({ path: '/' })
+  if (shutdownPage) {
+    if (to.name != 'shutdown') {
+      next({ path: '/shutdown' })
+    }
+    else {
+      next()
+    }
   }
   else {
-    next()
+    const authenticationStore = useAuthenticationStore()
+    if ((to.name != 'login' && to.name != 'loginWithCode') && !authenticationStore.isAuthenticated) {
+      next({ path: '/login' })
+    }
+    else if ((to.name == 'login' || to.name == 'shutdown') && authenticationStore.isAuthenticated) {
+      next({ path: '/' })
+    }
+    else {
+      next()
+    }
   }
 })
 
