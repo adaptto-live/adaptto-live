@@ -47,7 +47,12 @@ export function formatTalkDuration(talk : Talk) : string|undefined {
   if (!talk.duration) {
     return undefined
   }
-  return `${talk.duration} min${talk.durationFAQ ? ` + ${talk.durationFAQ} min FAQ` : ''}`
+  if (talk.durationFAQ) {
+    return `${talk.duration} min + ${talk.durationFAQ} min FAQ`
+  }
+  else {
+    return `${talk.duration} min`
+  }
 }
 
 /**
