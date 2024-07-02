@@ -22,6 +22,7 @@
       <div class="float-end" v-if="!talk.lobby" @click.stop="">
         <TalkRating :talk="talk" :small-button="true"/>
       </div>
+      <span class="talkTime">{{formatTalkTime(talk)}}</span>
       <span class="title">{{talk.title}}</span>
       <span class="speakers">{{talk.speakers}}</span>
     </li>
@@ -38,6 +39,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import socket from '@/util/socket'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
+import { formatTalkTime } from '@/util/datetime'
 
 const router = useRouter()
 const talkManager = new TalkManager()
@@ -81,11 +83,16 @@ function setCurrentTalk(talk : Talk) : void {
       cursor: default;
     }
   }
+  .talkTime {
+    margin-right: 0.5rem;
+    color: #aaa;
+  }
   .title {
     font-weight: bold;
   }
   .speakers {
     margin-left: 0.5rem;
+    color: #aaa;
     font-size: smaller;
   }
 }

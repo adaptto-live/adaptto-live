@@ -1,6 +1,5 @@
 import { fileURLToPath } from 'node:url'
-import { mergeConfig } from 'vite'
-import { configDefaults, defineConfig } from 'vitest/config'
+import { mergeConfig, configDefaults, defineConfig } from 'vitest/config'
 import viteConfig from './vite.config'
 
 export default mergeConfig(
@@ -13,6 +12,11 @@ export default mergeConfig(
       transformMode: {
         web: [/\.[jt]sx$/],
       },
+      globals: true,
+      coverage: {
+        provider: 'istanbul',
+        reporter: ['lcov']
+      }
     }
   })
 )

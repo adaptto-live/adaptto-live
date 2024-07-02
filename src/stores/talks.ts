@@ -6,6 +6,10 @@ export interface Talk {
   day: number
   title: string
   speakers?: string
+  startTime?: number
+  endTime?: number
+  duration?: number
+  durationFAQ?: number
   url?: string
   lobby?: boolean
 }
@@ -65,8 +69,12 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         title = titleMatcher[1]
       }
       const speakers = queryIndexEntry.speakers
+      const startTime = parseFloat(entry.Start)
+      const endTime = parseFloat(entry.End)
+      const duration = parseInt(entry.Duration, 10)
+      const durationFAQ = parseInt(entry.FAQ, 10)
       const url = `${urlPrefix}${path}`
-      result.push({id, day, title, speakers, url})
+      result.push({id, day, title, speakers, startTime, endTime, duration, durationFAQ, url})
     }
   })
 
@@ -132,7 +140,11 @@ async function loadJson(url: string) : Promise<any> {
 interface ScheduleEntry {
   Day: string,
   Entry: string,
-  Type: string
+  Type: string,
+  Start: string,
+  End: string,
+  Duration: string,
+  FAQ: string
 }
 
 interface QueryIndexEntry {
