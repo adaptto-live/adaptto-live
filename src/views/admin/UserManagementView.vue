@@ -75,9 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import { useErrorMessagesStore } from '@/stores/errorMessages';
+import { useErrorMessagesStore } from '@/stores/errorMessages'
 import socket from '@/util/socket'
-import type { User } from '@/util/socket.types';
+import type { User } from '@/util/socket.types'
 import { onMounted, ref } from 'vue'
 
 const errorMessagesStore = useErrorMessagesStore()

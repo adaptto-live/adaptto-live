@@ -79,9 +79,9 @@
 <script setup lang="ts">
 import TalkManager from '@/services/TalkManager'
 import { type Talk } from '@/stores/talks'
-import copyElementToClipboard from '@/util/copyElementToClipboard';
+import copyElementToClipboard from '@/util/copyElementToClipboard'
 import socket from '@/util/socket'
-import type { AverageTalkRating } from '@/util/socket.types';
+import type { AverageTalkRating } from '@/util/socket.types'
 import { onMounted, ref } from 'vue'
 
 const talkManager = new TalkManager()

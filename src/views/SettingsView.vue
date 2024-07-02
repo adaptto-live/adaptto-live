@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
 import { version} from '@/../package.json'
-import { useDebugModeStore } from '@/stores/debugMode';
+import { useDebugModeStore } from '@/stores/debugMode'
 
 const authenticationStore = useAuthenticationStore()
 const debugModeStore = useDebugModeStore()

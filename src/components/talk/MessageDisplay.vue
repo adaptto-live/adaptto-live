@@ -14,7 +14,7 @@
 import type Message from '@/services/Message'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { computed } from 'vue'
-import linkifyString from 'linkify-string';
+import linkifyString from 'linkify-string'
 
 const authenticationStore = useAuthenticationStore()
 

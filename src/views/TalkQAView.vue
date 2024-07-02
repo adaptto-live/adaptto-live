@@ -16,11 +16,11 @@
 
 <script setup lang="ts">
 import TalkQABigView from '@/components/talkQA/TalkQABigView.vue'
-import MessageAnswerFilter from '@/services/MessageAnswerFilter';
+import MessageAnswerFilter from '@/services/MessageAnswerFilter'
 import TalkManager from '@/services/TalkManager'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
 
 const talkManager = new TalkManager()
 const currentTalkId = computed(() => useCurrentTalkStore().talkId)

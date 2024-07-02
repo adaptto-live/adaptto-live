@@ -1,4 +1,4 @@
-import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap'
 
 /**
  * Show Bootstrap modal with given ID.

@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import type Message from '@/services/Message'
 import { computed } from 'vue'
-import linkifyString from 'linkify-string';
+import linkifyString from 'linkify-string'
 
 const props = defineProps<{
   message: Message

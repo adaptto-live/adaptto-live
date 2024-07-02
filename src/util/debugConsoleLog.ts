@@ -1,4 +1,4 @@
-import isDebugMode from "./isDebugMode";
+import isDebugMode from './isDebugMode'
 
 export default function debugConsoleLog(message : string) {
   if (isDebugMode()) {

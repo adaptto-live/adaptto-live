@@ -1,5 +1,5 @@
-import { useTalksStore, type Talk } from "@/stores/talks"
-import type Day from "./Day"
+import { useTalksStore, type Talk } from '@/stores/talks'
+import type Day from './Day'
 
 export default class TalkManager {
 
