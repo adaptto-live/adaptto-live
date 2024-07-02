@@ -15,19 +15,26 @@ const talk : Talk = { id: 'talk-1', title: 'Talk 1', day: 1,
   startTime: 44102.416666666664, endTime: 44466.46527777778,
   duration: 30, durationFAQ: 10 }
 
+const talkNoFaq : Talk = { id: 'talk-1', title: 'Talk 1', day: 1,
+    startTime: 44102.416666666664, endTime: 44466.46527777778,
+    duration: 30 }
+  
 const talkNoTimeDuration : Talk = { id: 'talk-1', title: 'Talk 1', day: 1 }
  
 test('formatTalkTime', () => {
   expect(formatTalkTime(talk)).to.eq('10:00 - 11:10')
+  expect(formatTalkTime(talkNoFaq)).to.eq('10:00 - 11:10')
   expect(formatTalkTime(talkNoTimeDuration)).to.undefined
 })
 
 test('formatTalkDuration', () => {
   expect(formatTalkDuration(talk)).to.eq('30 min + 10 min FAQ')
+  expect(formatTalkDuration(talkNoFaq)).to.eq('30 min')
   expect(formatTalkDuration(talkNoTimeDuration)).to.undefined
 })
 
 test('formatTalkTimeDuration', () => {
   expect(formatTalkTimeDuration(talk)).to.eq('10:00 - 11:10 (30 min + 10 min FAQ)')
+  expect(formatTalkTimeDuration(talkNoFaq)).to.eq('10:00 - 11:10 (30 min)')
   expect(formatTalkTimeDuration(talkNoTimeDuration)).to.undefined
 })
