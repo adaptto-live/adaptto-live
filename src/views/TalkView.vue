@@ -5,7 +5,11 @@
         <a v-if="talk.url" :href="talk.url" target="_blank">{{talk.title}}</a>
         <span v-else>{{talk.title}}</span>
       </h3>
-      <p v-if="talk.speakers">{{talk.speakers}}</p>
+      <p v-if="talk.speakers || talkTimeDuration">
+        {{talk.speakers}}
+        <span v-if="talk.speakers && talkTimeDuration"> | </span>
+        {{talkTimeDuration}}
+      </p>
       <p v-if="talk.lobby">Welcome to the Lobby. This room is active when there is currently no talk.</p>
     </div>
     <div class="rating" v-if="!talk.lobby">
@@ -19,12 +23,14 @@
 import TalkDiscussion from '@/components/talk/TalkDiscussion.vue'
 import TalkRating from '@/components/talk/TalkRating.vue'
 import TalkManager from '@/services/TalkManager'
+import { formatTalkTimeDuration } from '@/util/datetime'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const talkId = route.params.talk as string
 const talkManager = new TalkManager()
 const talk = talkManager.getTalk(talkId)
+const talkTimeDuration = talk ? formatTalkTimeDuration(talk) : undefined
 </script>
 
 <style lang="scss" scoped>
