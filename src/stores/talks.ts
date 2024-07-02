@@ -69,16 +69,26 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         title = titleMatcher[1]
       }
       const speakers = queryIndexEntry.speakers
-      const startTime = parseFloat(entry.Start)
-      const endTime = parseFloat(entry.End)
-      const duration = parseInt(entry.Duration, 10)
-      const durationFAQ = parseInt(entry.FAQ, 10)
+      const startTime = parseFloatOrUndefined(entry.Start)
+      const endTime = parseFloatOrUndefined(entry.End)
+      const duration = parseIntOrUndefined(entry.Duration)
+      const durationFAQ = parseIntOrUndefined(entry.FAQ)
       const url = `${urlPrefix}${path}`
       result.push({id, day, title, speakers, startTime, endTime, duration, durationFAQ, url})
     }
   })
 
   return addDailyLobbyTalks(result)
+}
+
+function parseFloatOrUndefined(value : string) : number|undefined {
+  const result = parseFloat(value)
+  return isNaN(result) ? undefined : result
+}
+
+function parseIntOrUndefined(value : string) : number|undefined {
+  const result = parseInt(value, 10)
+  return isNaN(result) ? undefined : result
 }
 
 /**
