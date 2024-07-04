@@ -4,6 +4,7 @@
       <h3>
         <a v-if="talk.url" :href="talk.url" target="_blank">{{talk.title}}</a>
         <span v-else>{{talk.title}}</span>
+        <button class="btn btn-outline-secondary ms-3" data-bs-toggle="modal" data-bs-target="#talkModeratorNotesModal">Moderator Notes</button>
       </h3>
       <p v-if="talk.speakers || talkTimeDuration">
         {{talk.speakers}}
@@ -16,11 +17,13 @@
       <TalkRating v-if="talk" :talk="talk"/>
     </div>
     <TalkDiscussion :talk="talk" class="content"/>
+    <TalkModeratorNotes :talk="talk"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import TalkDiscussion from '@/components/talk/TalkDiscussion.vue'
+import TalkModeratorNotes from '@/components/talk/TalkModeratorNotes.vue'
 import TalkRating from '@/components/talk/TalkRating.vue'
 import TalkManager from '@/services/TalkManager'
 import { formatTalkTimeDuration } from '@/util/datetime'
