@@ -33,12 +33,11 @@
 
 <script setup lang="ts">
 import type { Talk } from '@/stores/talks'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import socket from '@/util/socket'
 import type { ModeratorTalkNotesFromServer } from '@/util/socket.types'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
 import TextAreaEmojiPicker from '../structure/TextAreaEmojiPicker.vue'
-import { computed } from 'vue'
 import linkifyString from 'linkify-string'
 import { useAuthenticationStore } from '@/stores/authentication'
 
