@@ -1,6 +1,6 @@
 <template>
   <div class="shutdown">
-    <img src="@/assets/logo-on-transparent.svg" alt=""/>
+    <img src="@/assets/logo-with-text.svg" alt=""/>
     <h1>adaptTo() Live</h1>
     <p>is not running.</p>
   </div>
@@ -12,6 +12,6 @@
 }
 img {
   margin: 50px;
-  width: 150px;
+  width: 160px;
 }
 </style>
