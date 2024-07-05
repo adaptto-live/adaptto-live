@@ -11,6 +11,7 @@
         {{talkTimeDuration}}
       </p>
       <p v-if="talk.lobby">Welcome to the Lobby. This room is active when there is currently no talk.</p>
+      <TalkModeratorNotes :talk="talk"/>
     </div>
     <div class="rating" v-if="!talk.lobby">
       <TalkRating v-if="talk" :talk="talk"/>
@@ -21,6 +22,7 @@
 
 <script setup lang="ts">
 import TalkDiscussion from '@/components/talk/TalkDiscussion.vue'
+import TalkModeratorNotes from '@/components/talk/TalkModeratorNotes.vue'
 import TalkRating from '@/components/talk/TalkRating.vue'
 import TalkManager from '@/services/TalkManager'
 import { formatTalkTimeDuration } from '@/util/datetime'
