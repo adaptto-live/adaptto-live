@@ -18,7 +18,7 @@
     <li v-for="talk in talks" :key="talk.id" class="list-group-item list-group-item-action"
         :class="{active:currentTalkId == talk.id}"
         @click="navigateTo(talk)">
-      <button v-if="admin && currentTalkId != talk.id" class="float-end btn btn-sm btn-outline-primary ms-3" @click.stop="setCurrentTalk(talk)">Set Current</button>
+      <button v-if="allowChangeCurrentTalk && currentTalkId != talk.id" class="float-end btn btn-sm btn-outline-primary ms-3" @click.stop="setCurrentTalkAskConfirmation(talk)">Set Current</button>
       <div class="float-end" v-if="!talk.lobby" @click.stop="">
         <TalkRating :talk="talk" :small-button="true"/>
       </div>
@@ -27,6 +27,25 @@
       <span class="speakers">{{talk.speakers}}</span>
     </li>
   </ul>
+
+  <div class="modal" tabindex="-1" id="switchTalkConfirmModal">
+    <div class="modal-dialog">
+      <div class="modal-content" v-if="selectedTalk">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Set Current Talk</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to change the current talk to <b>{{selectedTalk.title}}</b>?</p>
+          <p>All users get notified by this change.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="setCurrentTalk(selectedTalk)">OK</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -40,14 +59,17 @@ import { useRouter } from 'vue-router'
 import socket from '@/util/socket'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
 import { formatTalkTime } from '@/util/datetime'
+import showModal from '@/util/showModal'
 
 const router = useRouter()
 const talkManager = new TalkManager()
 const currentTalkStore = useCurrentTalkStore()
 const currentTalkId = computed(() => currentTalkStore.talkId)
 const currentTalk = computed(() => talkManager.getTalk(currentTalkId.value))
-const admin = useAuthenticationStore().isAdmin
+const authenticationStore = useAuthenticationStore()
+const allowChangeCurrentTalk = authenticationStore.admin || authenticationStore.qaadmin
 const errorMessagesStore = useErrorMessagesStore()
+const selectedTalk = ref(undefined as Talk|undefined)
 
 let currentDay = ref(currentTalk.value?.day ?? 1)
 const talks = computed(() => {
@@ -63,6 +85,11 @@ function switchDay(day : number) : void {
 
 function navigateTo(talk : Talk) : void {
   router.push(`/talk/${talk.id}`)
+}
+
+function setCurrentTalkAskConfirmation(talk : Talk) : void {
+  selectedTalk.value = talk
+  showModal('switchTalkConfirmModal')
 }
 
 function setCurrentTalk(talk : Talk) : void {
