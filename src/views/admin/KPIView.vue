@@ -54,12 +54,26 @@ socket.on('adminKPIDataset', (dataset) => {
 
 function getData(dataset: KPIDataset) {
   return {
-    labels: Object.keys(dataset.days[0].values),
-    datasets: dataset.days.map((day,index) => ({
+    labels: dataset.days[0].values
+      .map(item => item.x)
+      .map(value => hoursToTime(value)),
+    datasets: dataset.days.map(day => ({
       label: `Day ${day.day}`,
-      data: Object.values(day.values)
+      data: day.values
+        .map(item => item.y)
+        .map(value => value == 0 ? null : value)
     }))
   }
+}
+
+const minutesFormatter = new Intl.NumberFormat('en-GB', { 
+  minimumIntegerDigits: 2
+})
+
+function hoursToTime(hours: number) : string {
+  const partialHours = hours % 1
+  const hour = Math.floor(hours)
+  return `${hour}:${minutesFormatter.format(partialHours * 60)}`
 }
 
 function getOptions(dataset: KPIDataset) {
@@ -72,11 +86,6 @@ function getOptions(dataset: KPIDataset) {
     scales: {
       x: {
         ticks: {
-          color: axisLabelColor
-        },
-        title: {
-          display: true,
-          text: dataset.xAxisTitle,
           color: axisLabelColor
         }
       },
@@ -96,7 +105,7 @@ function getOptions(dataset: KPIDataset) {
     },
     datasets: {
       line: {
-        tension: 0.1
+        tension: 0.2
       }
     }
   }
