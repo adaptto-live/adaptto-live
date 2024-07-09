@@ -14,7 +14,7 @@
           <div class="me-auto">
             <RouterLink to="/all-talks" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">All Talks</RouterLink>
             <template v-if="authenticationStore.qaadmin">
-              <RouterLink to="/qa" class="btn btn-warning me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">Q&A View</RouterLink>
+              <RouterLink to="/qa" class="btn btn-warning me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">Q&amp;A View</RouterLink>
             </template>
             <template v-else>
               <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
@@ -36,7 +36,7 @@
                 <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
                 <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><RouterLink to="/qa" class="dropdown-item">Q&A View</RouterLink></li>
+                <li><RouterLink to="/qa" class="dropdown-item">Q&amp;A View</RouterLink></li>
               </ul>
             </li>
             <li class="nav-item">

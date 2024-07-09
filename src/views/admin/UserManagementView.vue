@@ -13,7 +13,7 @@
           </div>
         </th>
         <th>Admin</th>
-        <th>Q&A</th>
+        <th>Q&amp;A</th>
         <th>Blocked</th>
         <th>Created</th>
         <th>Updated</th>
@@ -58,7 +58,7 @@
           </div>
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="userQAAdmin" v-model="selectedUser.qaadmin">
-            <label class="form-check-label" for="userQAAdmin">Q&A</label>
+            <label class="form-check-label" for="userQAAdmin">Q&amp;A</label>
           </div>
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="userBlocked" v-model="selectedUser.blocked">
