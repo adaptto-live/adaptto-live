@@ -2,9 +2,16 @@
   <h2>Admin: KPI</h2>
 
   <template v-for="(dataset,index) in datasets" :key="index">
-    <h4>{{dataset.title}}</h4>
+    <h4 class="mt-3">{{dataset.title}}</h4>
     <div class="chart">
-      <Line :data="getData(dataset)" :options="getOptions(dataset)"/>
+      <Line :data="getDatasetData(dataset)" :options="getOptions(dataset.yAxisTitle)"/>
+    </div>
+  </template>
+
+  <template v-if="talkRatings">
+    <h4 class="mt-3">Average Talk Ratings</h4>
+    <div class="chart">
+      <Line :data="getTalkRatingData(talkRatings)" :options="getOptions('Talk')"/>
     </div>
   </template>
 
@@ -27,6 +34,8 @@ import {
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import TalkManager from '@/services/TalkManager'
+import type { AverageTalkRating } from '@/util/socket.types'
+import type { Talk } from '@/stores/talks'
 
 ChartJS.register(CategoryScale,
   LinearScale,
@@ -41,18 +50,23 @@ ChartJS.register(CategoryScale,
 const axisLabelColor = '#ccc'
 
 const datasets = ref([] as KPIDataset[])
+const talkManager = new TalkManager()
+const talkRatings = ref(undefined as AverageTalkRating[]|undefined)
 
 onMounted(() => {
-  const talkManager = new TalkManager()
   socket.emit('adminGetKPI', talkManager.days.map(day => day.date).filter(date => date !== undefined))
+  socket.emit('adminGetTalkRatings')
 })
 socket.on('adminKPIDataset', (dataset) => {
   if (dataset.days.length > 0) {
     datasets.value.push(dataset)
   }
 })
+socket.on('adminTalkRatings', (ratings: AverageTalkRating[]) => {
+  talkRatings.value = ratings
+})
 
-function getData(dataset: KPIDataset) {
+function getDatasetData(dataset: KPIDataset) {
   return {
     labels: dataset.days[0].values
       .map(item => item.x)
@@ -76,7 +90,23 @@ function hoursToTime(hours: number) : string {
   return `${hour}:${minutesFormatter.format(partialHours * 60)}`
 }
 
-function getOptions(dataset: KPIDataset) {
+function getTalkRatingData(data: AverageTalkRating[]) {
+  const maxTalkCount = talkManager.days.reduce((max, day) => Math.max(max, day.talks.filter(talk => !talk.lobby).length), 0)
+  const labels = Array.from({length: maxTalkCount}, (_, index) => index + 1).map(index => `#${index}`)
+  return {
+    labels,
+    datasets: talkManager.days.map(day => ({
+      label: `Day ${day.day}`,
+      data: day.talks.filter(talk => !talk.lobby).map(talk => {
+        const rating = data.find(item => item.talkId == talk.id)
+        return rating ? rating.averageRating : null
+      })
+    }))
+  }
+}
+
+
+function getOptions(yAxisTitle: string) {
   return {
     responsive: true,
     maintainAspectRatio: false,
@@ -98,7 +128,7 @@ function getOptions(dataset: KPIDataset) {
         },
         title: {
           display: true,
-          text: dataset.yAxisTitle,
+          text: yAxisTitle,
           color: axisLabelColor
         }
       }
