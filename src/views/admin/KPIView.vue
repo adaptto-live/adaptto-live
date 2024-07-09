@@ -11,7 +11,12 @@
   <template v-if="talkRatings">
     <h4 class="mt-3">Average Talk Ratings</h4>
     <div class="chart">
-      <Line :data="getTalkRatingData(talkRatings)" :options="getOptions('Talk')"/>
+      <Line :data="getTalkAverageRatingData(talkRatings)" :options="getOptions('Avg. Rating / Talk')"/>
+    </div>
+
+    <h4 class="mt-3">Talk Rating Participation</h4>
+    <div class="chart">
+      <Line :data="getTalkRatingParticipationData(talkRatings)" :options="getOptions('# Rating Participants / Talk')"/>
     </div>
   </template>
 
@@ -19,7 +24,7 @@
 
 <script setup lang="ts">
 import socket from '@/util/socket'
-import type { KPIDataset } from '@/util/socket.types'
+import type { KPIDataset, AverageTalkRating } from '@/util/socket.types'
 import { onMounted, ref } from 'vue'
 import {
   Chart as ChartJS,
@@ -34,8 +39,6 @@ import {
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import TalkManager from '@/services/TalkManager'
-import type { AverageTalkRating } from '@/util/socket.types'
-import type { Talk } from '@/stores/talks'
 
 ChartJS.register(CategoryScale,
   LinearScale,
@@ -90,7 +93,15 @@ function hoursToTime(hours: number) : string {
   return `${hour}:${minutesFormatter.format(partialHours * 60)}`
 }
 
-function getTalkRatingData(data: AverageTalkRating[]) {
+function getTalkAverageRatingData(data: AverageTalkRating[]) {
+  return getTalkRatingData(data, rating => rating.averageRating)
+}
+
+function getTalkRatingParticipationData(data: AverageTalkRating[]) {
+  return getTalkRatingData(data, rating => rating.participants)
+}
+
+function getTalkRatingData(data: AverageTalkRating[], fn: (rating: AverageTalkRating) => number) {
   const maxTalkCount = talkManager.days.reduce((max, day) => Math.max(max, day.talks.filter(talk => !talk.lobby).length), 0)
   const labels = Array.from({length: maxTalkCount}, (_, index) => index + 1).map(index => `#${index}`)
   return {
@@ -99,12 +110,12 @@ function getTalkRatingData(data: AverageTalkRating[]) {
       label: `Day ${day.day}`,
       data: day.talks.filter(talk => !talk.lobby).map(talk => {
         const rating = data.find(item => item.talkId == talk.id)
-        return rating ? rating.averageRating : null
+        const value = rating ? fn(rating) : 0
+        return value > 0 ? value : null
       })
     }))
   }
 }
-
 
 function getOptions(yAxisTitle: string) {
   return {
