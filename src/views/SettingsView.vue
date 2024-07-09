@@ -16,7 +16,7 @@
       <td><code>{{authenticationStore.admin ? '☑' : '☐'}}</code></td>
     </tr>
     <tr v-if="authenticationStore.qaadmin">
-      <th>Q&A Admin</th>
+      <th>Q&amp;A Admin</th>
       <td><code>{{authenticationStore.qaadmin ? '☑' : '☐'}}</code></td>
     </tr>
     <tr>
