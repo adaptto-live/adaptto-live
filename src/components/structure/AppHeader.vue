@@ -35,6 +35,7 @@
                 <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
                 <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
                 <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>
+                <li><RouterLink to="/admin/kpi" class="dropdown-item">KPI</RouterLink></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><RouterLink to="/qa" class="dropdown-item">Q&amp;A View</RouterLink></li>
               </ul>

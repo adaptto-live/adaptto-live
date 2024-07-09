@@ -1,5 +1,6 @@
 import { useTalksStore, type Talk } from '@/stores/talks'
 import type Day from './Day'
+import { convertSheetDateValue } from '@/util/datetime'
 
 export default class TalkManager {
 
@@ -18,7 +19,11 @@ export default class TalkManager {
     if (!this._days) {
       const dayNumbers = Array.from(this.talks.reduce((set, talk) => set.add(talk.day), new Set<number>()))
       dayNumbers.sort((a,b) => a - b)
-      this._days = dayNumbers.map(day => ({ day, talks: this.talks.filter(talk => talk.day == day) }))  
+      this._days = dayNumbers.map(day => {
+        const talks = this.talks.filter(talk => talk.day == day)
+        const date = getDayDate(talks)
+        return { day, date, talks }
+      })
     }
     return this._days
   }
@@ -37,4 +42,16 @@ export default class TalkManager {
     return index1 > index2
   }
 
+}
+
+function getDayDate(talks : Talk[]) : Date|undefined {
+  const startTime = talks.find(talk => talk.startTime)?.startTime
+  if (startTime) {
+    return toDate(convertSheetDateValue(startTime))
+  }
+  return undefined
+}
+
+function toDate(dateTime : Date) {
+  return new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate())
 }
