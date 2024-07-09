@@ -34,8 +34,7 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
-  Colors
+  Legend
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import TalkManager from '@/services/TalkManager'
@@ -46,10 +45,11 @@ ChartJS.register(CategoryScale,
   LineElement,
   Title,
   Tooltip,
-  Legend,
-  Colors
+  Legend
 )
 
+const dataBackgroundColors = ['#0f0','#00f','#f00']
+const dataBorderColors = ['#4f4','#44f','#f44']
 const axisLabelColor = '#ccc'
 
 const datasets = ref([] as KPIDataset[])
@@ -74,11 +74,13 @@ function getDatasetData(dataset: KPIDataset) {
     labels: dataset.days[0].values
       .map(item => item.x)
       .map(value => hoursToTime(value)),
-    datasets: dataset.days.map(day => ({
+    datasets: dataset.days.map((day,index) => ({
       label: `Day ${day.day}`,
       data: day.values
         .map(item => item.y)
-        .map(value => value == 0 ? null : value)
+        .map(value => value == 0 ? null : value),
+      borderColor: dataBorderColors[index],
+      backgroundColor: dataBackgroundColors[index]
     }))
   }
 }
@@ -106,13 +108,15 @@ function getTalkRatingData(data: AverageTalkRating[], fn: (rating: AverageTalkRa
   const labels = Array.from({length: maxTalkCount}, (_, index) => index + 1).map(index => `#${index}`)
   return {
     labels,
-    datasets: talkManager.days.map(day => ({
+    datasets: talkManager.days.map((day,index) => ({
       label: `Day ${day.day}`,
       data: day.talks.filter(talk => !talk.lobby).map(talk => {
         const rating = data.find(item => item.talkId == talk.id)
         const value = rating ? fn(rating) : 0
         return value > 0 ? value : null
-      })
+      }),
+      borderColor: dataBorderColors[index],
+      backgroundColor: dataBackgroundColors[index]
     }))
   }
 }
@@ -123,6 +127,13 @@ function getOptions(yAxisTitle: string) {
     maintainAspectRatio: false,
     layout: {
       padding: 10
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: axisLabelColor
+        }
+      }
     },
     scales: {
       x: {
