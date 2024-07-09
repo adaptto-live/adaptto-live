@@ -12,6 +12,7 @@ import LoginCodeManagementViewVue from '@/views/admin/LoginCodeManagementViewVue
 import UserManagementViewVue from '@/views/admin/UserManagementView.vue'
 import TalkRatingsViewVue from '@/views/admin/TalkRatingsView.vue'
 import StatisticsViewVue from '@/views/admin/StatisticsView.vue'
+import KPIView from '@/views/admin/KPIView.vue'
 import ShutdownPage from '@/views/ShutdownPage.vue'
 
 const shutdownPage = (import.meta.env.VITE_SHUTDOWN_PAGE == 'true')
@@ -80,6 +81,11 @@ const router = createRouter({
       path: '/admin/statistics',
       name: 'admin-statistics',
       component: StatisticsViewVue
+    },
+    {
+      path: '/admin/kpi',
+      name: 'admin-kpi',
+      component: KPIView
     },
     {
       path: '/qa',
