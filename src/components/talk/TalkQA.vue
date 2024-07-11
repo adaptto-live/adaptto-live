@@ -19,7 +19,7 @@
               </div>
             </div>
           </div>
-          <QAEntryLike :message="message" class="like-button"/>
+          <QAEntryLike :id="message.id" :likeUserIds="message.likeUserIds" :key="(message.likeUserIds??[]).length" class="like-button" :disabled="qaBigView"/>
           <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
           <button class="btn btn-secondary btn-lg" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
         </div>
