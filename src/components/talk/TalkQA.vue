@@ -19,6 +19,7 @@
               </div>
             </div>
           </div>
+          <QAEntryLike :message="message" class="like-button"/>
           <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
           <button class="btn btn-secondary btn-lg" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
         </div>
@@ -120,6 +121,7 @@ import { useErrorMessagesStore } from '@/stores/errorMessages'
 import MessageAnswerFilter from '@/services/MessageAnswerFilter'
 import MessageDisplayExport from './MessageDisplayExport.vue'
 import copyElementToClipboard from '@/util/copyElementToClipboard'
+import QAEntryLike from '../talkQA/QAEntryLike.vue'
 
 const props = defineProps<{
   talk: Talk,
@@ -304,6 +306,7 @@ onMounted(() => {
       message.text = updatedMessage.text
       message.highlight = updatedMessage.highlight
       message.answered = updatedMessage.answered
+      message.likeUserIds = updatedMessage.likeUserIds
     }
   })
   socket.on('qaEntryDelete', id => {
@@ -374,10 +377,14 @@ onUnmounted(() => {
       background-color: unset;
     }
   }
+  .like-button {
+    margin-left: 15px;
+    margin-right: 0;
+  }
   .reply-button {
     height: 40px;
+    margin-left: 5px;
     margin-right: 0;
-    margin-left: 15px;
   }
   .reply-list {
     margin-left: 20px;

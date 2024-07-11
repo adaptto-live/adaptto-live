@@ -7,4 +7,5 @@ export default interface Message {
   replyTo?: string
   highlight?: boolean
   answered?: boolean
+  likeUserIds?: string[]
 }
