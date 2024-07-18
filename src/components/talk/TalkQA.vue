@@ -57,6 +57,9 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <p class="fst-italic">
+            Please write briefly and concisely.
+          </p>
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="qaEntryAnonymous" v-model="messageAnonymous">
