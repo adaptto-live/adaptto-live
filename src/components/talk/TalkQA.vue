@@ -3,7 +3,7 @@
     <div class="qa-window">
       <template v-for="(message, index) in messageWithoutReplies" :key="message.id">
         <div class="message-container">
-          <div class="index">{{index+1}}.</div>
+          <div class="index">{{message.entryIndex ? `${message.entryIndex}.` : ''}}</div>
           <div class="message-and-replies">
             <MessageDisplay :message="message" :read-only="qaBigView"
                 @message-clicked="messageClicked(message)"/>
@@ -229,9 +229,9 @@ function sendNewMessage(messageUsername?: string) : void {
   const id = uuidv4()
   const text = messageText.value
   const replyTo = replyToMessage.value?.id
-  socket.emit('qaEntry', { id, talkId: props.talk.id, text, anonymous: messageAnonymous.value, replyTo}, result => {
+  socket.emit('qaEntry', { id, talkId: props.talk.id, text, anonymous: messageAnonymous.value, replyTo}, (result, entryIndex) => {
     if (result.success) {
-      addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, replyTo})
+      addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, entryIndex, replyTo})
     }
     else if (result.error) {
       errorMessagesStore.add(`Unable to create QA entry: ${result.error}`)

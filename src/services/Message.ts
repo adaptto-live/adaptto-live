@@ -4,6 +4,7 @@ export default interface Message {
   userid: string
   username?: string
   text: string
+  entryIndex?: number
   replyTo?: string
   highlight?: boolean
   answered?: boolean
