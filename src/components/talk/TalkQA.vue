@@ -122,19 +122,27 @@ import MessageAnswerFilter from '@/services/MessageAnswerFilter'
 import MessageDisplayExport from './MessageDisplayExport.vue'
 import copyElementToClipboard from '@/util/copyElementToClipboard'
 import QAEntryLike from '../talkQA/QAEntryLike.vue'
+import MessageSortOrder from '@/services/MessageSortOrder'
 
 const props = defineProps<{
   talk: Talk,
   qaBigView?: boolean,
-  messageAnswerFilter?: MessageAnswerFilter
+  messageAnswerFilter?: MessageAnswerFilter,
+  messageSortOrder?: MessageSortOrder
 }>()
 
 const authenticationStore = useAuthenticationStore()
 const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
-const messageWithoutReplies = computed(() => messages.value
-    .filter(item => item.replyTo == undefined)
-    .filter(item => item.answered && props.messageAnswerFilter != MessageAnswerFilter.UNANSWERED || !item.answered && props.messageAnswerFilter != MessageAnswerFilter.ANSWERED))
+const messageWithoutReplies = computed(() => {
+  const filteredMessages = messages.value
+      .filter(item => item.replyTo == undefined)
+      .filter(item => item.answered && props.messageAnswerFilter != MessageAnswerFilter.UNANSWERED || !item.answered && props.messageAnswerFilter != MessageAnswerFilter.ANSWERED)
+  if (props.messageSortOrder == MessageSortOrder.VOTES) {
+    filteredMessages.sort((msg1, msg2) => (msg2.likeUserIds?.length ?? 0) - (msg1.likeUserIds?.length ?? 0))
+  }
+  return filteredMessages
+})
 
 const messageText = ref('')
 const messageAnonymous = ref(false)
