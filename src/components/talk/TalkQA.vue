@@ -60,7 +60,7 @@
           <p class="fst-italic">
             Please write briefly and concisely.
           </p>
-          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true" :max-length="1000"/>
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="qaEntryAnonymous" v-model="messageAnonymous">
             <label class="form-check-label" for="qaEntryAnonymous">Anonymous (without user name)</label>
@@ -94,7 +94,7 @@
           <div class="reply-to-question" v-if="replyToMessage">
             {{replyToMessage.text}}
           </div>
-          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true" :max-length="1000"/>
           <div v-if="authenticationStore.admin" class="form-check mt-3">
             <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="messageHighlight">
             <label class="form-check-label" for="qaEntryReplyHighlight">Highlight</label>
