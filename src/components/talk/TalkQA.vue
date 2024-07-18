@@ -1,7 +1,7 @@
 <template>
   <div class="qa-container">
     <div class="qa-window">
-      <template v-for="(message, index) in messageWithoutReplies" :key="message.id">
+      <template v-for="message in messageWithoutReplies" :key="message.id">
         <div class="message-container">
           <div class="index">{{message.entryIndex ? `${message.entryIndex}.` : ''}}</div>
           <div class="message-and-replies">
@@ -21,7 +21,7 @@
           </div>
           <QAEntryLike :id="message.id" :likeUserIds="message.likeUserIds" :key="(message.likeUserIds??[]).length" class="like-button" :disabled="qaBigView"/>
           <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
-          <button class="btn btn-secondary btn-lg" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
+          <button class="btn btn-secondary btn-lg answer-button" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
         </div>
       </template>
 
@@ -388,11 +388,16 @@ onUnmounted(() => {
   .like-button {
     margin-left: 15px;
     margin-right: 0;
+    margin-top: 0px;
   }
   .reply-button {
     height: 40px;
     margin-left: 5px;
     margin-right: 0;
+    margin-top: 0;
+  }
+  .answer-button {
+    margin-top: 0;
   }
   .reply-list {
     margin-left: 20px;
