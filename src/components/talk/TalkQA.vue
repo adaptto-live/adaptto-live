@@ -1,9 +1,9 @@
 <template>
   <div class="qa-container">
     <div class="qa-window">
-      <template v-for="(message, index) in messageWithoutReplies" :key="message.id">
+      <template v-for="message in messageWithoutReplies" :key="message.id">
         <div class="message-container">
-          <div class="index">{{index+1}}.</div>
+          <div class="index">{{message.entryIndex ? `${message.entryIndex}.` : ''}}</div>
           <div class="message-and-replies">
             <MessageDisplay :message="message" :read-only="qaBigView"
                 @message-clicked="messageClicked(message)"/>
@@ -19,8 +19,9 @@
               </div>
             </div>
           </div>
+          <QAEntryLike :id="message.id" :likeUserIds="message.likeUserIds" :key="(message.likeUserIds??[]).length" class="like-button" :disabled="qaBigView"/>
           <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
-          <button class="btn btn-secondary btn-lg" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
+          <button class="btn btn-secondary btn-lg answer-button" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
         </div>
       </template>
 
@@ -56,7 +57,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+          <p class="fst-italic">
+            Please write briefly and concisely.
+          </p>
+          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true" :max-length="1000"/>
           <div class="mt-3 form-check">
             <input type="checkbox" class="form-check-input" id="qaEntryAnonymous" v-model="messageAnonymous">
             <label class="form-check-label" for="qaEntryAnonymous">Anonymous (without user name)</label>
@@ -90,7 +94,7 @@
           <div class="reply-to-question" v-if="replyToMessage">
             {{replyToMessage.text}}
           </div>
-          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true"/>
+          <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true" :max-length="1000"/>
           <div v-if="authenticationStore.admin" class="form-check mt-3">
             <input type="checkbox" class="form-check-input" id="qaEntryReplyHighlight" v-model="messageHighlight">
             <label class="form-check-label" for="qaEntryReplyHighlight">Highlight</label>
@@ -120,19 +124,28 @@ import { useErrorMessagesStore } from '@/stores/errorMessages'
 import MessageAnswerFilter from '@/services/MessageAnswerFilter'
 import MessageDisplayExport from './MessageDisplayExport.vue'
 import copyElementToClipboard from '@/util/copyElementToClipboard'
+import QAEntryLike from '../talkQA/QAEntryLike.vue'
+import MessageSortOrder from '@/services/MessageSortOrder'
 
 const props = defineProps<{
   talk: Talk,
   qaBigView?: boolean,
-  messageAnswerFilter?: MessageAnswerFilter
+  messageAnswerFilter?: MessageAnswerFilter,
+  messageSortOrder?: MessageSortOrder
 }>()
 
 const authenticationStore = useAuthenticationStore()
 const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
-const messageWithoutReplies = computed(() => messages.value
-    .filter(item => item.replyTo == undefined)
-    .filter(item => item.answered && props.messageAnswerFilter != MessageAnswerFilter.UNANSWERED || !item.answered && props.messageAnswerFilter != MessageAnswerFilter.ANSWERED))
+const messageWithoutReplies = computed(() => {
+  const filteredMessages = messages.value
+      .filter(item => item.replyTo == undefined)
+      .filter(item => item.answered && props.messageAnswerFilter != MessageAnswerFilter.UNANSWERED || !item.answered && props.messageAnswerFilter != MessageAnswerFilter.ANSWERED)
+  if (props.messageSortOrder == MessageSortOrder.VOTES) {
+    filteredMessages.sort((msg1, msg2) => (msg2.likeUserIds?.length ?? 0) - (msg1.likeUserIds?.length ?? 0))
+  }
+  return filteredMessages
+})
 
 const messageText = ref('')
 const messageAnonymous = ref(false)
@@ -219,9 +232,9 @@ function sendNewMessage(messageUsername?: string) : void {
   const id = uuidv4()
   const text = messageText.value
   const replyTo = replyToMessage.value?.id
-  socket.emit('qaEntry', { id, talkId: props.talk.id, text, anonymous: messageAnonymous.value, replyTo}, result => {
+  socket.emit('qaEntry', { id, talkId: props.talk.id, text, anonymous: messageAnonymous.value, replyTo}, (result, entryIndex) => {
     if (result.success) {
-      addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, replyTo})
+      addMessage({id, date: new Date(), userid: authenticationStore.userid, username: messageUsername, text, entryIndex, replyTo})
     }
     else if (result.error) {
       errorMessagesStore.add(`Unable to create QA entry: ${result.error}`)
@@ -304,6 +317,7 @@ onMounted(() => {
       message.text = updatedMessage.text
       message.highlight = updatedMessage.highlight
       message.answered = updatedMessage.answered
+      message.likeUserIds = updatedMessage.likeUserIds
     }
   })
   socket.on('qaEntryDelete', id => {
@@ -374,10 +388,19 @@ onUnmounted(() => {
       background-color: unset;
     }
   }
+  .like-button {
+    margin-left: 15px;
+    margin-right: 0;
+    margin-top: 0px;
+  }
   .reply-button {
     height: 40px;
+    margin-left: 5px;
     margin-right: 0;
-    margin-left: 15px;
+    margin-top: 0;
+  }
+  .answer-button {
+    margin-top: 0;
   }
   .reply-list {
     margin-left: 20px;

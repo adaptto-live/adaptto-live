@@ -112,7 +112,7 @@ function showQA() {
     "tab-discussion tab-qa"
     "chat qa";
   grid-template-rows: auto 1fr;
-  grid-template-columns: 60% 40%;
+  grid-template-columns: 50% 50%;
   overflow-y: auto;
   .tab-selection {
     grid-area: tab-selection;
