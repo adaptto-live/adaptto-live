@@ -99,6 +99,10 @@ onMounted(() => {
     }
   })
 })
+
+socket.on('connect_error', () => {
+  logout()
+})
 </script>
 
 <style lang="scss" scoped>
