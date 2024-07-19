@@ -14,15 +14,16 @@ jobs:
       url: https://live.adapt.to
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
         cache: npm
 
     - run: npm install
     - run: npm run lint
+    - run: npm run test:unit
     - run: npm run build
       env:
         VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL }}
@@ -30,6 +31,9 @@ jobs:
         VITE_QUERY_INDEX_URL: ${{ vars.VITE_QUERY_INDEX_URL }}
         VITE_LAMAPOLL_URL: ${{ vars.VITE_LAMAPOLL_URL }}
         VITE_DEBUG_MODE: ${{ vars.VITE_DEBUG_MODE }}
+        VITE_SHOW_DEBUG_MODE: ${{ vars.VITE_SHOW_DEBUG_MODE }}
+        VITE_SHUTDOWN_PAGE: ${{ vars.VITE_SHUTDOWN_PAGE }}
+        VITE_WARNING_NOTICE: ${{ vars.VITE_WARNING_NOTICE }}
 
     - name: Copy to Site
       uses: cpina/github-action-push-to-another-repository@v1.7.2

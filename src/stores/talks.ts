@@ -6,6 +6,10 @@ export interface Talk {
   day: number
   title: string
   speakers?: string
+  startTime?: number
+  endTime?: number
+  duration?: number
+  durationFAQ?: number
   url?: string
   lobby?: boolean
 }
@@ -65,12 +69,26 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         title = titleMatcher[1]
       }
       const speakers = queryIndexEntry.speakers
+      const startTime = parseFloatOrUndefined(entry.Start)
+      const endTime = parseFloatOrUndefined(entry.End)
+      const duration = parseIntOrUndefined(entry.Duration)
+      const durationFAQ = parseIntOrUndefined(entry.FAQ)
       const url = `${urlPrefix}${path}`
-      result.push({id, day, title, speakers, url})
+      result.push({id, day, title, speakers, startTime, endTime, duration, durationFAQ, url})
     }
   })
 
   return addDailyLobbyTalks(result)
+}
+
+function parseFloatOrUndefined(value : string) : number|undefined {
+  const result = parseFloat(value)
+  return isNaN(result) ? undefined : result
+}
+
+function parseIntOrUndefined(value : string) : number|undefined {
+  const result = parseInt(value, 10)
+  return isNaN(result) ? undefined : result
 }
 
 /**
@@ -132,7 +150,11 @@ async function loadJson(url: string) : Promise<any> {
 interface ScheduleEntry {
   Day: string,
   Entry: string,
-  Type: string
+  Type: string,
+  Start: string,
+  End: string,
+  Duration: string,
+  FAQ: string
 }
 
 interface QueryIndexEntry {

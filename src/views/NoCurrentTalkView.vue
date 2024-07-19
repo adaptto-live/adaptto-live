@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCurrentTalkStore } from '@/stores/currentTalk';
+import { useCurrentTalkStore } from '@/stores/currentTalk'
 
 const router = useRouter()
 const currentTalkStore = useCurrentTalkStore()

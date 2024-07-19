@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -67,4 +67,20 @@ socket.on('connect_error', (err) => {
   loginInProcess.value = false
   loginError.value = err.message
 })
+
+onBeforeMount(() => {
+  const codeFromUrlParam = getCodeFromUrlParam()
+  if (codeFromUrlParam) {
+    document.location = `/#/login/${codeFromUrlParam}`
+  }
+})
+
+function getCodeFromUrlParam() : string|null {
+  const queryString = document.location.search
+  if (queryString) {
+    const urlParams = new URLSearchParams(queryString)
+    return urlParams.get('code')
+  }
+  return null
+}
 </script>

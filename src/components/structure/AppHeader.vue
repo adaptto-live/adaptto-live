@@ -13,13 +13,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="me-auto">
             <RouterLink to="/all-talks" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">All Talks</RouterLink>
-            <template v-if="authenticationStore.qaadmin">
-              <RouterLink to="/qa" class="btn btn-warning me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">Q&A View</RouterLink>
+            <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
+              Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg" alt=""/>
+            </a>
+            <template v-if="authenticationStore.qaadmin || authenticationStore.admin">
+              <RouterLink to="/qa" class="btn btn-warning me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">Q&amp;A View</RouterLink>
             </template>
             <template v-else>
-              <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
-                Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg" alt=""/>
-              </a>
               <a href="mailto:info@adapt.to?subject=Lightning Talk Proposal" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
                 Submit Lightning Talk
               </a>
@@ -35,8 +35,13 @@
                 <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
                 <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
                 <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>
+                <li><RouterLink to="/admin/kpi" class="dropdown-item">KPI</RouterLink></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><RouterLink to="/qa" class="dropdown-item">Q&A View</RouterLink></li>
+                <li>
+                  <a href="mailto:info@adapt.to?subject=Lightning Talk Proposal" class="dropdown-item" @click="collapseNavbar" v-if="lamaPollUrl">
+                    Submit Lightning Talk
+                  </a>
+                </li>
               </ul>
             </li>
             <li class="nav-item">
@@ -50,6 +55,7 @@
       </template>
     </div>
   </nav>
+  <div v-if="warningNotice" class="alert alert-warning p-2 m-1">⚠ <span v-html="warningNotice"></span></div>
 </template>
 
 <script setup lang="ts">
@@ -69,6 +75,7 @@ const lamaPollUrlPrefix = import.meta.env.VITE_LAMAPOLL_URL
 if (lamaPollUrlPrefix) {
   lamaPollUrl = lamaPollUrlPrefix + authenticationStore.code
 }
+const warningNotice = import.meta.env.VITE_WARNING_NOTICE
 
 function collapseNavbar() {
   const el = document.querySelector('#navbarSupportedContent')

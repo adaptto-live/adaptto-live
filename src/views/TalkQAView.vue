@@ -3,6 +3,12 @@
     <div class="title mb-1">
       <h4>{{talk.title}}</h4>
       <div class="btn-group">
+        <button class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.CHRONOLOGICAL}"
+            @click="messageSortOrder = MessageSortOrder.CHRONOLOGICAL">Chronological</button>
+        <button class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.VOTES}"
+            @click="messageSortOrder = MessageSortOrder.VOTES">Votes</button>
+      </div>
+      <div class="btn-group">
         <button class="btn btn-outline-secondary" :class="{active:messageAnswerFilter==MessageAnswerFilter.UNANSWERED}"
             @click="messageAnswerFilter = MessageAnswerFilter.UNANSWERED">Unanswered</button>
         <button class="btn btn-outline-secondary" :class="{active:messageAnswerFilter==MessageAnswerFilter.ANSWERED}"
@@ -10,22 +16,24 @@
       </div>
       <RouterLink to="/" class="btn">✕</RouterLink>
     </div>
-    <TalkQABigView :talk="talk" :message-answer-filter="messageAnswerFilter" class="content" :key="talk.id"/>
+    <TalkQABigView :talk="talk" :messageAnswerFilter="messageAnswerFilter" :messageSortOrder="messageSortOrder" class="content" :key="talk.id"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import TalkQABigView from '@/components/talkQA/TalkQABigView.vue'
-import MessageAnswerFilter from '@/services/MessageAnswerFilter';
+import MessageAnswerFilter from '@/services/MessageAnswerFilter'
+import MessageSortOrder from '@/services/MessageSortOrder'
 import TalkManager from '@/services/TalkManager'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
 
 const talkManager = new TalkManager()
 const currentTalkId = computed(() => useCurrentTalkStore().talkId)
 const talk = computed(() => talkManager.getTalk(currentTalkId.value))
 const messageAnswerFilter = ref(MessageAnswerFilter.UNANSWERED)
+const messageSortOrder = ref(MessageSortOrder.CHRONOLOGICAL)
 </script>
 
 <style lang="scss" scoped>

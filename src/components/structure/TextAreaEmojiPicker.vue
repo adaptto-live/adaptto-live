@@ -4,17 +4,25 @@
     <div v-if="showPicker" class="emoji-picker" @click="emojiPopup">
       <span v-for="emoji in emojiList" :key="emoji" @click.stop="insertEmoji(emoji)">{{emoji}}</span>
     </div>
-    <textarea v-model="value" ref="textarea" @keydown="keydown" maxlength="500"/>
+    <textarea v-model="value" ref="textarea" @keydown="keydown" :maxlength="maxLength"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-const props = defineProps<{
-  modelValue?: string,
-  allowEnter?: boolean
-}>()
+const props = defineProps({
+  modelValue: {
+    type: String
+  },
+  allowEnter: {
+    type: Boolean
+  },
+  maxLength: {
+    type: Number,
+    default: 500
+  }
+})
 const emit = defineEmits(['update:modelValue','enter-key'])
 
 const value = computed({

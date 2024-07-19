@@ -1,4 +1,4 @@
-import { useDebugModeStore } from "@/stores/debugMode"
+import { useDebugModeStore } from '@/stores/debugMode'
 
 const configuredDebugMode = (import.meta.env.VITE_DEBUG_MODE == 'true')
 

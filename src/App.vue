@@ -67,7 +67,7 @@ import TalkManager from './services/TalkManager'
 import { useErrorMessagesStore } from './stores/errorMessages'
 import { showModalIfExist } from './util/showModal'
 import { registerSW } from 'virtual:pwa-register'
-import { setIntervalAsync } from 'set-interval-async';
+import { setIntervalAsync } from 'set-interval-async'
 
 const authenticationStore = useAuthenticationStore()
 const talkStore = useTalksStore()

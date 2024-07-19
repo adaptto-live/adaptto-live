@@ -16,7 +16,7 @@
       <td><code>{{authenticationStore.admin ? '☑' : '☐'}}</code></td>
     </tr>
     <tr v-if="authenticationStore.qaadmin">
-      <th>Q&A Admin</th>
+      <th>Q&amp;A Admin</th>
       <td><code>{{authenticationStore.qaadmin ? '☑' : '☐'}}</code></td>
     </tr>
     <tr>
@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
 import { version} from '@/../package.json'
-import { useDebugModeStore } from '@/stores/debugMode';
+import { useDebugModeStore } from '@/stores/debugMode'
 
 const authenticationStore = useAuthenticationStore()
 const debugModeStore = useDebugModeStore()
