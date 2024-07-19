@@ -55,6 +55,7 @@
       </template>
     </div>
   </nav>
+  <div v-if="warningNotice" class="alert alert-warning p-2 m-1">⚠ <span v-html="warningNotice"></span></div>
 </template>
 
 <script setup lang="ts">
@@ -74,6 +75,7 @@ const lamaPollUrlPrefix = import.meta.env.VITE_LAMAPOLL_URL
 if (lamaPollUrlPrefix) {
   lamaPollUrl = lamaPollUrlPrefix + authenticationStore.code
 }
+const warningNotice = import.meta.env.VITE_WARNING_NOTICE
 
 function collapseNavbar() {
   const el = document.querySelector('#navbarSupportedContent')
