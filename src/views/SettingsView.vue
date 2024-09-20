@@ -2,27 +2,29 @@
   <h2 id="headlineSettings">Settings</h2>
 
   <table aria-describedby="headlineSettings">
-    <tr>
-      <th>User</th>
-      <td><code>{{authenticationStore.username}}</code>
-        <button class="btn btn-sm btn-outline-secondary ms-3"  data-bs-toggle="modal" data-bs-target="#changeUserNameModal">Change</button></td>
-    </tr>
-    <tr>
-      <th>User ID</th>
-      <td><code>{{authenticationStore.userid}}</code></td>
-    </tr>
-    <tr v-if="authenticationStore.admin">
-      <th>Admin</th>
-      <td><code>{{authenticationStore.admin ? '☑' : '☐'}}</code></td>
-    </tr>
-    <tr v-if="authenticationStore.qaadmin">
-      <th>Q&amp;A Admin</th>
-      <td><code>{{authenticationStore.qaadmin ? '☑' : '☐'}}</code></td>
-    </tr>
-    <tr>
-      <th>Client Version</th>
-      <td><code>{{version}}</code></td>
-    </tr>
+    <tbody>
+      <tr>
+        <th>User</th>
+        <td><code>{{authenticationStore.username}}</code>
+          <button class="btn btn-sm btn-outline-secondary ms-3"  data-bs-toggle="modal" data-bs-target="#changeUserNameModal">Change</button></td>
+      </tr>
+      <tr>
+        <th>User ID</th>
+        <td><code>{{authenticationStore.userid}}</code></td>
+      </tr>
+      <tr v-if="authenticationStore.admin">
+        <th>Admin</th>
+        <td><code>{{authenticationStore.admin ? '☑' : '☐'}}</code></td>
+      </tr>
+      <tr v-if="authenticationStore.qaadmin">
+        <th>Q&amp;A Admin</th>
+        <td><code>{{authenticationStore.qaadmin ? '☑' : '☐'}}</code></td>
+      </tr>
+      <tr>
+        <th>Client Version</th>
+        <td><code>{{version}}</code></td>
+      </tr>
+    </tbody>
   </table>
 
   <div class="mt-3 form-chec small" v-if="showDebugMode">
