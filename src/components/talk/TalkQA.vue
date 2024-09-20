@@ -26,19 +26,21 @@
       </template>
 
       <table id="document-export" class="table d-none" data-bs-theme="light" aria-describedby="excelExportCaption">
-        <tr>
-          <th colspan="2" id="excelExportCaption">Talk QA</th>
-        </tr>
-        <tr v-for="message in messageWithoutReplies" :key="message.id">
-          <td>
-            <MessageDisplayExport :message="message"/>
-          </td>
-          <td>
-            <p v-if="message.answered && getReplies(message).length == 0">(see answer in talk video)</p>
-            <MessageDisplayExport v-else v-for="replyMessage in getReplies(message)" :key="replyMessage.id"
-                :message="replyMessage"/>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th colspan="2" id="excelExportCaption">Talk QA</th>
+          </tr>
+          <tr v-for="message in messageWithoutReplies" :key="message.id">
+            <td>
+              <MessageDisplayExport :message="message"/>
+            </td>
+            <td>
+              <p v-if="message.answered && getReplies(message).length == 0">(see answer in talk video)</p>
+              <MessageDisplayExport v-else v-for="replyMessage in getReplies(message)" :key="replyMessage.id"
+                  :message="replyMessage"/>
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <div class="bottom" ref="bottomPlaceholder"/>

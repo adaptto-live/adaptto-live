@@ -159,7 +159,7 @@ function showQA() {
 .usersInRoom {
   position: absolute;
   right: 0;
-  z-index: 5000;
+  z-index: 800;
   margin-right: 10px;
 }
 </style>
