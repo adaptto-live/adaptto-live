@@ -75,7 +75,7 @@ const lamaPollUrlPrefix = import.meta.env.VITE_LAMAPOLL_URL
 if (lamaPollUrlPrefix) {
   lamaPollUrl = lamaPollUrlPrefix + authenticationStore.code
 }
-const warningNotice = import.meta.env.VITE_WARNING_NOTICE
+const warningNotice = (import.meta.env.VITE_WARNING_NOTICE ?? '').trim()
 
 function collapseNavbar() {
   const el = document.querySelector('#navbarSupportedContent')
