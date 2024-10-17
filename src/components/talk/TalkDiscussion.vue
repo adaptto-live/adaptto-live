@@ -4,22 +4,6 @@
       <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#usersInRoomModal">
         {{usersInRoom.length}} {{usersInRoom.length > 1 ? 'users' : 'user'}}
       </button>
-      <div class="modal" id="usersInRoomModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5">Users in room</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div v-for="username in usersInRoom" :key="username">{{username}}</div>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <div class="tab-selection">
       <ul class="nav nav-tabs">
@@ -50,6 +34,22 @@
     </div>
     <div class="qa" id="contentQA">
       <TalkQA :talk="talk"/>
+    </div>
+    <div class="modal" id="usersInRoomModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">Users in room</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div v-for="username in usersInRoom" :key="username">{{username}}</div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
