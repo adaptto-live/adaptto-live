@@ -26,14 +26,16 @@
             </template>
           </div>
           <ul class="navbar-nav mb-2 mb-lg-0">
-            <li v-if="authenticationStore.admin" class="nav-item dropdown">
+            <li v-if="authenticationStore.admin || authenticationStore.qaadmin" class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Admin
               </a>
               <ul class="dropdown-menu">
-                <li><RouterLink to="/admin/loginCodes" class="dropdown-item">Login Codes</RouterLink></li>
-                <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
-                <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
+                <template v-if="authenticationStore.admin">
+                  <li><RouterLink to="/admin/loginCodes" class="dropdown-item">Login Codes</RouterLink></li>
+                  <li><RouterLink to="/admin/userManagement" class="dropdown-item">User Management</RouterLink></li>
+                  <li><RouterLink to="/admin/talkRatings" class="dropdown-item">Talk Ratings</RouterLink></li>
+                </template>
                 <li><RouterLink to="/admin/statistics" class="dropdown-item">Statistics</RouterLink></li>
                 <li><RouterLink to="/admin/kpi" class="dropdown-item">KPI</RouterLink></li>
                 <li><hr class="dropdown-divider"></li>
