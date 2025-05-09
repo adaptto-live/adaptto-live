@@ -71,7 +71,7 @@ const allowChangeCurrentTalk = authenticationStore.admin || authenticationStore.
 const errorMessagesStore = useErrorMessagesStore()
 const selectedTalk = ref(undefined as Talk|undefined)
 
-let currentDay = ref(currentTalk.value?.day ?? 1)
+const currentDay = ref(currentTalk.value?.day ?? 1)
 const talks = computed(() => {
   if (currentDay.value > 0) {
     return talkManager.getDay(currentDay.value)?.talks

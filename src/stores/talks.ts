@@ -18,6 +18,7 @@ export const useTalksStore = defineStore('talks', {
   state: () => {
     return {
       talks: [] as Talk[],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       loadingError: undefined as any
     }
   },
@@ -138,6 +139,7 @@ function getUrlPrefix(scheduleDataUrl : string) {
   throw new Error(`Unable to extract URL prefix from url ${scheduleDataUrl}`)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function loadJson(url: string) : Promise<any> {
   try {
     return (await axios.get(url)).data
