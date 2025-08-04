@@ -34,6 +34,7 @@ jobs:
         VITE_SHOW_DEBUG_MODE: ${{ vars.VITE_SHOW_DEBUG_MODE }}
         VITE_SHUTDOWN_PAGE: ${{ vars.VITE_SHUTDOWN_PAGE }}
         VITE_WARNING_NOTICE: ${{ vars.VITE_WARNING_NOTICE }}
+        VITE_ALLOW_QAENTRY_ANONYMOUS: ${{ vars.VITE_ALLOW_QAENTRY_ANONYMOUS }}
 
     - name: Copy to Site
       uses: cpina/github-action-push-to-another-repository@v1.7.2
