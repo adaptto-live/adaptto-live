@@ -63,7 +63,7 @@
             Please write briefly and concisely.
           </p>
           <TextAreaEmojiPicker class="textarea" v-model="messageText" :allow-enter="true" :max-length="1000"/>
-          <div class="mt-3 form-check">
+          <div class="mt-3 form-check" v-if="allowQAEntryAnonymous">
             <input type="checkbox" class="form-check-input" id="qaEntryAnonymous" v-model="messageAnonymous">
             <label class="form-check-label" for="qaEntryAnonymous">Anonymous (without user name)</label>
           </div>
@@ -157,6 +157,8 @@ const selectedMessage = ref(undefined as Message|undefined)
 const replyToMessage = ref(undefined as Message|undefined)
 const bottomPlaceholder = ref(undefined as HTMLElement|undefined)
 const qaBigViewShowRepliesForMessage = ref([] as string[])
+
+const allowQAEntryAnonymous = (import.meta.env.VITE_ALLOW_QAENTRY_ANONYMOUS == 'true')
 
 function getReplies(message: Message) {
   return messages.value.filter(item => item.replyTo==message.id)
