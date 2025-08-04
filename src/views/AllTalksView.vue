@@ -28,6 +28,8 @@
     </li>
   </ul>
 
+  <TalkRatingModal v-for="talk in talks" :key="talk.id" :talk="talk"/>
+
   <div class="modal" tabindex="-1" id="switchTalkConfirmModal">
     <div class="modal-dialog">
       <div class="modal-content" v-if="selectedTalk">
@@ -60,6 +62,7 @@ import socket from '@/util/socket'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
 import { formatTalkTime } from '@/util/datetime'
 import showModal from '@/util/showModal'
+import TalkRatingModal from '@/components/talk/TalkRatingModal.vue'
 
 const router = useRouter()
 const talkManager = new TalkManager()
