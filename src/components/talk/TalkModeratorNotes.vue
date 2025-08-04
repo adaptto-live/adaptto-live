@@ -94,6 +94,8 @@ function saveNotes() {
     word-break: break-word;
     font-size: 1.5rem;
     padding: 0.5rem;
+    max-height: 250px;
+    overflow-y: auto;
   }
 }
 </style>
