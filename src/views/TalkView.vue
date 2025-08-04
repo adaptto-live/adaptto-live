@@ -19,12 +19,14 @@
     </div>
     <TalkDiscussion :talk="talk" class="content"/>
   </div>
+  <TalkRatingModal v-if="talk" :talk="talk"/>
 </template>
 
 <script setup lang="ts">
 import TalkDiscussion from '@/components/talk/TalkDiscussion.vue'
 import TalkModeratorNotes from '@/components/talk/TalkModeratorNotes.vue'
 import TalkRating from '@/components/talk/TalkRating.vue'
+import TalkRatingModal from '@/components/talk/TalkRatingModal.vue'
 import TalkManager from '@/services/TalkManager'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { formatTalkTimeDuration } from '@/util/datetime'
