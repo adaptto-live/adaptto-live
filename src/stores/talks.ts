@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import slugify from 'slugify'
 
 export interface Talk {
   id: string
@@ -58,8 +59,8 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
   const queryIndexEntries = queryIndex.data as QueryIndexEntry[]
   const result = [] as Talk[]
 
-  scheduleEntries.filter(entry => entry.Type == 'talk').forEach(entry => {
-    const id = `${year}-${entry.Entry}`
+  scheduleEntries.filter(entry => ['talk','other_rating'].includes(entry.Type)).forEach(entry => {
+    const id = `${year}-${slugify(entry.Entry, {lower:true})}`
     const day = parseInt(entry.Day)
     const path = `/${year}/schedule/${entry.Entry}`
     const queryIndexEntry = queryIndexEntries.find(entry => entry.path == path)
@@ -76,6 +77,14 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
       const durationFAQ = parseIntOrUndefined(entry.FAQ)
       const url = `${urlPrefix}${path}`
       result.push({id, day, title, speakers, startTime, endTime, duration, durationFAQ, url})
+    }
+    else if (entry.Type === 'other_rating') {
+      const title = entry.Entry
+      const speakers = entry.Speakers
+      const startTime = parseFloatOrUndefined(entry.Start)
+      const endTime = parseFloatOrUndefined(entry.End)
+      const duration = parseIntOrUndefined(entry.Duration)
+      result.push({id, day, title, speakers, startTime, endTime, duration})
     }
   })
 
@@ -157,6 +166,7 @@ interface ScheduleEntry {
   End: string,
   Duration: string,
   FAQ: string
+  Speakers: string
 }
 
 interface QueryIndexEntry {
