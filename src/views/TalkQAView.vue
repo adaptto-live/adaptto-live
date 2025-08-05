@@ -5,7 +5,9 @@
       <div class="btn-group">
         <button class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.CHRONOLOGICAL}"
             @click="messageSortOrder = MessageSortOrder.CHRONOLOGICAL">Chronological</button>
-        <button class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.VOTES}"
+        <button v-if="isMessageSortOrderVotes" class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.VOTES}"
+            @click="refreshVotesMessageOrder()">Votes ⟳</button>
+        <button v-else class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.VOTES}"
             @click="messageSortOrder = MessageSortOrder.VOTES">Votes</button>
       </div>
       <div class="btn-group">
@@ -34,6 +36,11 @@ const currentTalkId = computed(() => useCurrentTalkStore().talkId)
 const talk = computed(() => talkManager.getTalk(currentTalkId.value))
 const messageAnswerFilter = ref(MessageAnswerFilter.UNANSWERED)
 const messageSortOrder = ref(MessageSortOrder.CHRONOLOGICAL)
+const isMessageSortOrderVotes = computed(() => messageSortOrder.value === MessageSortOrder.VOTES)
+
+function refreshVotesMessageOrder() {
+
+}
 </script>
 
 <style lang="scss" scoped>
