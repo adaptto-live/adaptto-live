@@ -9,10 +9,10 @@
                 @message-clicked="messageClicked(message)"/>
             <div class="reply-list">
               <button v-if="qaBigView && !isShowRepliesInQABigView(message) && getReplies(message).length > 0"
-                class="btn btn-sm btn-secondary" @click="showRepliesInqaBigView(message, true)">
+                class="btn btn-sm btn-secondary" @click="showRepliesInQABigView(message, true)">
                 {{getReplies(message).length}} Answers
               </button>
-              <div v-else @click="showRepliesInqaBigView(message, false)">
+              <div v-else @click="showRepliesInQABigView(message, false)">
                 <MessageDisplay v-for="replyMessage in getReplies(message)" :key="replyMessage.id"
                     :message="replyMessage" :read-only="qaBigView"
                     @message-clicked="messageClicked(replyMessage, message)"/>
@@ -115,7 +115,7 @@
 <script setup lang="ts">
 import { useAuthenticationStore } from '@/stores/authentication'
 import type { Talk } from '@/stores/talks'
-import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import socket from '@/util/socket'
 import type Message from '@/services/Message'
@@ -139,13 +139,25 @@ const props = defineProps<{
 const authenticationStore = useAuthenticationStore()
 const errorMessagesStore = useErrorMessagesStore()
 const messages = ref([] as Message[])
+const likeUserIdsPerMessageIdSnapshot = ref(undefined as Map<string, number>|undefined)
+
 const messageWithoutReplies = computed(() => {
   const filteredMessages = messages.value
       .filter(item => item.replyTo == undefined)
       .filter(item => item.answered && props.messageAnswerFilter != MessageAnswerFilter.UNANSWERED || !item.answered && props.messageAnswerFilter != MessageAnswerFilter.ANSWERED)
+  
   if (props.messageSortOrder == MessageSortOrder.VOTES) {
-    filteredMessages.sort((msg1, msg2) => (msg2.likeUserIds?.length ?? 0) - (msg1.likeUserIds?.length ?? 0))
+    // store current like counts to keep this order consistent until the order is refreshed
+    if (!likeUserIdsPerMessageIdSnapshot.value) {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      likeUserIdsPerMessageIdSnapshot.value = new Map<string, number>()
+      filteredMessages.forEach(message => {
+        likeUserIdsPerMessageIdSnapshot.value?.set(message.id, message.likeUserIds?.length ?? 0)
+      })
+    }
+    filteredMessages.sort((msg1, msg2) => (likeUserIdsPerMessageIdSnapshot.value?.get(msg2.id) ?? 0) - (likeUserIdsPerMessageIdSnapshot.value?.get(msg1.id) ?? 0))
   }
+  
   return filteredMessages
 })
 
@@ -168,7 +180,7 @@ function isShowRepliesInQABigView(message: Message) {
   return qaBigViewShowRepliesForMessage.value.includes(message.id)
 }
 
-function showRepliesInqaBigView(message: Message, show: boolean) {
+function showRepliesInQABigView(message: Message, show: boolean) {
   if (show) {
     qaBigViewShowRepliesForMessage.value.push(message.id)
   }
@@ -176,6 +188,15 @@ function showRepliesInqaBigView(message: Message, show: boolean) {
     qaBigViewShowRepliesForMessage.value = qaBigViewShowRepliesForMessage.value.filter(id => id != message.id)
   }
 }
+
+function refreshVotesMessageOrder() {
+  if (props.messageSortOrder == MessageSortOrder.VOTES) {
+    likeUserIdsPerMessageIdSnapshot.value = undefined
+    // Trigger reactivity to re-sort by creating a new array reference
+    messages.value = [...messages.value]
+  }
+}
+watch([() => props.messageAnswerFilter, () => props.messageSortOrder], () => refreshVotesMessageOrder())
 
 function addMessage(message: Message) {
   // ensure no duplicates in list
@@ -291,6 +312,7 @@ function markAnswered(message : Message) {
       errorMessagesStore.add(`Unable to update QA entry: ${result.error}`)
     }
   })
+  refreshVotesMessageOrder()
 }
 
 function scrollToEndOfList() {
@@ -330,6 +352,10 @@ onMounted(() => {
 })
 onUnmounted(() => {
   socket.off('qaEntries')
+})
+
+defineExpose({
+  refreshVotesMessageOrder
 })
 </script>
 
