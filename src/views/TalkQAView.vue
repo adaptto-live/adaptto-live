@@ -18,7 +18,7 @@
       </div>
       <RouterLink to="/" class="btn">✕</RouterLink>
     </div>
-    <TalkQABigView :talk="talk" :messageAnswerFilter="messageAnswerFilter" :messageSortOrder="messageSortOrder" class="content" :key="talk.id"/>
+    <TalkQABigView ref="talkQABigViewRef" :talk="talk" :messageAnswerFilter="messageAnswerFilter" :messageSortOrder="messageSortOrder" class="content" :key="talk.id"/>
   </div>
 </template>
 
@@ -37,9 +37,10 @@ const talk = computed(() => talkManager.getTalk(currentTalkId.value))
 const messageAnswerFilter = ref(MessageAnswerFilter.UNANSWERED)
 const messageSortOrder = ref(MessageSortOrder.CHRONOLOGICAL)
 const isMessageSortOrderVotes = computed(() => messageSortOrder.value === MessageSortOrder.VOTES)
+const talkQABigViewRef = ref<InstanceType<typeof TalkQABigView>>()
 
 function refreshVotesMessageOrder() {
-
+  talkQABigViewRef.value?.refreshVotesMessageOrder()
 }
 </script>
 

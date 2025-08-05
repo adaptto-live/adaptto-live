@@ -352,6 +352,10 @@ onMounted(() => {
 onUnmounted(() => {
   socket.off('qaEntries')
 })
+
+defineExpose({
+  refreshVotesMessageOrder
+})
 </script>
 
 <style lang="scss" scoped>
