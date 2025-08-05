@@ -149,6 +149,7 @@ const messageWithoutReplies = computed(() => {
   if (props.messageSortOrder == MessageSortOrder.VOTES) {
     // store current like counts to keep this order consistent until the order is refreshed
     if (!likeUserIdsPerMessageIdSnapshot.value) {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       likeUserIdsPerMessageIdSnapshot.value = new Map<string, number>()
       filteredMessages.forEach(message => {
         likeUserIdsPerMessageIdSnapshot.value?.set(message.id, message.likeUserIds?.length ?? 0)
