@@ -40,6 +40,7 @@ const isMessageSortOrderVotes = computed(() => messageSortOrder.value === Messag
 const talkQABigViewRef = ref<InstanceType<typeof TalkQABigView>>()
 
 function refreshVotesMessageOrder() {
+  // if votes order is already active and button is hit again, force a sort order refresh
   talkQABigViewRef.value?.refreshVotesMessageOrder()
 }
 </script>
