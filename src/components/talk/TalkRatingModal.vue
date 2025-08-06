@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" :id="modalId" tabindex="-1">
+  <div class="modal talkRatingModal" :id="modalId" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -109,5 +109,9 @@ svg.fill {
 
 .textarea {
   height: 80px;
+}
+
+.talkRatingModal.modal {
+  --bs-modal-zindex: 5000;
 }
 </style>

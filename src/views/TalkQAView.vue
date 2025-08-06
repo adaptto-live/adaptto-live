@@ -5,7 +5,9 @@
       <div class="btn-group">
         <button class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.CHRONOLOGICAL}"
             @click="messageSortOrder = MessageSortOrder.CHRONOLOGICAL">Chronological</button>
-        <button class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.VOTES}"
+        <button v-if="isMessageSortOrderVotes" class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.VOTES}"
+            @click="refreshVotesMessageOrder()">Votes ⟳</button>
+        <button v-else class="btn btn-outline-secondary" :class="{active:messageSortOrder==MessageSortOrder.VOTES}"
             @click="messageSortOrder = MessageSortOrder.VOTES">Votes</button>
       </div>
       <div class="btn-group">
@@ -16,7 +18,7 @@
       </div>
       <RouterLink to="/" class="btn">✕</RouterLink>
     </div>
-    <TalkQABigView :talk="talk" :messageAnswerFilter="messageAnswerFilter" :messageSortOrder="messageSortOrder" class="content" :key="talk.id"/>
+    <TalkQABigView ref="talkQABigViewRef" :talk="talk" :messageAnswerFilter="messageAnswerFilter" :messageSortOrder="messageSortOrder" class="content" :key="talk.id"/>
   </div>
 </template>
 
@@ -34,6 +36,13 @@ const currentTalkId = computed(() => useCurrentTalkStore().talkId)
 const talk = computed(() => talkManager.getTalk(currentTalkId.value))
 const messageAnswerFilter = ref(MessageAnswerFilter.UNANSWERED)
 const messageSortOrder = ref(MessageSortOrder.CHRONOLOGICAL)
+const isMessageSortOrderVotes = computed(() => messageSortOrder.value === MessageSortOrder.VOTES)
+const talkQABigViewRef = ref<InstanceType<typeof TalkQABigView>>()
+
+function refreshVotesMessageOrder() {
+  // if votes order is already active and button is hit again, force a sort order refresh
+  talkQABigViewRef.value?.refreshVotesMessageOrder()
+}
 </script>
 
 <style lang="scss" scoped>

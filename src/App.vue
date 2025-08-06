@@ -85,7 +85,8 @@ const currentTalk = ref(undefined as Talk|undefined)
 const checkForNewVersionsIntervalMilliseconds = 30 * 60 * 1000
 const updateServiceWorker = registerSW({
   // check for new app version, see https://vite-pwa-org.netlify.app/guide/periodic-sw-updates.html
-  onRegisteredSW(swUrl:string, r:any) {
+  onRegisteredSW(swUrl:string, r:ServiceWorkerRegistration|undefined) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     r && setIntervalAsync(async () => {
       if (!(!r.installing && navigator)) {
         return

@@ -3,15 +3,14 @@
     <SvgStar v-for="index in 5" :key="index" :class="{fill: rating >= index}"/>
   </div>
   <button v-else class="btn btn-warning" :class="{'btn-sm':smallButton}" @click="showModal">Rate Talk</button>
-  <TalkRatingModal :talk="talk" ref="modal"/>
 </template>
 
 <script setup lang="ts">
 import { useRatingStore } from '@/stores/rating'
-import { computed, ref } from 'vue'
-import TalkRatingModal from './TalkRatingModal.vue'
+import { computed } from 'vue'
 import type { Talk } from '@/stores/talks'
 import SvgStar from '../structure/SvgStar.vue'
+import { showModalIfExist } from '@/util/showModal';
 
 const props = defineProps<{
   talk: Talk
@@ -20,10 +19,9 @@ const props = defineProps<{
 
 const ratingStore = useRatingStore()
 const rating = computed(() => ratingStore.getRating(props.talk.id))
-const modal = ref<typeof TalkRatingModal>();
 
 function showModal() {
-  modal.value?.show()
+  showModalIfExist(`talk-rating-modal-${props.talk.id}`)
 }
 </script>
 

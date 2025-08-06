@@ -28,6 +28,8 @@
     </li>
   </ul>
 
+  <TalkRatingModal v-for="talk in talks" :key="talk.id" :talk="talk"/>
+
   <div class="modal" tabindex="-1" id="switchTalkConfirmModal">
     <div class="modal-dialog">
       <div class="modal-content" v-if="selectedTalk">
@@ -60,6 +62,7 @@ import socket from '@/util/socket'
 import { useErrorMessagesStore } from '@/stores/errorMessages'
 import { formatTalkTime } from '@/util/datetime'
 import showModal from '@/util/showModal'
+import TalkRatingModal from '@/components/talk/TalkRatingModal.vue'
 
 const router = useRouter()
 const talkManager = new TalkManager()
@@ -71,7 +74,7 @@ const allowChangeCurrentTalk = authenticationStore.admin || authenticationStore.
 const errorMessagesStore = useErrorMessagesStore()
 const selectedTalk = ref(undefined as Talk|undefined)
 
-let currentDay = ref(currentTalk.value?.day ?? 1)
+const currentDay = ref(currentTalk.value?.day ?? 1)
 const talks = computed(() => {
   if (currentDay.value > 0) {
     return talkManager.getDay(currentDay.value)?.talks
