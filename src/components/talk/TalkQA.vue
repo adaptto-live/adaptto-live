@@ -442,7 +442,7 @@ defineExpose({
   }
 }
 
-.modal {
+#qaEntryModal.modal, #qaEntryReplyModal.modal {
   --bs-modal-zindex: 5000;
 }
 
