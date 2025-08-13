@@ -69,7 +69,7 @@ const usersInRoom = ref([] as string[])
 
 function socketConnectFunction() {
   // if a socket (re)connect happens while use is in the room, emit roomEnter again
-  window.setTimeout(() => socket.emit('roomEnter', props.talk.id), 500);
+  window.setTimeout(() => socket.emit('roomEnter', props.talk.id), 500)
 }
 function roomUsersFunction(usernames: string[]) {
   usersInRoom.value = usernames
@@ -81,7 +81,7 @@ onMounted(() => {
   window.setTimeout(() => {
     socket.emit('roomEnter', props.talk.id)
     socket.on('connect', socketConnectFunction)
-  }, 250);
+  }, 250)
 })
 onUnmounted(() => {
   socket.off('roomUsers', roomUsersFunction)
