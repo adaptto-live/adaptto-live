@@ -25,6 +25,12 @@ export default defineConfigWithVueTs(
     rules: {
       '@typescript-eslint/no-unused-expressions': 'off'
     },
+  },
+
+  {
+    rules: {
+      'semi': ['error', 'never']
+    }
   }
 
 )

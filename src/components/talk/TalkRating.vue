@@ -10,7 +10,7 @@ import { useRatingStore } from '@/stores/rating'
 import { computed } from 'vue'
 import type { Talk } from '@/stores/talks'
 import SvgStar from '../structure/SvgStar.vue'
-import { showModalIfExist } from '@/util/showModal';
+import { showModalIfExist } from '@/util/showModal'
 
 const props = defineProps<{
   talk: Talk

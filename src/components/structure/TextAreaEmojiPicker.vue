@@ -59,7 +59,7 @@ function insertAtCursorPosition(text : string) : void {
     if (selectionStart >= 0) {
       value.value = value.value.substring(0, selectionStart)
           + text
-          + value.value.substring(selectionEnd, value.value.length);
+          + value.value.substring(selectionEnd, value.value.length)
       window.setTimeout(() => {
         field.focus()
         field.setSelectionRange(selectionStart+text.length, selectionStart+text.length)
