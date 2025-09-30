@@ -66,17 +66,19 @@ import { Collapse } from 'bootstrap'
 import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
 import { useRatingStore } from '@/stores/rating'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
 const ratingStore = useRatingStore()
 
-let lamaPollUrl : string|undefined
-const lamaPollUrlPrefix = import.meta.env.VITE_LAMAPOLL_URL
-if (lamaPollUrlPrefix) {
-  lamaPollUrl = lamaPollUrlPrefix + authenticationStore.code
-}
+const lamaPollUrl = computed((): string | undefined => {
+  const lamaPollUrlPrefix = import.meta.env.VITE_LAMAPOLL_URL
+  if (lamaPollUrlPrefix) {
+    return `${lamaPollUrlPrefix}${authenticationStore.code}`
+  }
+  return undefined
+})
 const warningNotice = (import.meta.env.VITE_WARNING_NOTICE ?? '').trim()
 
 function collapseNavbar() {
