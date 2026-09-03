@@ -13,7 +13,7 @@ export interface Talk {
   durationFAQ?: number
   url?: string
   lobby?: boolean
-  isBreak?: boolean
+  isBreakOther?: boolean
 }
 
 export const useTalksStore = defineStore('talks', {
@@ -103,7 +103,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
       const startTime = parseFloatOrUndefined(entry.Start)
       const endTime = parseFloatOrUndefined(entry.End)
       const duration = parseIntOrUndefined(entry.Duration)
-      result.push({id, day, title, startTime, endTime, duration, isBreak: true})
+      result.push({id, day, title, startTime, endTime, duration, isBreakOther: true})
     }
   })
 

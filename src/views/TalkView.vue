@@ -1,6 +1,6 @@
 <template>
-  <TalkBreakDetail v-if="talk && talk.isBreak && isModerator" :talk="talk"/>
-  <div v-else-if="talk && !talk.isBreak" class="talk-view">
+  <TalkBreakOtherDetail v-if="talk && talk.isBreakOther && isModerator" :talk="talk"/>
+  <div v-else-if="talk && !talk.isBreakOther" class="talk-view">
     <div class="title">
       <h3>
         <a v-if="talk.url" :href="talk.url" target="_blank">{{talk.title}}</a>
@@ -21,12 +21,12 @@
     <TalkDiscussion :talk="talk" class="content"/>
   </div>
   <NotFoundView v-else/>
-  <TalkRatingModal v-if="talk && !talk.isBreak" :talk="talk"/>
+  <TalkRatingModal v-if="talk && !talk.isBreakOther" :talk="talk"/>
 </template>
 
 <script setup lang="ts">
 import TalkDiscussion from '@/components/talk/TalkDiscussion.vue'
-import TalkBreakDetail from '@/components/talk/TalkBreakDetail.vue'
+import TalkBreakOtherDetail from '@/components/talk/TalkBreakOtherDetail.vue'
 import TalkModeratorNotes from '@/components/talk/TalkModeratorNotes.vue'
 import TalkRating from '@/components/talk/TalkRating.vue'
 import TalkRatingModal from '@/components/talk/TalkRatingModal.vue'

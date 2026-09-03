@@ -42,7 +42,7 @@ describe('talks store break/other handling', () => {
     const store = useTalksStore()
     await store.fill()
 
-    const breaks = store.talks.filter(talk => talk.isBreak)
+    const breaks = store.talks.filter(talk => talk.isBreakOther)
     expect(breaks.map(b => b.id)).to.deep.eq([
       '2023-break-other-day-1-1',
       '2023-break-other-day-1-2',
@@ -59,13 +59,13 @@ describe('talks store break/other handling', () => {
     expect(coffeeBreak?.title).to.eq('Coffee Break')
     expect(coffeeBreak?.duration).to.eq(15)
     expect(coffeeBreak?.url).to.undefined
-    expect(coffeeBreak?.isBreak).to.true
+    expect(coffeeBreak?.isBreakOther).to.true
 
     const registration = store.talks.find(talk => talk.id === '2023-break-other-day-1-2')
     expect(registration?.title).to.eq('Registration')
     expect(registration?.duration).to.eq(60)
     expect(registration?.url).to.undefined
-    expect(registration?.isBreak).to.true
+    expect(registration?.isBreakOther).to.true
   })
 
   test('breaks and others are kept in schedule order alongside talks', async () => {

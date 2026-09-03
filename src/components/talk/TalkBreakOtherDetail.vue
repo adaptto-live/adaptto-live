@@ -21,7 +21,7 @@ const props = defineProps<{
 
 const talkTimeDuration = formatTalkTimeDuration(props.talk)
 
-// join the room to receive the moderator notes for this break
+// join the room to receive the moderator notes for this break/other entry
 function socketConnectFunction() {
   window.setTimeout(() => socket.emit('roomEnter', props.talk.id), 500)
 }

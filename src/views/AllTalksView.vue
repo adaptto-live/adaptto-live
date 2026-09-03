@@ -16,10 +16,10 @@
 
   <ul class="list-group talks">
     <li v-for="talk in talks" :key="talk.id" class="list-group-item list-group-item-action"
-        :class="{active:currentTalkId == talk.id, break:talk.isBreak}"
+        :class="{active:currentTalkId == talk.id, break:talk.isBreakOther}"
         @click="navigateTo(talk)">
-      <button v-if="allowChangeCurrentTalk && !talk.isBreak && currentTalkId != talk.id" class="float-end btn btn-sm btn-outline-primary ms-3" @click.stop="setCurrentTalkAskConfirmation(talk)">Set Current</button>
-      <div class="float-end" v-if="!talk.lobby && !talk.isBreak" @click.stop="">
+      <button v-if="allowChangeCurrentTalk && !talk.isBreakOther && currentTalkId != talk.id" class="float-end btn btn-sm btn-outline-primary ms-3" @click.stop="setCurrentTalkAskConfirmation(talk)">Set Current</button>
+      <div class="float-end" v-if="!talk.lobby && !talk.isBreakOther" @click.stop="">
         <TalkRating :talk="talk" :small-button="true"/>
       </div>
       <span class="talkTime">{{formatTalkTime(talk)}}</span>
@@ -77,10 +77,10 @@ const selectedTalk = ref(undefined as Talk|undefined)
 const currentDay = ref(currentTalk.value?.day ?? 1)
 const talks = computed(() => {
   const dayTalks = currentDay.value > 0 ? talkManager.getDay(currentDay.value)?.talks : talkManager.talks
-  // breaks are only visible for moderators
-  return dayTalks?.filter(talk => allowChangeCurrentTalk || !talk.isBreak)
+  // breaks and other entries are only visible for moderators
+  return dayTalks?.filter(talk => allowChangeCurrentTalk || !talk.isBreakOther)
 })
-const ratableTalks = computed(() => talks.value?.filter(talk => !talk.isBreak))
+const ratableTalks = computed(() => talks.value?.filter(talk => !talk.isBreakOther))
 
 function switchDay(day : number) : void {
   currentDay.value = day
