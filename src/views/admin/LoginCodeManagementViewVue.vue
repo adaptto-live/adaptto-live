@@ -6,7 +6,7 @@
       <tr>
         <th>
           <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="showCodesSwitch" v-model="showCodes">
+            <input class="form-check-input" type="checkbox" role="switch" id="showCodesSwitch" v-model="showCodes" :aria-checked="showCodes">
             <label class="form-check-label" for="showCodesSwitch">Code</label>
           </div>
         </th>

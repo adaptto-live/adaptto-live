@@ -4,7 +4,7 @@ import { convertSheetDateValue } from '@/util/datetime'
 
 export default class TalkManager {
 
-  private _talks : Talk[]
+  private readonly _talks : Talk[]
   private _days : Day[]|undefined
 
   public constructor() {

@@ -4,12 +4,13 @@
     <div v-if="showPicker" class="emoji-picker" @click="emojiPopup">
       <span v-for="emoji in emojiList" :key="emoji" @click.stop="insertEmoji(emoji)">{{emoji}}</span>
     </div>
-    <textarea v-model="value" ref="textarea" @keydown="keydown" :maxlength="maxLength"/>
+    <label :for="textareaId" class="visually-hidden">{{ ariaLabel }}</label>
+    <textarea v-model="value" ref="textarea" :id="textareaId" @keydown="keydown" :maxlength="maxLength"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, useId } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -21,6 +22,10 @@ const props = defineProps({
   maxLength: {
     type: Number,
     default: 500
+  },
+  ariaLabel: {
+    type: String,
+    default: 'Message text'
   }
 })
 const emit = defineEmits(['update:modelValue','enter-key'])
@@ -34,6 +39,7 @@ const value = computed({
   }
 })
 
+const textareaId = useId()
 const textarea = ref<HTMLTextAreaElement|null>(null)
 const emojiList = '😀,😁,😆,😂,🤣,😊,🙂,🙃,😉,😌,😍,😎,😕,🙁,☹️,😐,😦,😲,,😭,🙄,👍,👎,👋'.split(',')
 

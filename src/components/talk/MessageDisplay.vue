@@ -76,7 +76,7 @@ function clickMessage(event : Event) {
   }
   .text {
     white-space: pre-line;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
   &.editable {
     cursor: pointer;

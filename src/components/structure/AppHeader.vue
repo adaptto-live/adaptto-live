@@ -27,9 +27,9 @@
           </div>
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li v-if="authenticationStore.admin || authenticationStore.qaadmin" class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Admin
-              </a>
+              </button>
               <ul class="dropdown-menu">
                 <template v-if="authenticationStore.admin">
                   <li><RouterLink to="/admin/loginCodes" class="dropdown-item">Login Codes</RouterLink></li>

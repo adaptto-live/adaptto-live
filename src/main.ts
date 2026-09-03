@@ -23,5 +23,5 @@ const app = createApp(App)
   })
 
 // load talk data
-useTalksStore().fill()
-  .then(() => app.mount('#app'))
+await useTalksStore().fill()
+app.mount('#app')

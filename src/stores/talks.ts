@@ -61,7 +61,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
 
   scheduleEntries.filter(entry => ['talk','other_rating'].includes(entry.Type)).forEach(entry => {
     const id = `${year}-${slugify(entry.Entry, {lower:true})}`
-    const day = parseInt(entry.Day)
+    const day = Number.parseInt(entry.Day)
     const path = `/${year}/schedule/${entry.Entry}`
     const queryIndexEntry = queryIndexEntries.find(entry => entry.path == path)
     if (queryIndexEntry) {
@@ -92,13 +92,13 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
 }
 
 function parseFloatOrUndefined(value : string) : number|undefined {
-  const result = parseFloat(value)
-  return isNaN(result) ? undefined : result
+  const result = Number.parseFloat(value)
+  return Number.isNaN(result) ? undefined : result
 }
 
 function parseIntOrUndefined(value : string) : number|undefined {
-  const result = parseInt(value, 10)
-  return isNaN(result) ? undefined : result
+  const result = Number.parseInt(value, 10)
+  return Number.isNaN(result) ? undefined : result
 }
 
 /**
@@ -130,7 +130,8 @@ function addDailyLobbyTalks(talks : Talk[]) : Talk[] {
 }
 
 const scheduleUrlPattern = /^(.*)\/(\d{4})\/schedule-data\.json$/
-const titleWithoutSuffixPattern = /^(.+)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
+// group must end on a non-whitespace char, so it can't overlap with the following \s+ (avoids superlinear backtracking)
+const titleWithoutSuffixPattern = /^(.*\S)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
 
 function extractYear(scheduleDataUrl : string) : string {
   const matcher = scheduleUrlPattern.exec(scheduleDataUrl)

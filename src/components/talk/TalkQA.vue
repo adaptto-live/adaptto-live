@@ -463,7 +463,7 @@ defineExpose({
     vertical-align: top;
     width: 50% !important;
     border: 1px solid black;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
 }
 </style>
