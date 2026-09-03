@@ -119,6 +119,6 @@ function copyToClipboard() {
 
 <style lang="scss" scoped>
 td {
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 </style>

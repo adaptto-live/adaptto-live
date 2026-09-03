@@ -1,9 +1,9 @@
 <template>
   <h1>Login</h1>
 
-  <div v-if="loginInProcess" class="spinner-border mt-5" role="status">
+  <output v-if="loginInProcess" class="spinner-border mt-5">
     <span class="visually-hidden">Logging in...</span>
-  </div>
+  </output>
   <form v-else>
     <p v-if="loginError" class="alert alert-danger mt-3">{{loginError}}</p>
     <div class="mb-3 mt-3">

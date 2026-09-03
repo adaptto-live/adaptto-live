@@ -91,7 +91,7 @@ function saveNotes() {
   }
   .text {
     white-space: pre-line;
-    word-break: break-word;
+    overflow-wrap: break-word;
     font-size: 1.5rem;
     padding: 0.5rem;
     max-height: 250px;
