@@ -8,7 +8,7 @@
         </a>
         <a data-bs-toggle="modal" data-bs-target="#talkModeratorNotesModal" class="edit">✎</a>
       </div>
-      <p id="talkModeratorNotesCollapse" v-html="notesTextHtml" class="text collapse"></p>
+      <p id="talkModeratorNotesCollapse" v-html="notesTextHtml" class="text collapse" :class="{show: expanded}"></p>
     </div>
 
     <div class="modal modal-lg" id="talkModeratorNotesModal" tabindex="-1">
@@ -46,6 +46,7 @@ const errorMessagesStore = useErrorMessagesStore()
 
 const props = defineProps<{
   talk: Talk
+  expanded?: boolean
 }>()
 
 const isVisible = authenticationStore.qaadmin || authenticationStore.admin

@@ -1,69 +1,21 @@
 <template>
-  <div v-if="talk" class="talk-view">
-    <div class="title">
-      <h3>
-        <a v-if="talk.url" :href="talk.url" target="_blank">{{talk.title}}</a>
-        <span v-else>{{talk.title}}</span>
-      </h3>
-      <p v-if="talk.speakers || talkTimeDuration">
-        {{talk.speakers}}
-        <span v-if="talk.speakers && talkTimeDuration"> | </span>
-        {{talkTimeDuration}}
-        <span v-if="currentTalkStore.talkId == talk.id"> | <i>Current Talk</i></span>
-      </p>
-      <p v-if="talk.lobby">Welcome to the Lobby. This room is active when there is currently no talk.</p>
-      <TalkModeratorNotes :talk="talk"/>
-    </div>
-    <div class="rating" v-if="!talk.lobby">
-      <TalkRating v-if="talk" :talk="talk"/>
-    </div>
-    <TalkDiscussion :talk="talk" class="content"/>
-  </div>
-  <TalkRatingModal v-if="talk" :talk="talk"/>
+  <TalkBreakOtherDetail v-if="talk && talk.isBreakOther && isModerator" :talk="talk"/>
+  <TalkDetail v-else-if="talk && !talk.isBreakOther" :talk="talk"/>
+  <NotFoundView v-else/>
 </template>
 
 <script setup lang="ts">
-import TalkDiscussion from '@/components/talk/TalkDiscussion.vue'
-import TalkModeratorNotes from '@/components/talk/TalkModeratorNotes.vue'
-import TalkRating from '@/components/talk/TalkRating.vue'
-import TalkRatingModal from '@/components/talk/TalkRatingModal.vue'
+import TalkBreakOtherDetail from '@/components/talk/TalkBreakOtherDetail.vue'
+import TalkDetail from '@/components/talk/TalkDetail.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 import TalkManager from '@/services/TalkManager'
-import { useCurrentTalkStore } from '@/stores/currentTalk'
-import { formatTalkTimeDuration } from '@/util/datetime'
+import { useAuthenticationStore } from '@/stores/authentication'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const talkId = route.params.talk as string
 const talkManager = new TalkManager()
 const talk = talkManager.getTalk(talkId)
-const talkTimeDuration = talk ? formatTalkTimeDuration(talk) : undefined
-const currentTalkStore = useCurrentTalkStore()
+const authenticationStore = useAuthenticationStore()
+const isModerator = authenticationStore.qaadmin || authenticationStore.admin
 </script>
-
-<style lang="scss" scoped>
-.talk-view {
-  display: grid;
-  grid-template-areas:
-    "title rating"
-    "content content";
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto 1fr;
-  width: 100%;
-  height: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  .title {
-    grid-area: title;
-    a {
-      text-decoration: none;
-    }
-  }
-  .rating {
-    grid-area: rating;
-    padding-left: 10px;
-  }
-  .content {
-    grid-area: content;
-  }
-}
-</style>

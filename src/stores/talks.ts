@@ -13,6 +13,7 @@ export interface Talk {
   durationFAQ?: number
   url?: string
   lobby?: boolean
+  isBreakOther?: boolean
 }
 
 export const useTalksStore = defineStore('talks', {
@@ -59,32 +60,50 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
   const queryIndexEntries = queryIndex.data as QueryIndexEntry[]
   const result = [] as Talk[]
 
-  scheduleEntries.filter(entry => ['talk','other_rating'].includes(entry.Type)).forEach(entry => {
-    const id = `${year}-${slugify(entry.Entry, {lower:true})}`
+  // ordinal counter per day to build stable break/other ids
+  const breakOtherCountByDay = new Map<number, number>()
+
+  scheduleEntries.forEach(entry => {
     const day = Number.parseInt(entry.Day)
-    const path = `/${year}/schedule/${entry.Entry}`
-    const queryIndexEntry = queryIndexEntries.find(entry => entry.path == path)
-    if (queryIndexEntry) {
-      let title = queryIndexEntry.title
-      const titleMatcher = titleWithoutSuffixPattern.exec(title)
-      if (titleMatcher) {
-        title = titleMatcher[1]
+    if (['talk','other_rating'].includes(entry.Type)) {
+      const id = `${year}-${slugify(entry.Entry, {lower:true})}`
+      const path = `/${year}/schedule/${entry.Entry}`
+      // if a query index exists, this is a talk schedule entry
+      const queryIndexEntry = queryIndexEntries.find(entry => entry.path == path)
+      if (queryIndexEntry) {
+        let title = queryIndexEntry.title
+        const titleMatcher = titleWithoutSuffixPattern.exec(title)
+        if (titleMatcher) {
+          title = titleMatcher[1]
+        }
+        const speakers = queryIndexEntry.speakers
+        const startTime = parseFloatOrUndefined(entry.Start)
+        const endTime = parseFloatOrUndefined(entry.End)
+        const duration = parseIntOrUndefined(entry.Duration)
+        const durationFAQ = parseIntOrUndefined(entry.FAQ)
+        const url = `${urlPrefix}${path}`
+        result.push({id, day, title, speakers, startTime, endTime, duration, durationFAQ, url})
       }
-      const speakers = queryIndexEntry.speakers
-      const startTime = parseFloatOrUndefined(entry.Start)
-      const endTime = parseFloatOrUndefined(entry.End)
-      const duration = parseIntOrUndefined(entry.Duration)
-      const durationFAQ = parseIntOrUndefined(entry.FAQ)
-      const url = `${urlPrefix}${path}`
-      result.push({id, day, title, speakers, startTime, endTime, duration, durationFAQ, url})
+      // otherwise it's likely a non-talk entry, which should be treated like a talk and can be rated on
+      else if (entry.Type === 'other_rating') {
+        const title = entry.Entry
+        const speakers = entry.Speakers
+        const startTime = parseFloatOrUndefined(entry.Start)
+        const endTime = parseFloatOrUndefined(entry.End)
+        const duration = parseIntOrUndefined(entry.Duration)
+        result.push({id, day, title, speakers, startTime, endTime, duration})
+      }
     }
-    else if (entry.Type === 'other_rating') {
+    // for break and other entries, we generate a stable id based on the day and a per-day ordinal counter
+    else if (['break','other'].includes(entry.Type)) {
+      const ordinal = (breakOtherCountByDay.get(day) ?? 0) + 1
+      breakOtherCountByDay.set(day, ordinal)
+      const id = `${year}-break-other-day-${day}-${ordinal}`
       const title = entry.Entry
-      const speakers = entry.Speakers
       const startTime = parseFloatOrUndefined(entry.Start)
       const endTime = parseFloatOrUndefined(entry.End)
       const duration = parseIntOrUndefined(entry.Duration)
-      result.push({id, day, title, speakers, startTime, endTime, duration})
+      result.push({id, day, title, startTime, endTime, duration, isBreakOther: true})
     }
   })
 

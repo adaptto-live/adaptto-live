@@ -63,6 +63,12 @@
     "url": "https://adapt.to/2023/integration-grow-repeat-website-dxp"
   },
   {
+    "id": "2023-break-other-day-1-1",
+    "day": 1,
+    "title": "Coffee Break",
+    "isBreakOther": true
+  },
+  {
     "id": "2023-edit-anything-with-the-universal-editor",
     "day": 2,
     "title": "Edit anything with the Universal Editor",
