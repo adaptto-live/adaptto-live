@@ -60,8 +60,8 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
   const queryIndexEntries = queryIndex.data as QueryIndexEntry[]
   const result = [] as Talk[]
 
-  // ordinal counter per day to build stable break ids
-  const breakCountByDay = new Map<number, number>()
+  // ordinal counter per day to build stable break/other ids
+  const breakOtherCountByDay = new Map<number, number>()
 
   scheduleEntries.forEach(entry => {
     const day = Number.parseInt(entry.Day)
@@ -92,10 +92,10 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         result.push({id, day, title, speakers, startTime, endTime, duration})
       }
     }
-    else if (entry.Type === 'break') {
-      const ordinal = (breakCountByDay.get(day) ?? 0) + 1
-      breakCountByDay.set(day, ordinal)
-      const id = `${year}-break-day-${day}-${ordinal}`
+    else if (['break','other'].includes(entry.Type)) {
+      const ordinal = (breakOtherCountByDay.get(day) ?? 0) + 1
+      breakOtherCountByDay.set(day, ordinal)
+      const id = `${year}-break-other-day-${day}-${ordinal}`
       const title = entry.Entry
       const startTime = parseFloatOrUndefined(entry.Start)
       const endTime = parseFloatOrUndefined(entry.End)
