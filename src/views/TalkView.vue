@@ -1,5 +1,6 @@
 <template>
-  <div v-if="talk" class="talk-view">
+  <TalkBreakDetail v-if="talk && talk.isBreak && isModerator" :talk="talk"/>
+  <div v-else-if="talk && !talk.isBreak" class="talk-view">
     <div class="title">
       <h3>
         <a v-if="talk.url" :href="talk.url" target="_blank">{{talk.title}}</a>
@@ -19,15 +20,19 @@
     </div>
     <TalkDiscussion :talk="talk" class="content"/>
   </div>
-  <TalkRatingModal v-if="talk" :talk="talk"/>
+  <NotFoundView v-else/>
+  <TalkRatingModal v-if="talk && !talk.isBreak" :talk="talk"/>
 </template>
 
 <script setup lang="ts">
 import TalkDiscussion from '@/components/talk/TalkDiscussion.vue'
+import TalkBreakDetail from '@/components/talk/TalkBreakDetail.vue'
 import TalkModeratorNotes from '@/components/talk/TalkModeratorNotes.vue'
 import TalkRating from '@/components/talk/TalkRating.vue'
 import TalkRatingModal from '@/components/talk/TalkRatingModal.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 import TalkManager from '@/services/TalkManager'
+import { useAuthenticationStore } from '@/stores/authentication'
 import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { formatTalkTimeDuration } from '@/util/datetime'
 import { useRoute } from 'vue-router'
@@ -38,6 +43,8 @@ const talkManager = new TalkManager()
 const talk = talkManager.getTalk(talkId)
 const talkTimeDuration = talk ? formatTalkTimeDuration(talk) : undefined
 const currentTalkStore = useCurrentTalkStore()
+const authenticationStore = useAuthenticationStore()
+const isModerator = authenticationStore.qaadmin || authenticationStore.admin
 </script>
 
 <style lang="scss" scoped>

@@ -16,10 +16,10 @@
 
   <ul class="list-group talks">
     <li v-for="talk in talks" :key="talk.id" class="list-group-item list-group-item-action"
-        :class="{active:currentTalkId == talk.id}"
+        :class="{active:currentTalkId == talk.id, break:talk.isBreak}"
         @click="navigateTo(talk)">
-      <button v-if="allowChangeCurrentTalk && currentTalkId != talk.id" class="float-end btn btn-sm btn-outline-primary ms-3" @click.stop="setCurrentTalkAskConfirmation(talk)">Set Current</button>
-      <div class="float-end" v-if="!talk.lobby" @click.stop="">
+      <button v-if="allowChangeCurrentTalk && !talk.isBreak && currentTalkId != talk.id" class="float-end btn btn-sm btn-outline-primary ms-3" @click.stop="setCurrentTalkAskConfirmation(talk)">Set Current</button>
+      <div class="float-end" v-if="!talk.lobby && !talk.isBreak" @click.stop="">
         <TalkRating :talk="talk" :small-button="true"/>
       </div>
       <span class="talkTime">{{formatTalkTime(talk)}}</span>
@@ -28,7 +28,7 @@
     </li>
   </ul>
 
-  <TalkRatingModal v-for="talk in talks" :key="talk.id" :talk="talk"/>
+  <TalkRatingModal v-for="talk in ratableTalks" :key="talk.id" :talk="talk"/>
 
   <div class="modal" tabindex="-1" id="switchTalkConfirmModal">
     <div class="modal-dialog">
@@ -76,11 +76,11 @@ const selectedTalk = ref(undefined as Talk|undefined)
 
 const currentDay = ref(currentTalk.value?.day ?? 1)
 const talks = computed(() => {
-  if (currentDay.value > 0) {
-    return talkManager.getDay(currentDay.value)?.talks
-  }
-  return talkManager.talks
-}) 
+  const dayTalks = currentDay.value > 0 ? talkManager.getDay(currentDay.value)?.talks : talkManager.talks
+  // breaks are only visible for moderators
+  return dayTalks?.filter(talk => allowChangeCurrentTalk || !talk.isBreak)
+})
+const ratableTalks = computed(() => talks.value?.filter(talk => !talk.isBreak))
 
 function switchDay(day : number) : void {
   currentDay.value = day
@@ -119,6 +119,10 @@ function setCurrentTalk(talk : Talk) : void {
   }
   .title {
     font-weight: bold;
+  }
+  li.break .title {
+    font-weight: normal;
+    font-style: italic;
   }
   .speakers {
     margin-left: 0.5rem;
