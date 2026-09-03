@@ -130,7 +130,8 @@ function addDailyLobbyTalks(talks : Talk[]) : Talk[] {
 }
 
 const scheduleUrlPattern = /^(.*)\/(\d{4})\/schedule-data\.json$/
-const titleWithoutSuffixPattern = /^(.+)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
+// group must end on a non-whitespace char, so it can't overlap with the following \s+ (avoids superlinear backtracking)
+const titleWithoutSuffixPattern = /^(.*\S)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
 
 function extractYear(scheduleDataUrl : string) : string {
   const matcher = scheduleUrlPattern.exec(scheduleDataUrl)
