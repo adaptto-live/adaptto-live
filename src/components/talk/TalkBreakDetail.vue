@@ -3,7 +3,7 @@
     <div class="title">
       <h3>{{talk.title}}</h3>
       <p v-if="talkTimeDuration">{{talkTimeDuration}}</p>
-      <TalkModeratorNotes :talk="talk"/>
+      <TalkModeratorNotes :talk="talk" :expanded="true"/>
     </div>
   </div>
 </template>

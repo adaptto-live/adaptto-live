@@ -68,6 +68,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
     if (['talk','other_rating'].includes(entry.Type)) {
       const id = `${year}-${slugify(entry.Entry, {lower:true})}`
       const path = `/${year}/schedule/${entry.Entry}`
+      // if a query index exists, this is a talk schedule entry
       const queryIndexEntry = queryIndexEntries.find(entry => entry.path == path)
       if (queryIndexEntry) {
         let title = queryIndexEntry.title
@@ -83,6 +84,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         const url = `${urlPrefix}${path}`
         result.push({id, day, title, speakers, startTime, endTime, duration, durationFAQ, url})
       }
+      // otherwise it's likely a non-talk entry, which should be treated like a talk and can be rated on
       else if (entry.Type === 'other_rating') {
         const title = entry.Entry
         const speakers = entry.Speakers
@@ -92,6 +94,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         result.push({id, day, title, speakers, startTime, endTime, duration})
       }
     }
+    // for break and other entries, we generate a stable id based on the day and a per-day ordinal counter
     else if (['break','other'].includes(entry.Type)) {
       const ordinal = (breakOtherCountByDay.get(day) ?? 0) + 1
       breakOtherCountByDay.set(day, ordinal)
