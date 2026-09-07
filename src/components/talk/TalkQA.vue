@@ -422,6 +422,7 @@ defineExpose({
     margin-left: 15px;
     margin-right: 0;
     margin-top: 0px;
+    max-height: 150px;
   }
   .reply-button {
     height: 40px;
