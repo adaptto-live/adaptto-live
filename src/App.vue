@@ -120,8 +120,9 @@ function goToCurrentTalk() {
 onBeforeMount(() => {
   socket.on('currentTalk', talkId => {
     const talkChanged = talkId != currentTalkStore.talkId && currentTalkStore.talkId != undefined
+    const alreadyOnTalk = route.name?.toString() == 'talk' && route.params.talk == talkId
     currentTalkStore.set(talkId)
-    if (talkChanged && route.name?.toString() != 'qa') {
+    if (talkChanged && route.name?.toString() != 'qa' && !alreadyOnTalk) {
       currentTalkId.value = talkId
       currentTalk.value = talkManager.getTalk(talkId)
       showModalIfExist('currentTalkChangeModal')
