@@ -16,7 +16,7 @@
             <a :href="lamaPollUrl" target="_blank" class="btn btn-secondary me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar" v-if="lamaPollUrl">
               Conference Feedback <img class="external-link-icon" src="@/assets/external-link.svg" alt=""/>
             </a>
-            <template v-if="authenticationStore.qaadmin || authenticationStore.admin">
+            <template v-if="(authenticationStore.qaadmin || authenticationStore.admin) && currentTalkStore.talkId">
               <RouterLink to="/qa" class="btn btn-warning me-lg-2 mt-2 mt-lg-0 d-block d-lg-inline" @click="collapseNavbar">Q&amp;A View</RouterLink>
             </template>
             <template v-else>
@@ -66,11 +66,13 @@ import { Collapse } from 'bootstrap'
 import { useAuthenticationStore } from '@/stores/authentication'
 import socket from '@/util/socket'
 import { useRatingStore } from '@/stores/rating'
+import { useCurrentTalkStore } from '@/stores/currentTalk'
 import { computed, onMounted } from 'vue'
 
 const router = useRouter()
 const authenticationStore = useAuthenticationStore()
 const ratingStore = useRatingStore()
+const currentTalkStore = useCurrentTalkStore()
 
 const lamaPollUrl = computed((): string | undefined => {
   const lamaPollUrlPrefix = import.meta.env.VITE_LAMAPOLL_URL
