@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       <template v-for="talkRating in talkRatings" :key="talkRating.talk.id">
-        <tr v-if="!talkRating.talk.lobby">
+        <tr>
           <td>{{talkRating.talk.title}}</td>
           <td>{{talkRating.talk.speakers}}</td>
           <td>{{formatRating(talkRating.result?.averageRating)}}</td>
@@ -61,7 +61,7 @@
     </thead>
     <tbody>
       <template v-for="talkRating in talkRatings" :key="talkRating.talk.id">
-        <tr v-if="!talkRating.talk.lobby">
+        <tr>
           <td>{{talkRating.talk.title}}</td>
           <td>{{talkRating.talk.speakers}}</td>
           <td>{{formatRatingLocalized(talkRating.result?.averageRating)}}</td>
@@ -91,9 +91,11 @@ onMounted(() => {
   socket.emit('adminGetTalkRatings')
 })
 socket.on('adminTalkRatings', (ratings: AverageTalkRating[]) => {
-  talkRatings.value = talkManager.talks.map(talk => ({
-    talk, result: ratings.find(item => item.talkId == talk.id)
-  }))
+  talkRatings.value = talkManager.talks
+    .filter(talk => !talk.lobby && !talk.isBreakOther)
+    .map(talk => ({
+      talk, result: ratings.find(item => item.talkId == talk.id)
+    }))
 })
 
 function formatRating(rating? : number) : string|undefined {
