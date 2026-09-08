@@ -19,9 +19,11 @@
               </div>
             </div>
           </div>
-          <QAEntryLike :id="message.id" :likeUserIds="message.likeUserIds" :key="(message.likeUserIds??[]).length" class="like-button" :disabled="qaBigView"/>
-          <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
-          <button class="btn btn-secondary btn-lg answer-button" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
+          <div class="buttons">
+            <QAEntryLike :id="message.id" :likeUserIds="message.likeUserIds" :key="(message.likeUserIds??[]).length" class="like-button" :disabled="qaBigView"/>
+            <button class="btn btn-outline-secondary btn-sm reply-button" @click="addReply(message)" v-if="!qaBigView">Reply</button>
+            <button class="btn btn-secondary btn-lg answer-button" @click="markAnswered(message)" v-else>{{message.answered ? 'Unanswer' : 'Answered'}}</button>
+          </div>
         </div>
       </template>
 
@@ -418,20 +420,54 @@ defineExpose({
       background-color: unset;
     }
   }
-  .like-button {
-    margin-left: 15px;
-    margin-right: 0;
-    margin-top: 0px;
-    max-height: 150px;
-  }
-  .reply-button {
-    height: 40px;
-    margin-left: 5px;
-    margin-right: 0;
-    margin-top: 0;
-  }
-  .answer-button {
-    margin-top: 0;
+  .buttons {
+    display: flex;
+    .like-button {
+      margin-left: 15px;
+      margin-right: 0;
+      margin-top: 0px;
+      max-height: 120px;
+    }
+    .reply-button {
+      height: 40px;
+      margin-left: 5px;
+      margin-right: 0;
+      margin-top: 0;
+    }
+    .answer-button {
+      margin-top: 0;
+      min-height: 60px;
+    }
+    @media (max-width: 1100px) {
+      flex-direction: column;
+      .like-button {
+        width: 100%;
+        margin-left: 5px;
+      }
+      .reply-button {
+        width: 100%;
+      }
+    }
+    @media (max-width: 800px) {
+      flex-direction: row;
+      .like-button {
+        width: unset;
+        margin-left: 15px;
+      }
+      .reply-button {
+        width: unset;
+      }
+    }
+    @media (max-width: 580px) {
+      flex-direction: column;
+      .like-button {
+        width: 100%;
+        margin-left: 5px;
+      }
+      .reply-button {
+        width: 100%;
+      }
+    }
   }
   .reply-list {
     margin-left: 20px;
