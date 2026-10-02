@@ -56,7 +56,7 @@
         <th>Speaker</th>
         <th>Rating</th>
         <th>Median</th>
-        <th>Standard Deviation</th>
+        <th>Std. dev.</th>
         <th>Participants</th>
         <th>Comments</th>
       </tr>
