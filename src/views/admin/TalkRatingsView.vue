@@ -55,6 +55,8 @@
         <th>Talk</th>
         <th>Speaker</th>
         <th>Rating</th>
+        <th>Median</th>
+        <th>Std. dev.</th>
         <th>Participants</th>
         <th>Comments</th>
       </tr>
@@ -65,6 +67,8 @@
           <td>{{talkRating.talk.title}}</td>
           <td>{{talkRating.talk.speakers}}</td>
           <td>{{formatRatingLocalized(talkRating.result?.averageRating)}}</td>
+          <td>{{formatRatingLocalized(talkRating.result?.medianRating)}}</td>
+          <td>{{formatRatingLocalized(talkRating.result?.standardDeviation)}}</td>
           <td>{{talkRating.result?.participants}}</td>
           <td style="white-space:pre;">
             <span v-for="(comment,index) in talkRating.result?.comments" :key="index">{{`${comment};`}}</span>
@@ -103,7 +107,7 @@ function formatRating(rating? : number) : string|undefined {
 }
 
 function formatRatingLocalized(rating? : number) : string|undefined {
-  if (rating) {
+  if (rating != undefined) {
     return rating.toLocaleString('de-DE', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
