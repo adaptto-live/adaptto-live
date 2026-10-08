@@ -58,6 +58,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
 
   const scheduleEntries = schedule.data as ScheduleEntry[]
   const queryIndexEntries = queryIndex.data as QueryIndexEntry[]
+  const speakerEntries = queryIndexEntries.filter(entry => speakerPathPattern.test(entry.path ?? ''))
   const result = [] as Talk[]
 
   // ordinal counter per day to build stable break/other ids
@@ -76,7 +77,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
         if (titleMatcher) {
           title = titleMatcher[1]
         }
-        const speakers = queryIndexEntry.speakers
+        const speakers = resolveSpeakerDisplayNames(queryIndexEntry.speakers, speakerEntries)
         const startTime = parseFloatOrUndefined(entry.Start)
         const endTime = parseFloatOrUndefined(entry.End)
         const duration = parseIntOrUndefined(entry.Duration)
@@ -87,7 +88,7 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
       // otherwise it's likely a non-talk entry, which should be treated like a talk and can be rated on
       else if (entry.Type === 'other_rating') {
         const title = entry.Entry
-        const speakers = entry.Speakers
+        const speakers = resolveSpeakerDisplayNames(entry.Speakers, speakerEntries)
         const startTime = parseFloatOrUndefined(entry.Start)
         const endTime = parseFloatOrUndefined(entry.End)
         const duration = parseIntOrUndefined(entry.Duration)
@@ -108,6 +109,48 @@ async function getRemoteTalks(scheduleDataUrl: string, queryIndexUrl: string) : 
   })
 
   return addDailyLobbyTalks(result)
+}
+
+/**
+ * Resolves speaker references to their display names.
+ * Speaker references may be display names or internal speaker document names/paths
+ * (used to disambiguate speakers that share the same display name). Each reference
+ * is resolved to the actual speaker display name; unresolved references are kept as-is.
+ * @param speakers Comma-separated speaker references
+ * @param speakerEntries Query index entries of speakers
+ * @returns Comma-separated speaker display names
+ */
+function resolveSpeakerDisplayNames(speakers : string|undefined, speakerEntries : QueryIndexEntry[]) : string|undefined {
+  if (!speakers) {
+    return speakers
+  }
+  return speakers.split(',')
+    .map(speaker => speaker.trim())
+    .filter(speaker => speaker !== '')
+    .map(speaker => {
+      const speakerPath = getPathName(speaker)
+      const speakerEntry = speakerEntries.find(entry => entry.path === speakerPath
+          || entry.title === speaker
+          || getDocumentName(entry.path) === speaker)
+      return speakerEntry?.title || speaker
+    })
+    .join(', ')
+}
+
+function getPathName(value : string) : string|undefined {
+  if (absoluteUrlPattern.test(value)) {
+    try {
+      return new URL(value).pathname
+    }
+    catch {
+      return undefined
+    }
+  }
+  return value.startsWith('/') ? value : undefined
+}
+
+function getDocumentName(path : string) : string {
+  return path.substring(path.lastIndexOf('/') + 1)
 }
 
 function parseFloatOrUndefined(value : string) : number|undefined {
@@ -151,6 +194,8 @@ function addDailyLobbyTalks(talks : Talk[]) : Talk[] {
 const scheduleUrlPattern = /^(.*)\/(\d{4})\/schedule-data\.json$/
 // group must end on a non-whitespace char, so it can't overlap with the following \s+ (avoids superlinear backtracking)
 const titleWithoutSuffixPattern = /^(.*\S)\s+-\s+adaptTo\(\)\s+\d{4}\s*$/
+const speakerPathPattern = /^\/speakers\/[^/]+$/
+const absoluteUrlPattern = /^https?:\/\/[^/]+\//
 
 function extractYear(scheduleDataUrl : string) : string {
   const matcher = scheduleUrlPattern.exec(scheduleDataUrl)
