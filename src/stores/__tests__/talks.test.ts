@@ -82,3 +82,49 @@ describe('talks store break/other handling', () => {
     ])
   })
 })
+
+describe('talks store same-name speakers', () => {
+  const sameNameScheduleData = {
+    data: [
+      { Day: '1', Entry: 'talk-one', Type: 'talk', Start: '', End: '', Duration: '30', FAQ: '', Speakers: '' },
+      { Day: '1', Entry: 'talk-two', Type: 'talk', Start: '', End: '', Duration: '30', FAQ: '', Speakers: '' },
+      { Day: '1', Entry: 'talk-three', Type: 'talk', Start: '', End: '', Duration: '30', FAQ: '', Speakers: '' },
+      { Day: '1', Entry: 'Panel', Type: 'other_rating', Start: '', End: '', Duration: '30', FAQ: '', Speakers: 'nitin-gupta-nitigupt, Jane Doe' }
+    ]
+  }
+
+  const sameNameQueryIndexData = {
+    data: [
+      { path: '/2023/' },
+      { path: '/speakers/nitin-gupta', title: 'Nitin Gupta' },
+      { path: '/speakers/nitin-gupta-nitigupt', title: 'Nitin Gupta' },
+      { path: '/speakers/konrad-windszus', title: 'Konrad Windszus' },
+      { path: '/2023/schedule/talk-one', title: 'Talk One - adaptTo() 2023', speakers: 'nitin-gupta' },
+      { path: '/2023/schedule/talk-two', title: 'Talk Two - adaptTo() 2023', speakers: 'nitin-gupta-nitigupt, Konrad Windszus' },
+      { path: '/2023/schedule/talk-three', title: 'Talk Three - adaptTo() 2023', speakers: 'Konrad Windszus,Unknown Speaker' }
+    ]
+  }
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    vi.stubEnv('VITE_SCHEDULE_DATA_URL', 'https://adapt.to/2023/schedule-data.json')
+    vi.stubEnv('VITE_QUERY_INDEX_URL', 'https://adapt.to/query-index.json')
+    vi.mocked(axios.get).mockImplementation((url: string) => {
+      if (url.includes('schedule-data')) {
+        return Promise.resolve({ data: sameNameScheduleData })
+      }
+      return Promise.resolve({ data: sameNameQueryIndexData })
+    })
+  })
+
+  test('resolves speaker document names to display names', async () => {
+    const store = useTalksStore()
+    await store.fill()
+
+    const speakersById = (id: string) => store.talks.find(talk => talk.id === id)?.speakers
+    expect(speakersById('2023-talk-one')).to.eq('Nitin Gupta')
+    expect(speakersById('2023-talk-two')).to.eq('Nitin Gupta, Konrad Windszus')
+    expect(speakersById('2023-talk-three')).to.eq('Konrad Windszus, Unknown Speaker')
+    expect(speakersById('2023-panel')).to.eq('Nitin Gupta, Jane Doe')
+  })
+})
